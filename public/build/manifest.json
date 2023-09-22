@@ -1,0 +1,26 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-a95fb06f.css",
+    "isEntry": true,
+    "src": "resources/css/app.css"
+  },
+  "resources/img/bg-neon.jpg": {
+    "file": "assets/bg-neon-60e27fad.jpg",
+    "src": "resources/img/bg-neon.jpg"
+  },
+  "resources/js/app.css": {
+    "file": "assets/app-44b6a305.css",
+    "src": "resources/js/app.css"
+  },
+  "resources/js/app.js": {
+    "assets": [
+      "assets/bg-neon-60e27fad.jpg"
+    ],
+    "css": [
+      "assets/app-44b6a305.css"
+    ],
+    "file": "assets/app-1cd2eb9f.js",
+    "isEntry": true,
+    "src": "resources/js/app.js"
+  }
+}
