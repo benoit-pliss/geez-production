@@ -49,10 +49,8 @@
         </aside>
         <nav class="md:place-self-center md:justify-self-end">
             <div class="grid grid-flow-col gap-4">
-                <a href="https://www.instagram.com/" target="_blank" class="text-xl"><i class="fa-brands fa-instagram"></i></a>
-                <a href="https://www.twitter.com/" target="_blank" class="text-xl"><i class="fa-brands fa-twitter"></i></a>
-                <a href="https://www.youtube.com/" target="_blank" class="text-xl"><i class="fa-brands fa-youtube"></i></a>
-                <a href="https://www.linkedin.com/" target="_blank" class="text-xl"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="https://instagram.com/gee.z_prod?igshid=OGQ5ZDc2ODk2ZA==" target="_blank" class="text-xl"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://www.tiktok.com/@gee.z_prod?_t=8fxkxEsPeC0&_r=1" target="_blank" class="text-xl"><i class="fa-brands fa-tiktok"></i></a>
             </div>
         </nav>
     </footer>
