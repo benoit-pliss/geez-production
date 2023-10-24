@@ -12,10 +12,8 @@
                 <p class="pt-6">En attendant, bonne nouvelle !</p>
                 <p class="pb-6">Vous pouvez nous suivre sur les réseaux sociaux !</p>
                 <div class="flex justify-center gap-10">
-                    <a href="https://www.instagram.com/" target="_blank" class="text-4xl"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="https://www.twitter.com/" target="_blank" class="text-4xl"><i class="fa-brands fa-twitter"></i></a>
-                    <a href="https://www.youtube.com/" target="_blank" class="text-4xl"><i class="fa-brands fa-youtube"></i></a>
-                    <a href="https://www.linkedin.com/" target="_blank" class="text-4xl"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="https://instagram.com/gee.z_prod?igshid=OGQ5ZDc2ODk2ZA==" target="_blank" class="text-4xl"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://www.tiktok.com/@gee.z_prod?_t=8fxkxEsPeC0&_r=1" target="_blank" class="text-4xl"><i class="fa-brands fa-tiktok"></i></a>
                 </div>
             </div>
         </div>
