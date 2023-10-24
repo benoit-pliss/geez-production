@@ -16,5 +16,6 @@
 
 
 
+        <script src="https://kit.fontawesome.com/895b664c37.js" crossorigin="anonymous"></script>
     </body>
 </html>

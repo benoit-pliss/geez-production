@@ -8,6 +8,11 @@ const routes = [
         name: 'home',
         component : Home,
     },
+    {
+        path: '/sandbox',
+        name: 'sandbox',
+        component: Home,
+    }
 ]
 
 
