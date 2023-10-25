@@ -9,7 +9,7 @@
     "src": "resources/img/bg-neon.jpg"
   },
   "resources/js/app.css": {
-    "file": "assets/app-44b6a305.css",
+    "file": "assets/app-f7b96b95.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
@@ -17,9 +17,9 @@
       "assets/bg-neon-60e27fad.jpg"
     ],
     "css": [
-      "assets/app-44b6a305.css"
+      "assets/app-f7b96b95.css"
     ],
-    "file": "assets/app-1cd2eb9f.js",
+    "file": "assets/app-c9583a74.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }
