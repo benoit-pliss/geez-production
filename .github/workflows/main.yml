@@ -9,28 +9,26 @@ on:
       - main
 
 jobs:
-    laravel-tests:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v2
+  laravel-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-        - name: Install dependencies
-          run: npm install
+      - name: Install dependencies and build
+        run: |
+          npm install
+          npm run build
 
-        - name: Build
-          run: npm run build
-
-        - name: Setup SSH
-          run:
-            ssh -p 65002 u882725468@62.72.37.27
-               && cd public_html
-                && rm -r ./*
-                && git clone git@github.com:benoit-pliss/geez-production.git .
-                && composer update --ignore-platform-reqs
-                && cp ../.env .env
-                && php artisan key:generate
-                && php artisan migrate --force
-                && php artisan DB:seed --force
-
-
+      - name: Deploy to Hostinger
+        env:
+          SSH_USER: ${{ secrets.REMOTE_USERNAME }}
+          SSH_PASSWORD: ${{ secrets.REMOTE_PASSWORD }}
+        run: |
+          sshpass -p "$SSH_PASSWORD" ssh -p 65002 $SSH_USER@62.72.37.27 'cd public_html && rm -r ./*'
+          sshpass -p "$SSH_PASSWORD" ssh -p 65002 $SSH_USER@62.72.37.27 'cd public_html && git clone git@github.com:benoit-pliss/geez-production.git .'
+          sshpass -p "$SSH_PASSWORD" ssh -p 65002 $SSH_USER@62.72.37.27 'cd public_html && composer update --ignore-platform-reqs'
+          sshpass -p "$SSH_PASSWORD" ssh -p 65002 $SSH_USER@62.72.37.27 'cd public_html && cp ../.env .env'
+          sshpass -p "$SSH_PASSWORD" ssh -p 65002 $SSH_USER@62.72.37.27 'cd public_html && php artisan key:generate'
+          sshpass -p "$SSH_PASSWORD" ssh -p 65002 $SSH_USER@62.72.37.27 'cd public_html && php artisan migrate --force'
+          sshpass -p "$SSH_PASSWORD" ssh -p 65002 $SSH_USER@62.72.37.27 'cd public_html && php artisan db:seed --force'
