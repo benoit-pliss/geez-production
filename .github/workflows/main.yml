@@ -23,7 +23,7 @@ jobs:
 
         - name: Setup SSH
           run:
-            ssh -p {{secret.TARGET}} {{secret.REMOTE_USERNAME}}@{{secret.REMOTE_HOST}} "cd {{secret.REMOTE_PATH}}
+            ssh -p 65002 u882725468@62.72.37.27
                && cd public_html
                 && rm -r ./*
                 && git clone git@github.com:benoit-pliss/geez-production.git .
