@@ -22,20 +22,15 @@ jobs:
           run: npm run build
 
         - name: Setup SSH
-          uses: appleboy/ssh-action@v1.0.0
-          with:
-            host: ${{ secrets.REMOTE_HOST }}
-            username: ${{ secrets.REMOTE_USERNAME }}
-            password: ${{ secrets.REMOTE_PASSWORD }}
-            key: ${{ secrets.SSH_KEY }}
-            port: ${{ secrets.TARGET }}
-            script: |
-              cd public_html
-              git clone git@github.com:benoit-pliss/geez-production.git .
-              composer update --ignore-platform-reqs
-              cp ../.env .env
-              php artisan generate:key
-              php artisan migrate
-              php artisan DB:seed
+          run:
+            ssh -p {{secret.TARGET}} {{secret.REMOTE_USERNAME}}@{{secret.REMOTE_HOST}} "cd {{secret.REMOTE_PATH}}
+               && cd public_html
+                && rm -r ./*
+                && git clone git@github.com:benoit-pliss/geez-production.git .
+                && composer update --ignore-platform-reqs
+                && cp ../.env .env
+                && php artisan key:generate
+                && php artisan migrate --force
+                && php artisan DB:seed --force
 
 
