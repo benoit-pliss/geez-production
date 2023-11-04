@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <div class="navbar bg-base-100 px-1 py-1 fixed top-0 bg-base-100/25 text-base-content z-[1]">
+    <div class="navbar bg-base-100 px-1 py-1 fixed top-0 bg-base-100/25 text-base-content z-[2]">
         <div class="navbar-start lg:hidden">
             <div class="dropdown">
                 <label tabindex="0" class="btn btn-ghost">
@@ -12,9 +12,9 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
                     </svg>
                 </label>
-                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                    <li><a>Photographie</a></li>
-                    <li><a>Audiovisuel</a></li>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[2] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="photography">Photographie</a></li>
+                    <li><a href="audiovisual">Audiovisuel</a></li>
                     <li>
                         <a>En savoir plus</a>
                         <ul class="p-2">
@@ -26,12 +26,12 @@
             </div>
         </div>
         <div class="flex-1 justify-end lg:justify-start">
-            <h1 class="btn btn-ghost normal-case text-xl">GEEZ PRODUCTION</h1>
+            <a class="btn btn-ghost normal-case text-xl" href="home">GEEZ PRODUCTION</a>
         </div>
         <div class="hidden lg:flex">
             <ul class="menu menu-horizontal px-1">
-                <li><a>Photographie</a></li>
-                <li><a>Audiovisuel</a></li>
+                <li><a href="photography">Photographie</a></li>
+                <li><a href="audiovisual">Audiovisuel</a></li>
                 <li>
                     <details>
                         <summary>
@@ -47,32 +47,27 @@
         </div>
     </div>
 
-    <video ref="videoPlayer" src="../../img/production_id_4440816.mp4" type="video/mp4" class="hero min-h-screen">
-        <div class="hero-overlay bg-opacity-60 z-[2]"></div>
-        <div class="hero-content text-center text-neutral-content z-[2]">
-            <div class="max-w-xl">
+    <div  class="hero min-h-screen place-items-end">
+        <video src="../../img/production_id_4440816.mp4" type="video/mp4" class="object-cover w-full h-full max-h-screen" loop autoplay muted></video>
+        <div class="hero-overlay bg-opacity-40 z-[1]"></div>
+        <div class="hero-content text-neutral-content z-[1] min-w-full text-center py-20 lg:text-start lg:justify-start lg:p-20">
+            <div class="max-w-2xl">
                 <h1 class="text-5xl font-bold">Audiovisuel</h1>
                 <p class="py-6">Nous vous souhaitons la bienvenue sur notre site web, nous espèrons que vous vous y touverez toutes les informations dont vous avez besoin. Toutefois, si vous avez des questions, n'hésitez pas à nous contacter ! C'est avec plaisir que nous vous répondrons.</p>
-            
-                <p class="pb-6">Retrouvez-nous également sur les réseaux sociaux !</p>
-                <div class="flex justify-center gap-10">
-                    <a href="https://instagram.com/gee.z_prod?igshid=OGQ5ZDc2ODk2ZA==" target="_blank" class="text-4xl"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="https://www.tiktok.com/@gee.z_prod?_t=8fxkxEsPeC0&_r=1" target="_blank" class="text-4xl"><i class="fa-brands fa-tiktok"></i></a>
-                </div>
             </div>
         </div>
-    </video>
+    </div>
 
     <div class="hero min-h-screen bg-base-200">
         <div class="hero-content flex-col md:flex-row justify-between max-w-7xl gap-10">
             <div class="text-center md:text-start">
-                <h1 class="text-4xl font-bold">Séances photos</h1>
+                <h1 class="text-4xl font-bold">Production audiovisuelle</h1>
                 <p class="py-6 text-sm">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi
                     exercitationem
                     quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
                 <button class="btn btn-neutral">S'informer</button>
             </div>
-            <img src="../../img/pexels-josh-hild-4424567.jpg" class="max-w-sm rounded-xl shadow-2xl" />
+            <video src="../../img/pexels_videos_1534965.mp4" type="video/mp4" class="max-w-sm rounded-xl shadow-2xl" loop autoplay muted></video>
         </div>
     </div>
 
@@ -147,15 +142,6 @@
   
 <script>
 
-export default {
-  mounted() {
-    // Cacher les de lecure
-    this.$refs.videoPlayer.play()
-    this.$refs.videoPlayer.addEventListener('ended', () => {
-      this.$refs.videoPlayer.play()
-    })
-  }
-}
 </script>
 
 <style scoped>
