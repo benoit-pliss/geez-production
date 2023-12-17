@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-a95fb06f.css",
+    "file": "assets/app-8e9a9492.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
@@ -8,18 +8,53 @@
     "file": "assets/bg-neon-60e27fad.jpg",
     "src": "resources/img/bg-neon.jpg"
   },
+  "resources/img/pexels-aleksandar-pasaric-1820770.jpg": {
+    "file": "assets/pexels-aleksandar-pasaric-1820770-3727c93a.jpg",
+    "src": "resources/img/pexels-aleksandar-pasaric-1820770.jpg"
+  },
+  "resources/img/pexels-josh-hild-4424567.jpg": {
+    "file": "assets/pexels-josh-hild-4424567-f0aa8c78.jpg",
+    "src": "resources/img/pexels-josh-hild-4424567.jpg"
+  },
+  "resources/img/pexels-redrec-2743739.jpg": {
+    "file": "assets/pexels-redrec-2743739-fe75947e.jpg",
+    "src": "resources/img/pexels-redrec-2743739.jpg"
+  },
+  "resources/img/pexels-ricky-esquivel-1964474.jpg": {
+    "file": "assets/pexels-ricky-esquivel-1964474-5106400c.jpg",
+    "src": "resources/img/pexels-ricky-esquivel-1964474.jpg"
+  },
+  "resources/img/pexels-timea-kadar-2215609.jpg": {
+    "file": "assets/pexels-timea-kadar-2215609-c4d4064b.jpg",
+    "src": "resources/img/pexels-timea-kadar-2215609.jpg"
+  },
+  "resources/img/pexels_videos_1534965.mp4": {
+    "file": "assets/pexels_videos_1534965-62d6bd5e.mp4",
+    "src": "resources/img/pexels_videos_1534965.mp4"
+  },
+  "resources/img/production_id_4440816.mp4": {
+    "file": "assets/production_id_4440816-5331649a.mp4",
+    "src": "resources/img/production_id_4440816.mp4"
+  },
   "resources/js/app.css": {
-    "file": "assets/app-f7b96b95.css",
+    "file": "assets/app-9d70d72b.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
     "assets": [
-      "assets/bg-neon-60e27fad.jpg"
+      "assets/pexels-redrec-2743739-fe75947e.jpg",
+      "assets/pexels-josh-hild-4424567-f0aa8c78.jpg",
+      "assets/pexels-ricky-esquivel-1964474-5106400c.jpg",
+      "assets/pexels-timea-kadar-2215609-c4d4064b.jpg",
+      "assets/production_id_4440816-5331649a.mp4",
+      "assets/pexels_videos_1534965-62d6bd5e.mp4",
+      "assets/bg-neon-60e27fad.jpg",
+      "assets/pexels-aleksandar-pasaric-1820770-3727c93a.jpg"
     ],
     "css": [
-      "assets/app-f7b96b95.css"
+      "assets/app-9d70d72b.css"
     ],
-    "file": "assets/app-c9583a74.js",
+    "file": "assets/app-0d9ac170.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }
