@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 import App from "../components/app.vue";
-import Home from "../components/home.vue";
-import Footer from "../components/footer.vue";
-import Photography from "../components/photography.vue";
-import Audiovisual from "../components/audiovisual.vue";
+import Home from "../pages/home.vue";
+import Footer from "../components/footer-page.vue";
+import Photography from "../pages/photography.vue";
+import Audiovisual from "../pages/audiovisual.vue";
 
 const routes = [
     {
@@ -20,17 +20,26 @@ const routes = [
     {
         path: '/home',
         name: 'home',
-        component: Home
+        component: Home,
+        data: {
+            theme: 'dark'
+        }
     },
     {
         path: '/photography',
         name: 'photography',
-        component: Photography
+        component: Photography,
+        data: {
+            theme: 'light'
+        }
     },
     {
         path: '/audiovisual',
         name: 'audiovisual',
-        component: Audiovisual
+        component: Audiovisual,
+        data: {
+            theme: 'dark'
+        }
     }
 
 ]

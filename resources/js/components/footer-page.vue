@@ -26,14 +26,16 @@
         </nav>
     </footer>
     <footer class="footer px-10 py-4 bg-base-100 text-base-content">
-        <aside class="items-center grid-flow-col gap-4">
+        <aside class="items-center grid-flow-col gap-4 order-last md:order-first">
             <i class="fa-solid fa-clapperboard text-2xl"></i>
             <p>© 2023 Geez Production - Tous droits réservés</p>
         </aside>
         <nav class="md:place-self-center md:justify-self-end">
             <div class="grid grid-flow-col gap-4">
-                <a href="https://instagram.com/gee.z_prod?igshid=OGQ5ZDc2ODk2ZA==" target="_blank" class="text-xl"><i class="fa-brands fa-instagram"></i></a>
-                <a href="https://www.tiktok.com/@gee.z_prod?_t=8fxkxEsPeC0&_r=1" target="_blank" class="text-xl"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="https://instagram.com/gee.z_prod?igshid=OGQ5ZDc2ODk2ZA==" target="_blank" class="text-xl"><i
+                    class="fa-brands fa-instagram"></i></a>
+                <a href="https://www.tiktok.com/@gee.z_prod?_t=8fxkxEsPeC0&_r=1" target="_blank" class="text-xl"><i
+                    class="fa-brands fa-tiktok"></i></a>
             </div>
         </nav>
     </footer>
