@@ -18,6 +18,7 @@
         "@vitejs/plugin-vue": "^4.3.4",
         "locomotive-scroll": "^4.1.4",
         "vue": "^3.2.36",
+        "vue-masonry-css": "^1.0.3",
         "vue-router": "^4.2.5",
         "vuex": "^4.1.0"
     }
