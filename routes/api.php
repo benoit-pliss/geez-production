@@ -58,3 +58,28 @@ Route::get('/images', function () {
         'images' => $images,
     ]);
 });
+
+
+Route::post('/login', function (Request $request) {
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    $user = DB::table('users')
+        ->where('email', '=', $request->email)
+        ->where('password', '=', $request->password)
+        ->first();
+
+    if (!$user) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Email ou mot de passe incorrect',
+        ]);
+    }
+
+    return response()->json([
+        'success' => true,
+        'user' => $user,
+    ]);
+});

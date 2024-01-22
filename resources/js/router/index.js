@@ -7,7 +7,7 @@ import Photography from "../pages/photography.vue";
 import Audiovisual from "../pages/audiovisual.vue";
 
 // partie sandbox
-import Galerie from "../pages/galerie.vue";
+import Login from "../pages/login.vue";
 
 const routes = [
     {
@@ -18,7 +18,7 @@ const routes = [
     {
         path: '/sandbox',
         name: 'sandbox',
-        component: Galerie,
+        component: Login,
     },
     {
         path: '/home',
