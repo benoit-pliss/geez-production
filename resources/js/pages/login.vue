@@ -19,11 +19,12 @@ const login = () => {
             if (res.data.success) {
                 localStorage.setItem('token', res.data.token)
                 store.state.user.token = res.data.token
+                router.push({name: 'dashboard'})
+            } else {
+                errors.value = res.data.errors
             }
-            router.push({path: '/dashboard'})
         })
         .catch((err) => {
-            console.log(err)
             if (err) {
                 errors.value = err.response.data.errors
             }
@@ -40,7 +41,7 @@ const login = () => {
         </div>
 
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <form class="space-y-6">
+            <div class="space-y-6">
                 <div>
                     <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
                     <div class="mt-2">
@@ -60,7 +61,7 @@ const login = () => {
                 <div>
                     <button v-on:click="login" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Se Connecter</button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </template>

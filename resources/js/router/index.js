@@ -8,6 +8,7 @@ import Audiovisual from "../pages/audiovisual.vue";
 
 // partie sandbox
 import Login from "../pages/login.vue";
+import Galerie from "../pages/galerie.vue";
 
 const routes = [
     {
@@ -43,6 +44,25 @@ const routes = [
         data: {
             theme: 'dark'
         }
+    },
+    {
+        path: '/admin/dashboard',
+        name: 'dashboard',
+        component: Galerie,
+        data: {
+            theme: 'light'
+        },
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/admin/login',
+        name: 'login',
+        component: Login,
+        data: {
+            theme: 'light'
+        }
     }
 
 ]
@@ -51,6 +71,19 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes
+});
+
+router.beforeEach((to, from, next) => {
+    if (to.meta.requiresAuth && !localStorage.getItem('token')) {
+        next({ name: 'login' });
+    } else if (to.name === 'login' && localStorage.getItem('token')) {
+        next({ name: 'dashboard' });
+    } else if (to.name === 'register' && localStorage.getItem('token')) {
+        next({ name: 'dashboard' });
+    }
+    else {
+        next();
+    }
 });
 
 export default router;
