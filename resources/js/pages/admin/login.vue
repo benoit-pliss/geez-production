@@ -1,7 +1,7 @@
 <script setup>
 
-import router from "../router/index.js";
-import store from "../store/index.js";
+import router from "../../router/index.js";
+import store from "../../store/index.js";
 import {ref} from "vue";
 
 const formData = ref({
@@ -36,7 +36,7 @@ const login = () => {
 <template>
     <div class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8" data-theme="light">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-            <img class="mx-auto h-10 w-auto" src="../../img/logo/logogeez.png" alt="Geez Production" />
+            <img class="mx-auto h-10 w-auto" src="../../../img/logo/logogeez.png" alt="Geez Production" />
             <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Se connecter en tant qu'administrateur</h2>
         </div>
 

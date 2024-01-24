@@ -10,6 +10,9 @@ export default {
   ],
   theme: {
     extend: {},
+      color: {
+        bgwhite : "#F9F9F9",
+      }
   },
   plugins: [
         require("daisyui"),

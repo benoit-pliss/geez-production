@@ -7,8 +7,10 @@ import Photography from "../pages/photography.vue";
 import Audiovisual from "../pages/audiovisual.vue";
 
 // partie sandbox
-import Login from "../pages/login.vue";
+import Login from "../pages/admin/login.vue";
 import Galerie from "../pages/galerie.vue";
+import Dashboard from "../pages/admin/dashboard.vue";
+import StoreImage from "../components/adminComponents/store-image.vue";
 
 const routes = [
     {
@@ -19,7 +21,7 @@ const routes = [
     {
         path: '/sandbox',
         name: 'sandbox',
-        component: Login,
+        component: StoreImage,
     },
     {
         path: '/home',
@@ -48,7 +50,7 @@ const routes = [
     {
         path: '/admin/dashboard',
         name: 'dashboard',
-        component: Galerie,
+        component: Dashboard,
         data: {
             theme: 'light'
         },
