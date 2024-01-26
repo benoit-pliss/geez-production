@@ -1,5 +1,7 @@
 <script setup>
 import {ref} from "vue";
+import {uploadPhoto} from "../../services/Photo-service.js";
+import { PhotoIcon, UserCircleIcon } from '@heroicons/vue/24/solid'
 import axiosClient from "../../axios/index.js";
 
 const file = ref(null);
@@ -18,13 +20,15 @@ async function upload() {
     formData.append('image', file.value);
 
     try {
-        await axiosClient.post('/upload/photos', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
+        await uploadPhoto(formData)
+            .then((res) => {
+            images.value.push(res.data);
+            file.value = null;
+        })
+            .catch((err) => {
+                console.log(err);
+            })
 
-        console.log(response.data);
     } catch (error) {
         console.log(error.response);
     }
@@ -35,17 +39,25 @@ async function upload() {
 
 <!--    file input-->
 
-    <div class="max-w-2xl mx-auto" data-theme="light">
 
-        <div class="flex items-center justify-center w-full" data-theme="light">
-            <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer  dark:hover:bg-bray-800  hover:bg-gray-100 ">
-                <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                    <svg class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-
+    <div class="col-span-full">
+        <label for="cover-photo" class="block text-sm font-medium leading-6 text-gray-900">Ajouter des photos</label>
+        <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+            <div class="text-center">
+                <PhotoIcon class="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
+                <div class="mt-4 flex text-sm leading-6 text-gray-600">
+                    <label for="file-upload" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                        <span>Upload a file</span>
+                        <input id="file-upload" name="file-upload" type="file" class="hidden" @change="onFileChange" />
+                    </label>
+                    <p class="pl-1">or drag and drop</p>
                 </div>
-                <input id="dropzone-file" type="file" class="hidden" @change="onFileChange"/>
-            </label>
+                <p v-if="file"
+                     class="mt-2 text-sm text-gray-500"
+                >
+                    {{ file.name }}
+                </p>
+            </div>
         </div>
         <button class="mt-4 px-4 py-2 bg-blue-500 text-white rounded" @click="upload">Valider</button>
     </div>

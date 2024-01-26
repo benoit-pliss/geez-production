@@ -34,7 +34,7 @@ const routes = [
     {
         path: '/photography',
         name: 'photography',
-        component: Photography,
+        component: Galerie,
         data: {
             theme: 'light'
         }

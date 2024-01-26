@@ -2,6 +2,7 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import StoreImage from "../../components/adminComponents/store-image.vue";
+import DashboardContent from "../../components/adminComponents/dashboard-content.vue";
 
 const user = {
     name: 'Tom Cook',
@@ -126,8 +127,7 @@ const userNavigation = [
             <div class="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
                 <div class="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
 
-                    <StoreImage>
-                    </StoreImage>
+                    <DashboardContent />
 
                 </div>
             </div>
