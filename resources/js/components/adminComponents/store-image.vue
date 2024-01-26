@@ -1,11 +1,16 @@
 <script setup>
 import {ref} from "vue";
 import {uploadPhoto} from "../../services/Photo-service.js";
-import { PhotoIcon, UserCircleIcon } from '@heroicons/vue/24/solid'
-import axiosClient from "../../axios/index.js";
+import { PhotoIcon } from '@heroicons/vue/24/solid'
+import Notifications from "./notifications.vue";
 
 const file = ref(null);
 const images = ref([]);
+const notifications = ref({
+    show: false,
+    message: '',
+    type: ''
+});
 
 const onFileChange = (e) => {
     file.value = e.target.files[0];
@@ -22,8 +27,23 @@ async function upload() {
     try {
         await uploadPhoto(formData)
             .then((res) => {
-            images.value.push(res.data);
-            file.value = null;
+                console.log(res);
+                if (res.data.success === false) {
+                    notifications.value = {
+                        show: true,
+                        message: res.data.message,
+                        type: 'error'
+                    }
+                } else {
+                    images.value.push(res.data);
+                    file.value = null;
+                    notifications.value = {
+                        show: true,
+                        message: 'Photo bien enregistrée',
+                        type: 'success'
+                    }
+                }
+
         })
             .catch((err) => {
                 console.log(err);
@@ -38,6 +58,7 @@ async function upload() {
 <template>
 
 <!--    file input-->
+    <Notifications v-if="notifications.show" :message="notifications.message" :type="notifications.type" :duration="2000" @close="notifications.show = false" />
 
 
     <div class="col-span-full">

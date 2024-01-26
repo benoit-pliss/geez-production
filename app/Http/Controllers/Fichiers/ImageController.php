@@ -36,6 +36,7 @@ class ImageController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'Image uploaded',
             'entity' => $image,
         ]);
     }
