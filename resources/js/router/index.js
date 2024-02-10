@@ -11,7 +11,7 @@ import Login from "../pages/admin/login.vue";
 import Galerie from "../pages/galerie.vue";
 import Dashboard from "../pages/admin/dashboard.vue";
 import StoreImage from "../components/adminComponents/store-image.vue";
-import Notifications from "../components/adminComponents/notifications.vue";
+import Toast from "../components/adminComponents/Toast.vue";
 
 const routes = [
     {
@@ -22,7 +22,7 @@ const routes = [
     {
         path: '/sandbox',
         name: 'sandbox',
-        component: Notifications,
+        component: Toast,
     },
     {
         path: '/home',

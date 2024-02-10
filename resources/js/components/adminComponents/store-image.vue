@@ -1,21 +1,22 @@
 <script setup>
 import {ref} from "vue";
 import {uploadPhoto} from "../../services/Photo-service.js";
+import {Photos} from "../../Models/Photos.js";
 import { PhotoIcon } from '@heroicons/vue/24/solid'
-import Notifications from "./notifications.vue";
+import notificationService from "../../services/notificationService.js";
+
 
 const files = ref([]);
-
-
 const images = ref([]);
-const notifications = ref({
-    show: false,
-    message: '',
-    type: ''
-});
 
 const onFileChange = (e) => {
-    files.value = Array.from(e.target.files || e.dataTransfer.files);
+    const newFiles = Array.from(e.target.files || e.dataTransfer.files);
+    newFiles.forEach((file) => {
+        const photo = new Photos(file.name, '', file);
+        files.value.push(photo);
+    });
+
+    console.log(files.value);
 };
 
 async function upload() {
@@ -28,27 +29,29 @@ async function upload() {
         formData.append('image', file);
 
         try {
+            console.log(formData);
             await uploadPhoto(formData)
                 .then((res) => {
                     console.log(res);
                     if (res.data.success === false) {
-                        notifications.value = {
-                            show: true,
-                            message: res.data.message,
-                            type: 'error'
-                        }
+                        notificationService.addToast(
+                            res.data.message,
+                            'error'
+                        )
                     } else {
-                        images.value.push(res.data);
-                        notifications.value = {
-                            show: true,
-                            message: 'Photo bien enregistrée',
-                            type: 'success'
-                        }
+                        notificationService.addToast(
+                            res.data.message,
+                            'success'
+                        )
                     }
 
                 })
                 .catch((err) => {
                     console.log(err);
+                    notificationService.addToast(
+                        err.response.data.message,
+                        'error'
+                    )
                 })
 
         } catch (error) {
@@ -59,13 +62,31 @@ async function upload() {
     // Reset files after upload
     files.value = [];
 }
+
+
 </script>
 
 <template>
 
-<!--    file input-->
-    <Notifications v-if="notifications.show" :message="notifications.message" :type="notifications.type" :duration="2000" @close="notifications.show = false" />
+    <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6" data-theme="light" v-if="files.length === 1" >
+        <div class="sm:col-span-4">
+            <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Nom du Fichier</label>
+            <div class="mt-2">
+                <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                    <input v-model="files[0].name" type="text" name="name" id="name" class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" placeholder="name" />
+                </div>
+            </div>
+        </div>
 
+        <div class="col-span-full">
+            <label for="desc" class="block text-sm font-medium leading-6 text-gray-900">Desciption</label>
+            <div class="mt-2">
+                <textarea id="desc" name="desc" rows="3" v-model="files[0].description" placeholder="Description du Fichier" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+            </div>
+        </div>
+    </div>
+
+<!--    file input-->
 
     <div class="col-span-full">
         <label for="cover-photo" class="block text-sm font-medium leading-6 text-gray-900">Ajouter des photos</label>

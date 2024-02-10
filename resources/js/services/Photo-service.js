@@ -1,6 +1,6 @@
 import axiosClient from "../axios/index.js";
 
-export function uploadPhoto(photo) {
+export function uploadPhoto(photo)  {
     return axiosClient.post("/upload/photos", photo);
 }
 
