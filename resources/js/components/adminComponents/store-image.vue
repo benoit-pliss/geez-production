@@ -7,7 +7,6 @@ import notificationService from "../../services/notificationService.js";
 
 
 const files = ref([]);
-const images = ref([]);
 
 const onFileChange = (e) => {
     const newFiles = Array.from(e.target.files || e.dataTransfer.files);
@@ -24,39 +23,13 @@ async function upload() {
         return;
     }
 
-    for (const file of files.value) {
-        const formData = new FormData();
-        formData.append('image', file);
+    console.log(files.value);
 
-        try {
-            console.log(formData);
-            await uploadPhoto(formData)
-                .then((res) => {
-                    console.log(res);
-                    if (res.data.success === false) {
-                        notificationService.addToast(
-                            res.data.message,
-                            'error'
-                        )
-                    } else {
-                        notificationService.addToast(
-                            res.data.message,
-                            'success'
-                        )
-                    }
+    try {
+        const response = await uploadPhoto(files.value);
 
-                })
-                .catch((err) => {
-                    console.log(err);
-                    notificationService.addToast(
-                        err.response.data.message,
-                        'error'
-                    )
-                })
-
-        } catch (error) {
-            console.log(error.response);
-        }
+    } catch (error) {
+        notificationService.error('An error occurred while uploading the photos');
     }
 
     // Reset files after upload

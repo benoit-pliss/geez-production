@@ -1,7 +1,9 @@
 import axiosClient from "../axios/index.js";
 
-export function uploadPhoto(photo)  {
-    return axiosClient.post("/upload/photos", photo);
+export function uploadPhoto(photos = [])  {
+    return axiosClient.post("/upload/photos", {
+        photos : photos
+    });
 }
 
 export function getListedPhotos() {

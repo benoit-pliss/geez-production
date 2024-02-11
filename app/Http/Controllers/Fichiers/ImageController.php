@@ -4,50 +4,64 @@ namespace App\Http\Controllers\Fichiers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Images;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Models\Images as ModelsImages;
 use Illuminate\Support\Facades\Log;
 
 class ImageController extends Controller
 {
-    public function upload(Request $request) {
+    public function upload(Request $request)
+    {
+
         $request->validate([
-            'image' => 'required',
+            'photos' => 'required',
         ]);
 
-        Log::debug(
-            $request->get('image')['file']
-        );
+
+        $images = $request->get('photos');
 
 
+        Log::info($images);
+        foreach ($images as $image) {
+            Log::info($image);
+            self::storeImage($image);
 
-//        $file = $request->file('image.file');
-//        $originalName = $file->getClientOriginalName();
-//        $path = $file->storeAs('public/images', $originalName);
-//
-//
-//        if (!(Images::class::where('name', $originalName)->exists())) {
-//            $image = Images::class::create([
-//                'name' => $originalName,
-//                'description' => null,
-//                'type' => $file->getMimeType(),
-//                'url' => env('APP_URL') . '/storage/images/' . $originalName,
-//            ]);
-//        } else {
-//            $image = Images::class::where('name', $originalName)->first();
-//            return response()->json([
-//                'success' => false,
-//                'message' => 'Image already exists',
-//                'entity' => $image,
-//            ]);
-//        }
-//
-//        return response()->json([
-//            'success' => true,
-//            'message' => 'Image uploaded',
-//            'entity' => $image,
-//        ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Images uploaded',
+        ]);
+
     }
+
+    public function storeImage($image): JsonResponse
+    {
+        try {
+            $entity = Images::class::create([
+                'name' => $image['name'],
+                'description' => $image['description'],
+                'url' => env('APP_URL') . '/storage/images/' . $image['name'],
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Image uploaded',
+                'entity' => $entity,
+            ]);
+        } catch (QueryException $e) {
+            if ($e->getCode() == 23000) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An error occurred while uploading the image. Please make sure the image name is unique.',
+                ], 400);
+            }
+
+            throw $e;
+        }
+    }
+
 
     public function getListe() {
         $path = storage_path('app/public/images');
