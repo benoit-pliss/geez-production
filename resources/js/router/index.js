@@ -5,9 +5,8 @@ import Home from "../pages/home.vue";
 import Footer from "../components/footer-page.vue";
 import Photography from "../pages/photography.vue";
 import Audiovisual from "../pages/audiovisual.vue";
-
-// partie sandbox
-import Galerie from "../pages/galerie.vue";
+import Contact from "../pages/contact.vue";
+import Galerie from "../components/galerie.vue";
 
 const routes = [
     {
@@ -18,7 +17,7 @@ const routes = [
     {
         path: '/sandbox',
         name: 'sandbox',
-        component: Galerie,
+        component: App,
     },
     {
         path: '/home',
@@ -41,7 +40,15 @@ const routes = [
         name: 'audiovisual',
         component: Audiovisual,
         data: {
-            theme: 'dark'
+            theme: 'light'
+        }
+    },
+    {
+        path: '/contact',
+        name: 'contact',
+        component: Contact,
+        data: {
+            theme: 'light'
         }
     }
 

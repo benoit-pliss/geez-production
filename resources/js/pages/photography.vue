@@ -1,88 +1,45 @@
 <script setup>
 import Navbar from "../components/navbar.vue";
 import FooterPage from "../components/footer-page.vue";
+import Galerie from "../components/galerie.vue";
 
 </script>
 
 <template>
     <div data-theme="light">
         <navbar></navbar>
-
-        <div class="hero min-h-screen place-items-end">
-            <img src="../../img/pexels-redrec-2743739.jpg" class="object-cover w-full h-full max-h-screen" />
-            <div class="hero-overlay bg-opacity-60 z-[1]"></div>
-            <div class="hero-content text-neutral-content z-[1] min-w-full text-center py-20 lg:text-start lg:justify-start lg:p-20">
-                <div class="max-w-2xl">
-                    <h1 class="text-5xl font-bold">Photographie</h1>
-                    <p class="py-6">Nous vous souhaitons la bienvenue sur notre site web, nous espèrons que vous vous y touverez toutes les informations dont vous avez besoin. Toutefois, si vous avez des questions, n'hésitez pas à nous contacter ! C'est avec plaisir que nous vous répondrons.</p>
-                </div>
-            </div>
+        <div class="overflow-hidden bg-white py-32">
+    <div class="mx-auto max-w-7xl px-6 lg:flex lg:px-8">
+      <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-12 gap-y-16 lg:mx-0 lg:min-w-full lg:max-w-none lg:flex-none lg:gap-y-8">
+        <div class="lg:col-end-1 lg:w-full lg:max-w-lg lg:pb-8">
+          <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Photographie</h2>
+          <p class="mt-6 text-xl leading-8 text-gray-600">Quasi est quaerat. Sit molestiae et. Provident ad dolorem occaecati eos iste. Soluta rerum quidem minus ut molestiae velit error quod. Excepturi quidem expedita molestias quas.</p>
+          <p class="mt-6 text-base leading-7 text-gray-600">Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat. Quasi aperiam sit non sit neque reprehenderit.</p>
+          <div class="mt-10 flex">
+            <a href="#" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Découvrir la galerie <span aria-hidden="true">&rarr;</span></a>
+          </div>
         </div>
-
-
-
-        <div class="hero bg-base-200 py-10">
-            <div class="hero-content flex-col md:flex-row justify-between max-w-7xl gap-10">
-                <div class="text-center md:text-start">
-                    <h1 class="text-4xl font-bold">Séances photos</h1>
-                    <p class="py-6 text-sm">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi
-                        exercitationem
-                        quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
-                    <button class="btn btn-neutral">S'informer</button>
-                </div>
-                <img src="../../img/pexels-josh-hild-4424567.jpg" class="max-w-sm rounded-xl shadow-2xl" />
+        <div class="flex flex-wrap items-start justify-end gap-6 sm:gap-8 lg:contents">
+          <div class="w-0 flex-auto lg:ml-auto lg:w-auto lg:flex-none lg:self-end">
+            <img src="https://images.unsplash.com/photo-1670272502246-768d249768ca?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1152&q=80" alt="" class="aspect-[7/5] w-[37rem] max-w-none rounded-2xl bg-gray-50 object-cover" />
+          </div>
+          <div class="contents lg:col-span-2 lg:col-end-2 lg:ml-auto lg:flex lg:w-[37rem] lg:items-start lg:justify-end lg:gap-x-8">
+            <div class="order-first flex w-64 flex-none justify-end self-end lg:w-auto">
+              <img src="https://images.unsplash.com/photo-1605656816944-971cd5c1407f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=768&h=604&q=80" alt="" class="aspect-[4/3] w-[24rem] max-w-none flex-none rounded-2xl bg-gray-50 object-cover" />
             </div>
+            <div class="flex w-96 flex-auto justify-end lg:w-auto lg:flex-none">
+              <img src="https://images.unsplash.com/photo-1568992687947-868a62a9f521?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1152&h=842&q=80" alt="" class="aspect-[7/5] w-[37rem] max-w-none flex-none rounded-2xl bg-gray-50 object-cover" />
+            </div>
+            <div class="hidden sm:block sm:w-0 sm:flex-auto lg:w-auto lg:flex-none">
+              <img src="https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=768&h=604&q=80" alt="" class="aspect-[4/3] w-[24rem] max-w-none rounded-2xl bg-gray-50 object-cover" />
+            </div>
+          </div>
         </div>
-
-        <div class="hero bg-base-200 py-10">
-            <div class="hero-content flex-col md:flex-row-reverse justify-between max-w-7xl gap-10">
-                <div class="text-center md:text-start">
-                    <h1 class="text-4xl font-bold">Événements</h1>
-                    <p class="py-6 text-sm">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi
-                        exercitationem
-                        quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
-                    <button class="btn btn-neutral">En savoir plus</button>
-                </div>
-                <img src="../../img/pexels-ricky-esquivel-1964474.jpg" class="max-w-sm rounded-xl shadow-2xl" />
-            </div>
-        </div>
-
-        <!--<div class="carousel carousel-center max-w-md p-4 space-x-4 bg-neutral rounded-box">
-            <div class="carousel-item">
-                <img src="../../img/carousel/pexels-alice-marie-18886987.jpg" class="rounded-box object-cover" />
-            </div>
-            <div class="carousel-item">
-                <img src="../../img/carousel/pexels-beladiya-nikunj-18862463.jpg" class="rounded-box object-cover" />
-            </div>
-            <div class="carousel-item">
-                <img src="../../img/carousel/pexels-kelcey-shotit-18766323.jpg" class="rounded-box object-cover" />
-            </div>
-            <div class="carousel-item">
-                <video src="../../img/carousel/pexels-audio-borough-18681432.mp4" type="video/mp4" class="rounded-box object-cover" loop autoplay muted></video>
-            </div>
-            <div class="carousel-item">
-                <img src="../../img/carousel/pexels-kyle-miller-13909946.jpg" class="rounded-box object-cover" />
-            </div>
-            <div class="carousel-item">
-                <img src="../../img/carousel/pexels-maheshwaran-shanmugam-18929375.jpg" class="rounded-box object-cover" />
-            </div>
-            <div class="carousel-item">
-                <img src="../../img/carousel/pexels-nati-16776919.jpg" class="rounded-box object-cover" />
-            </div>
-        </div>-->
-
-        <div class="hero bg-base-200 py-10">
-            <div class="hero-content flex-col md:flex-row justify-between max-w-7xl gap-10">
-                <div class="text-center md:text-start">
-                    <h1 class="text-4xl font-bold">Galerie photos</h1>
-                    <p class="py-6 text-sm">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi
-                        exercitationem
-                        quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
-                    <button class="btn btn-neutral">Découvrir</button>
-                </div>
-                <img src="../../img/pexels-timea-kadar-2215609.jpg" class="max-w-sm rounded-xl shadow-2xl" />
-            </div>
-        </div>
+      </div>
+    </div>
+  </div>
+  <galerie></galerie>
+        
 
 
         <footer-page></footer-page>

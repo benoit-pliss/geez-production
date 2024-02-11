@@ -1,172 +1,52 @@
 <script setup>
+import Navbar from "../components/navbar.vue";
+import FooterPage from "../components/footer-page.vue";
 
 </script>
 
 <template>
-    <div class="navbar bg-base-100 px-1 py-1 fixed top-0 bg-base-100/25 text-base-content z-[2]">
-        <div class="navbar-start lg:hidden">
-            <div class="dropdown">
-                <label tabindex="0" class="btn btn-ghost">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
-                    </svg>
-                </label>
-                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[2] p-2 shadow bg-base-100 rounded-box w-52">
-                    <li><a href="photography">Photographie</a></li>
-                    <li><a href="audiovisual">Audiovisuel</a></li>
-                    <li>
-                        <a>En savoir plus</a>
-                        <ul class="p-2">
-                            <li><a>Nous contacter</a></li>
-                            <li><a>Nous trouver</a></li>
-                        </ul>
-                    </li>
-                </ul>
+    <div data-theme="dark">
+        <navbar></navbar>
+        <div class="hero min-h-screen header-image">
+            <div class="hero-overlay bg-opacity-60"></div>
+            <div class="relative mx-auto flex max-w-3xl flex-col items-center px-6 py-32 text-center sm:py-64 lg:px-0">
+                <h1 class="text-4xl font-bold tracking-tight text-white lg:text-6xl">New arrivals are here</h1>
+                <p class="mt-4 text-xl text-white">The new arrivals have, well, newly arrived. Check out the latest options
+                    from
+                    our summer small-batch release while they're still in stock.</p>
+                <a href="#"
+                    class="mt-8 inline-block rounded-md border border-transparent bg-white px-8 py-3 text-base font-medium text-gray-900 hover:bg-gray-100">Shop
+                    New Arrivals</a>
             </div>
         </div>
-        <div class="flex-1 justify-end lg:justify-start">
-            <a class="btn btn-ghost normal-case text-xl" href="home">GEEZ PRODUCTION</a>
-        </div>
-        <div class="hidden lg:flex">
-            <ul class="menu menu-horizontal px-1">
-                <li><a href="photography">Photographie</a></li>
-                <li><a href="audiovisual">Audiovisuel</a></li>
-                <li>
-                    <details>
-                        <summary>
-                            En savoir plus
-                        </summary>
-                        <ul class="p-2 bg-base-100">
-                            <li><a>Nous contacter</a></li>
-                            <li><a>Nous trouver</a></li>
-                        </ul>
-                    </details>
-                </li>
-            </ul>
-        </div>
+  <div class="bg-gray-900 py-24 sm:py-32">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <h2 class="text-center text-lg font-semibold leading-8 text-white">Nous traivaillons avec les grands et les petits</h2>
+      <div class="mx-auto mt-10 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 lg:mx-0 lg:max-w-none lg:grid-cols-5">
+        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/transistor-logo-white.svg" alt="Transistor" width="158" height="48" />
+        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/reform-logo-white.svg" alt="Reform" width="158" height="48" />
+        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/tuple-logo-white.svg" alt="Tuple" width="158" height="48" />
+        <img class="col-span-2 max-h-12 w-full object-contain sm:col-start-2 lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/savvycal-logo-white.svg" alt="SavvyCal" width="158" height="48" />
+        <img class="col-span-2 col-start-2 max-h-12 w-full object-contain sm:col-start-auto lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/statamic-logo-white.svg" alt="Statamic" width="158" height="48" />
+      </div>
     </div>
+  </div>
 
-    <div class="hero min-h-screen header-image">
-        <div class="hero-overlay bg-opacity-60"></div>
-        <div class="hero-content text-center text-neutral-content flex flex-col justify-center gap-20"> 
-            <div class="flex flex-col w-full lg:flex-row">
-                <div class="max-w-xl">
-                    <h1 class="text-5xl font-bold">Photographie</h1>
-                    <p class="py-6 text-sm">Nous vous souhaitons la bienvenue sur notre site web, nous espèrons que vous
-                        vous y
-                        touverez toutes les informations dont vous avez besoin. Toutefois, si vous avez des questions,
-                        n'hésitez pas à nous contacter ! C'est avec plaisir que nous vous répondrons.</p>
-                </div>
-                <div class="divider lg:divider-horizontal text-neutral-content"></div>
-                <div class="max-w-xl">
-                    <h1 class="text-5xl font-bold">Audiovisuel</h1>
-                    <p class="py-6 text-sm">Nous vous souhaitons la bienvenue sur notre site web, nous espèrons que vous
-                        vous y
-                        touverez toutes les informations dont vous avez besoin. Toutefois, si vous avez des questions,
-                        n'hésitez pas à nous contacter ! C'est avec plaisir que nous vous répondrons.</p>
-                </div>
-                
-            </div>
 
-            <div class="flex flex-col justify-center gap-5">
-                <div class="flex justify-center gap-10">
-                    <a href="https://instagram.com/gee.z_prod?igshid=OGQ5ZDc2ODk2ZA==" target="_blank" class="text-4xl"><i
-                            class="fa-brands fa-instagram"></i></a>
-                    <a href="https://www.tiktok.com/@gee.z_prod?_t=8fxkxEsPeC0&_r=1" target="_blank" class="text-4xl"><i
-                            class="fa-brands fa-tiktok"></i></a>
-                </div>
-                <p class=" text-sm">Retrouvez-nous également sur les réseaux sociaux !</p>
-            </div>
 
-            
-            
-
-        </div>
+        <footer-page></footer-page>
     </div>
+</template>
 
-
-    <div class="flex justify-center items-center">
-
-        <div class="my-10 flex gap-10 flex-wrap justify-center lg:gap-20 lg:flex-nowrap">
-
-            <div class="stat">
-                <div class="stat-figure">
-                    <i class="fa-regular fa-heart text-3xl"></i>
-                </div>
-                <div class="stat-title">Likes</div>
-                <div class="stat-value">15.4k</div>
-                <div class="stat-desc">37% plus que le mois dernier</div>
-            </div>
-
-
-            <div class="stat">
-                <div class="stat-figure">
-                    <i class="fa-solid fa-bolt text-3xl"></i>
-                </div>
-                <div class="stat-title">Visites totales</div>
-                <div class="stat-value">1,200</div>
-                <div class="stat-desc">19% plus que le mois dernier</div>
-            </div>
-
-
-            <div class="stat">
-                <!--<div class="stat-figure">
-                    <div class="avatar">
-                        <div class="w-16 rounded-full">
-                            <img src="../../img/pp.jpg" />
-                        </div>
-                    </div>
-                </div>-->
-                <div class="stat-figure">
-                    <i class="fa-solid fa-chess-king text-3xl"></i>
-                </div>
-                <div class="stat-title">Ragee Moudawi</div>
-                <div class="stat-value">100%</div>
-                <div class="stat-desc">Fondateur de Geez Production</div>
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <footer class="footer p-10 bg-base-100 text-base-content">
-        <nav>
-            <header class="footer-title">Services</header>
-            <a class="link link-hover">Photographe</a>
-            <a class="link link-hover">Videaste</a>
-            <a class="link link-hover">Bien plus...</a>
-        </nav>
-        <nav>
-            <header class="footer-title">Geez Production</header>
-            <a class="link link-hover">À propos</a>
-            <a class="link link-hover">Contact</a>
-            <a class="link link-hover">Carrière</a>
-            <a class="link link-hover">Blog</a>
-        </nav>
-        <nav>
-            <header class="footer-title">Juridique</header>
-            <a class="link link-hover">Conditions d'utilisation</a>
-            <a class="link link-hover">Politique de confidentialité</a>
-            <a class="link link-hover">Mentions légales</a>
-            <a class="link link-hover">Politique de cookies</a>
-        </nav>
-    </footer>
-    <footer class="footer px-10 py-4 bg-base-100 text-base-content">
-        <aside class="items-center grid-flow-col gap-4 order-last md:order-first">
-            <i class="fa-solid fa-clapperboard text-2xl"></i>
-            <p>© 2023 Geez Production - Tous droits réservés</p>
-        </aside>
-        <nav class="md:place-self-center md:justify-self-end">
-            <div class="grid grid-flow-col gap-4">
-                <a href="https://instagram.com/gee.z_prod?igshid=OGQ5ZDc2ODk2ZA==" target="_blank" class="text-xl"><i
-                    class="fa-brands fa-instagram"></i></a>
-            <a href="https://www.tiktok.com/@gee.z_prod?_t=8fxkxEsPeC0&_r=1" target="_blank" class="text-xl"><i
-                    class="fa-brands fa-tiktok"></i></a>
-        </div>
-    </nav>
-</footer></template>
+<script>
+export default {
+    data() {
+        return {
+            hovered: false
+        };
+    }
+};
+</script>
 
 <style scoped>.header-image {
     background-image: url('../../img/pexels-aleksandar-pasaric-1820770.jpg');
