@@ -12,6 +12,8 @@ import Galerie from "../pages/galerie.vue";
 import Dashboard from "../pages/admin/dashboard.vue";
 import StoreImage from "../components/adminComponents/store-image.vue";
 import Toast from "../components/adminComponents/Toast.vue";
+import ListeTags from "../components/adminComponents/tags/liste-tags.vue";
+import CreateTagsDialog from "../components/dialog/create-tags-dialog.vue";
 
 const routes = [
     {
@@ -22,7 +24,7 @@ const routes = [
     {
         path: '/sandbox',
         name: 'sandbox',
-        component: Toast,
+        component: ListeTags,
     },
     {
         path: '/home',

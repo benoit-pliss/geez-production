@@ -1,5 +1,5 @@
 // notificationService.js
-import { createApp, h } from 'vue';
+import { createApp} from 'vue';
 import ToastContainer from "../components/adminComponents/ToastContainer.vue";
 
 let toastContainerInstance = null;
