@@ -20,6 +20,7 @@ Route::post('register', [\App\Http\Controllers\Auth\AuthController::class, 'regi
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/upload/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'upload']);
 
+    Route::get('/tags', [\App\Http\Controllers\Tags\TagsController::class, 'getTags']);
 });
 
 Route::get('/images', [\App\Http\Controllers\Fichiers\ImageController::class, 'getListe']);
