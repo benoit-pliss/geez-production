@@ -4,6 +4,8 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import StoreImage from "../../components/adminComponents/store-image.vue";
 import DashboardContent from "../../components/adminComponents/dashboard-content.vue";
 
+import {isTokenValid, logout} from "../../services/authService.js";
+
 const user = {
     name: 'Tom Cook',
     email: 'tom@example.com',
@@ -18,8 +20,15 @@ const navigation = [
 const userNavigation = [
     { name: 'Your Profile', href: '#' },
     { name: 'Settings', href: '#' },
-    { name: 'Sign out', href: '#' },
+    { name: 'Sign out', href: '/logout' },
 ]
+
+isTokenValid().then(response => {
+    console.log(response);
+    if (!response) {
+        logout();
+    }
+});
 
 
 

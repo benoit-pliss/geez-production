@@ -5,14 +5,13 @@ export default {
         dialogInstance: null
     },
 
-    openDialog(component, props = {}) {
-        // Créer un élément div pour monter le composant de dialogue
+    openDialog(component, props = {}, onUpdatedTags) {
         const dialogContainer = document.createElement('div');
         document.body.appendChild(dialogContainer);
-
-        // Créer une nouvelle instance de l'application Vue avec le composant de dialogue
-        this.dialogInstance = createApp(component, props).mount(dialogContainer);
+        this.dialogInstance = createApp(component, { ...props, onUpdatedTags }).mount(dialogContainer);
     },
+
+
 
     closeDialog() {
         if (this.dialogInstance) {
@@ -21,5 +20,9 @@ export default {
             document.body.removeChild(container);
             this.dialogInstance = null;
         }
+    },
+
+    getDialogInstance() {
+        return this.dialogInstance;
     }
 };

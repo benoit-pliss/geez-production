@@ -14,6 +14,7 @@ use App\Models\User;
 |
 */
 Route::post('login', \App\Http\Controllers\Auth\AuthController::class)->name('api.login');
+Route::post('logout', [\App\Http\Controllers\Auth\AuthController::class, 'logout'])->name('api.logout');
 Route::post('register', [\App\Http\Controllers\Auth\AuthController::class, 'register'])->name('api.register');
 
 
@@ -21,6 +22,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/upload/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'upload']);
 
     Route::get('/tags', [\App\Http\Controllers\Tags\TagsController::class, 'getTags']);
+    Route::post('/tag/store', [\App\Http\Controllers\Tags\TagsController::class, 'store']);
+
 });
 
 Route::get('/images', [\App\Http\Controllers\Fichiers\ImageController::class, 'getListe']);

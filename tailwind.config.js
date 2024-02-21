@@ -12,6 +12,7 @@ export default {
     extend: {},
       color: {
         bgwhite : "#F9F9F9",
+          'tag-blue': '#00f',
       }
   },
   plugins: [

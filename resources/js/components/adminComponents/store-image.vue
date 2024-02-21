@@ -4,6 +4,9 @@ import {uploadPhoto} from "../../services/Photo-service.js";
 import {Photos} from "../../Models/Photos.js";
 import { PhotoIcon } from '@heroicons/vue/24/solid'
 import notificationService from "../../services/notificationService.js";
+import ListeTags from "./tags/liste-tags.vue";
+
+console.log(localStorage.getItem('token'));
 
 
 const files = ref([]);
@@ -41,7 +44,7 @@ async function upload() {
 
 <template>
 
-    <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6" data-theme="light" v-if="files.length === 1" >
+    <div class="mt-10 flex flex-col gap-4 sm:grid-cols-6" data-theme="light" v-if="files.length === 1" >
         <div class="sm:col-span-4">
             <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Nom du Fichier</label>
             <div class="mt-2">
@@ -57,6 +60,8 @@ async function upload() {
                 <textarea id="desc" name="desc" rows="3" v-model="files[0].description" placeholder="Description du Fichier" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
             </div>
         </div>
+
+        <liste-tags />
 
 
     </div>

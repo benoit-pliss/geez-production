@@ -12,6 +12,7 @@ class Tags extends Model
     protected $fillable = [
         'id',
         'name',
+        'description',
         'ParentTag',
     ];
 

@@ -13,7 +13,7 @@ import Dashboard from "../pages/admin/dashboard.vue";
 import StoreImage from "../components/adminComponents/store-image.vue";
 import Toast from "../components/adminComponents/Toast.vue";
 import ListeTags from "../components/adminComponents/tags/liste-tags.vue";
-import CreateTagsDialog from "../components/dialog/create-tags-dialog.vue";
+import CreateTagsDialog from "../components/dialog/create-tags/create-tags-dialog.vue";
 
 const routes = [
     {
@@ -25,6 +25,9 @@ const routes = [
         path: '/sandbox',
         name: 'sandbox',
         component: ListeTags,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/home',

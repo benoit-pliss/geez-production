@@ -3,6 +3,7 @@
 import router from "../../router/index.js";
 import store from "../../store/index.js";
 import {ref} from "vue";
+import {login as AuthLogin} from "../../services/authService.js";
 
 const formData = ref({
     email: '',
@@ -13,7 +14,7 @@ const errors = ref({});
 
 const login = () => {
     console.log(formData.value)
-    axios.post('/api/login', formData.value)
+    AuthLogin(formData.value)
         .then((res) => {
             errors.value = {}
             if (res.data.success) {

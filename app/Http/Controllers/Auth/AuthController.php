@@ -52,4 +52,21 @@ class AuthController extends Controller
             'token' => $token,
         ]);
     }
+
+    public function logout(Request $request) : JsonResponse
+    {
+        if (auth()->check()) {
+            auth()->user()->tokens()->each(function ($token, $key) {
+                $token->delete();
+            });
+
+            return response()->json([
+                'success' => true,
+            ]);
+        }
+
+        return response()->json([
+            'error' => 'Unauthenticated',
+        ], 401);
+    }
 }
