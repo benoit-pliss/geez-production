@@ -1,33 +1,24 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-import App from "../components/app.vue";
 import Home from "../pages/home.vue";
-import Footer from "../components/footer-page.vue";
-import Photography from "../pages/photography.vue";
-import Audiovisual from "../pages/audiovisual.vue";
 
-// partie sandbox
 import Login from "../pages/admin/login.vue";
 import Galerie from "../pages/galerie.vue";
 import Dashboard from "../pages/admin/dashboard.vue";
-import StoreImage from "../components/adminComponents/store-image.vue";
-import Toast from "../components/adminComponents/Toast.vue";
-import ListeTags from "../components/adminComponents/tags/liste-tags.vue";
-import CreateTagsDialog from "../components/dialog/create-tags/create-tags-dialog.vue";
+import Photo from "../pages/photo.vue";
+import Video from "../pages/video.vue";
+import Contact from "../pages/contact.vue";
 
 const routes = [
     {
         path: '/',
-        name: 'app',
-        component : App,
+        redirect: { name: 'home' }
+
     },
     {
         path: '/sandbox',
         name: 'sandbox',
-        component: ListeTags,
-        meta: {
-            requiresAuth: true
-        }
+        component: Galerie,
     },
     {
         path: '/home',
@@ -38,19 +29,27 @@ const routes = [
         }
     },
     {
-        path: '/photography',
-        name: 'photography',
-        component: Galerie,
+        path: '/photo',
+        name: 'photo',
+        component: Photo,
         data: {
             theme: 'light'
         }
     },
     {
-        path: '/audiovisual',
-        name: 'audiovisual',
-        component: Audiovisual,
+        path: '/video',
+        name: 'video',
+        component: Video,
         data: {
-            theme: 'dark'
+            theme: 'light'
+        }
+    },
+    {
+        path: '/contact',
+        name: 'contact',
+        component: Contact,
+        data: {
+            theme: 'light'
         }
     },
     {
