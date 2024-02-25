@@ -1,7 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-import App from "../components/app.vue";
 import Home from "../pages/home.vue";
+
+import Login from "../pages/admin/login.vue";
+import Dashboard from "../pages/admin/dashboard.vue";
 import Photo from "../pages/photo.vue";
 import Video from "../pages/video.vue";
 import Contact from "../pages/contact.vue";
@@ -15,7 +17,7 @@ const routes = [
     {
         path: '/sandbox',
         name: 'sandbox',
-        component: App,
+        component: Dashboard,
     },
     {
         path: '/home',
@@ -48,12 +50,46 @@ const routes = [
         data: {
             theme: 'light'
         }
+    },
+    {
+        path: '/admin/dashboard',
+        name: 'dashboard',
+        component: Dashboard,
+        data: {
+            theme: 'light'
+        },
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/admin/login',
+        name: 'login',
+        component: Login,
+        data: {
+            theme: 'light'
+        }
     }
+
 ]
+
 
 const router = createRouter({
     history: createWebHistory(),
     routes
+});
+
+router.beforeEach((to, from, next) => {
+    if (to.meta.requiresAuth && !localStorage.getItem('token')) {
+        next({ name: 'login' });
+    } else if (to.name === 'login' && localStorage.getItem('token')) {
+        next({ name: 'dashboard' });
+    } else if (to.name === 'register' && localStorage.getItem('token')) {
+        next({ name: 'dashboard' });
+    }
+    else {
+        next();
+    }
 });
 
 export default router;
