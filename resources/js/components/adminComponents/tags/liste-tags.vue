@@ -62,7 +62,7 @@ const removeTag = (tag) => {
 <!--                        {{ tag.name }}-->
 <!--                    </span>-->
 
-                    <Badge v-if="!selectedTags.find(t => t === tag)" @click="selectTag(tag)"  :name="tag.name" :color="`red`" />
+                    <Badge v-if="!selectedTags.find(t => t === tag)" @click="selectTag(tag)"  :label="tag.name" :color="tag.color ? tag.color : null" />
 
 
 
