@@ -1,9 +1,3 @@
-<script setup>
-import Navbar from "../components/navbar.vue";
-import FooterPage from "../components/footer-page.vue";
-import Galerie from "../components/galerie.vue";
-
-</script>
 
 <template>
     <div data-theme="light">
@@ -49,7 +43,7 @@ import Galerie from "../components/galerie.vue";
     </div>
   </div>
   <galerie></galerie>
-        
+
 
 
         <footer-page></footer-page>
@@ -57,6 +51,9 @@ import Galerie from "../components/galerie.vue";
 </template>
 
 <script>
+import Navbar from "../components/navbar.vue";
+import FooterPage from "../components/footer-page.vue";
+import Galerie from "../components/galerie.vue";
 export default {
     components: {
         Navbar,
