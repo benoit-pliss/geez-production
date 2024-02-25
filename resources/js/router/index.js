@@ -3,7 +3,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Home from "../pages/home.vue";
 
 import Login from "../pages/admin/login.vue";
-import Galerie from "../pages/galerie.vue";
 import Dashboard from "../pages/admin/dashboard.vue";
 import Photo from "../pages/photo.vue";
 import Video from "../pages/video.vue";
@@ -18,7 +17,7 @@ const routes = [
     {
         path: '/sandbox',
         name: 'sandbox',
-        component: Galerie,
+        component: Dashboard,
     },
     {
         path: '/home',
