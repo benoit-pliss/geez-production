@@ -55,8 +55,10 @@ import { Dialog, DialogPanel } from '@headlessui/vue'
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
   
   const navigation = [
-    { name: 'Photographie', href: '/photography' },
-    { name: 'Audiovisuel', href: '/audiovisual' },
+    { name: 'Home', href: '/home' },
+    { name: 'Photographie', href: '/photo' },
+    { name: 'Galerie photo', href: '/photo#gallery' },
+    //{ name: 'Audiovisuel', href: '/audiovisual' },
     { name: 'Contact', href: '/contact' },
   ]
   

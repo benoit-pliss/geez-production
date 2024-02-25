@@ -44,8 +44,41 @@ Route::get('/images', function () {
         if (in_array($file, ['.', '..'])) {
             continue;
         }
+        // ignore .DS_Store file
+        if ($file === '.DS_Store') {
+            continue;
+        }
 
         $images[] = [
+            'name' => $file,
+            'size' => filesize($path . '/' . $file),
+            'type' => mime_content_type($path . '/' . $file),
+            'url' => $url . '/' . $file,
+        ];
+       
+    }
+
+    return response()->json([
+        'success' => true,
+        'images' => $images,
+    ]);
+});
+
+Route::get('/videos/{file_name}', function ($file_name) {
+    $path = storage_path('app/public/videos/' . $file_name);
+    $url = env('APP_URL') . '/storage/videos/' . $file_name;
+    $videos = [];
+
+    foreach (scandir($path) as $file) {
+        if (in_array($file, ['.', '..'])) {
+            continue;
+        }
+        // ignore .DS_Store file
+        if ($file === '.DS_Store') {
+            continue;
+        }
+
+        $videos[] = [
             'name' => $file,
             'size' => filesize($path . '/' . $file),
             'type' => mime_content_type($path . '/' . $file),
@@ -55,6 +88,6 @@ Route::get('/images', function () {
 
     return response()->json([
         'success' => true,
-        'images' => $images,
+        'videos' => $videos,
     ]);
 });

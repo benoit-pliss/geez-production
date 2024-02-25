@@ -13,9 +13,15 @@
         <div class="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
           <div class="md:grid md:grid-cols-2 md:gap-8">
             <div>
-              <h3 class="text-sm font-semibold leading-6 text-white">Services</h3>
+              <!--<h3 class="text-sm font-semibold leading-6 text-white">Services</h3>
               <ul role="list" class="mt-6 space-y-4">
                 <li v-for="item in navigation.services" :key="item.name">
+                  <a :href="item.href" class="text-sm leading-6 text-gray-300 hover:text-white">{{ item.name }}</a>
+                </li>
+              </ul>-->
+              <h3 class="text-sm font-semibold leading-6 text-white">Editeurs</h3>
+              <ul role="list" class="mt-6 space-y-4">
+                <li v-for="item in navigation.editeurs" :key="item.name">
                   <a :href="item.href" class="text-sm leading-6 text-gray-300 hover:text-white">{{ item.name }}</a>
                 </li>
               </ul>
@@ -91,10 +97,13 @@ const navigation = {
     { name: 'Blog', href: '#' },
   ],
   partenariats: [
-    { name: 'Benoit PLISSONNIER', href: '#' },
-    { name: 'Victor FOUQUET', href: '#' },
     { name: 'Partenariats 1', href: '#' },
     { name: 'Partenariats 2', href: '#' },
+  ],
+  editeurs: [
+    { name: 'Ragee MOUDAWI', href: '/home' },
+    { name: 'Benoit PLISSONNIER', href: 'https://benoitplissonnier.fr' },
+    { name: 'Victor FOUQUET', href: 'https://victorfouquet.com' },
   ],
   legal: [
     { name: 'Conditions d\'utilisation', href: '#' },

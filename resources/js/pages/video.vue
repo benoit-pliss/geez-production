@@ -1,6 +1,26 @@
 <template>
     <div data-theme="light">
         <navbar></navbar>
+
+        <div class="relative isolate overflow-hidden bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
+            <img src="/storage/images/DSC09388.jpg" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover" />
+            <div class="absolute inset-0 bg-gray-900 opacity-75 -z-10" />
+            <div class="hidden sm:absolute sm:-top-10 sm:right-1/2 sm:-z-10 sm:mr-10 sm:block sm:transform-gpu sm:blur-3xl" aria-hidden="true">
+                <div class="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#ff4694] to-[#776fff] opacity-20" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" />
+            </div>
+            <div class="absolute -top-52 left-1/2 -z-10 -translate-x-1/2 transform-gpu blur-3xl sm:top-[-28rem] sm:ml-16 sm:translate-x-0 sm:transform-gpu" aria-hidden="true">
+                <div class="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#ff4694] to-[#776fff] opacity-20" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" />
+            </div>
+            <div class="mx-auto max-w-2xl text-center z-10">
+                <h2 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">Patience</h2>
+                <p class="mt-6 text-lg leading-8 text-gray-300">Nos dévellopeurs travaillent d'arrache-pied pour vous offrir une expérience unique. Revenez bientôt pour découvrir notre contenu.</p>
+            </div>
+        </div>
+
+        <footer-page></footer-page>
+    </div>
+</template>
+        <!--
         <div class="bg-white">
             <section aria-labelledby="features-heading" class="mx-auto max-w-7xl py-32 sm:px-2 lg:px-8">
                 <div class="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
@@ -35,8 +55,8 @@
                                     </div>
                                     <div class="lg:col-span-7">
                                         <div
-                                            class="aspect-h-1 aspect-w-2 overflow-hidden rounded-lg bg-gray-100 sm:aspect-h-2 sm:aspect-w-5">
-                                            <img :src="feature.imageSrc" :alt="feature.imageAlt"
+                                            class="overflow-hidden rounded-lg bg-gray-100 aspect-w-16 aspect-h-9 lg:aspect-none">
+                                            <img :src="feature.mainVideoSrc" :alt="feature.name"
                                                 class="object-cover object-center" />
                                         </div>
                                     </div>
@@ -47,13 +67,8 @@
                 </div>
             </section>
         </div>
-
-
-
-        <footer-page></footer-page>
-    </div>
-</template>
-
+        -->
+        
 <script setup>
 
 import Navbar from "../components/navbar.vue";
@@ -63,42 +78,32 @@ import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/vue'
 
 const tabs = [
   {
-    name: 'Clips',
+    name: 'ALCHEMIA LOUNGE CUISINE',
     features: [
       {
         name: 'Adaptive and modular',
         description:
           'The Organize base set allows you to configure and evolve your setup as your items and habits change. The included trays and optional add-ons are easily rearranged to achieve that perfect setup.',
-        imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-feature-06-detail-01.jpg',
-        imageAlt: 'Maple organizer base with slots, supporting white polycarbonate trays of various sizes.',
-      },
-    ],
-  },
-  {
-    name: 'Material',
-    features: [
-      {
-        name: 'Natural wood options',
-        description:
-          'Organize has options for rich walnut and bright maple base materials. Accent your desk with a contrasting material, or match similar woods for a calm and cohesive look. Every base is hand sanded and finished.',
-        imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-feature-06-detail-02.jpg',
-        imageAlt:
-          'Walnut organizer base with pen, sticky note, phone, and bin trays, next to modular drink coaster attachment.',
-      },
-    ],
-  },
-  {
-    name: 'Considerations',
-    features: [
-      {
-        name: 'Helpful around the home',
-        description:
-          "Our customers use Organize throughout the house to bring efficiency to many daily routines. Enjoy Organize in your workspace, kitchen, living room, entry way, garage, and more. We can't wait to see how you'll use it!",
-        imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-feature-06-detail-03.jpg',
-        imageAlt: 'Walnut organizer base with white polycarbonate trays in the kitchen with various kitchen utensils.',
+        mainVideoSrc: 'http://localhost:8000/storage/videos/ALCHEMIA%20LOUNGE%20CUISINE/BCDD794F-665D-4FBD-B58D-C457D492280C.MOV',
       },
     ],
   },
 ]
+
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+
+const videos = ref([]);
+
+async function fetchVideos() {
+    try {
+        const response = await axios.get('/api/videos/ALCHEMIA LOUNGE CUISINE');
+        videos.value = response.data.videos;
+    } catch (error) {
+        console.log(error.response);
+    }
+}
+
+onMounted(fetchVideos); // Fetch images when the component is mounted
 </script>
 

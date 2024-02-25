@@ -2,17 +2,15 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import App from "../components/app.vue";
 import Home from "../pages/home.vue";
-import Footer from "../components/footer-page.vue";
-import Photography from "../pages/photography.vue";
-import Audiovisual from "../pages/audiovisual.vue";
+import Photo from "../pages/photo.vue";
+import Video from "../pages/video.vue";
 import Contact from "../pages/contact.vue";
-import Galerie from "../components/galerie.vue";
 
 const routes = [
     {
         path: '/',
-        name: 'app',
-        component : App,
+        redirect: { name: 'home' }
+
     },
     {
         path: '/sandbox',
@@ -28,17 +26,17 @@ const routes = [
         }
     },
     {
-        path: '/photography',
-        name: 'photography',
-        component: Photography,
+        path: '/photo',
+        name: 'photo',
+        component: Photo,
         data: {
             theme: 'light'
         }
     },
     {
-        path: '/audiovisual',
-        name: 'audiovisual',
-        component: Audiovisual,
+        path: '/video',
+        name: 'video',
+        component: Video,
         data: {
             theme: 'light'
         }
@@ -51,9 +49,7 @@ const routes = [
             theme: 'light'
         }
     }
-
 ]
-
 
 const router = createRouter({
     history: createWebHistory(),
