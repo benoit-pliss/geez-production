@@ -26,4 +26,9 @@ class Images extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tags::class, 'files_tags', 'file_id', 'tag_id');
+    }
 }

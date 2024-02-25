@@ -1,8 +1,9 @@
 export class Photos {
 
-    constructor(name, description, file) {
+    constructor(name, description, url, type) {
         this.name = name;
         this.description = description;
-        this.file = file;
+        this.url = url;
+        this.type = type;
     }
 }

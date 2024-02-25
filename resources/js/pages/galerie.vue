@@ -7,8 +7,8 @@ const images = ref([]);
 
 async function fetchImages() {
     try {
-        const response = await axios.get('/api/images');
-        images.value = response.data.images;
+        const response = await axios.get('/api/photos');
+        images.value = response.data.photos;
     } catch (error) {
         console.log(error.response);
     }

@@ -1,25 +1,43 @@
 <script setup>
 
 import StoreImage from "./store-image.vue";
-import PhotoEditing from "./photo-editing.vue";
-import {Photos} from "../../Models/Photos.js";
+import PhotosTables from "./tables/photos-tables.vue";
+import {getListePhotosWithTags} from "../../services/Photo-service.js";
+import {onMounted, ref} from "vue";
 
+const PhotosListe = ref([]);
+const isLoading = ref(false); // New loading state
 
-const photo =  new Photos(
-    'Image1',
-    "Don't compromise on snack-carrying capacity with this lightweight and spacious bag. The drawstring top keeps all your favorite chips, crisps, fries, biscuits, crackers, and cookies secure.",
-    'http://localhost:8000/storage/images/annie-spratt-STLEtlSj1i4-unsplash.jpg',
-)
+const getPhotos = async () => {
+    isLoading.value = true; // Start loading
+    await getListePhotosWithTags()
+        .then(response => {
+            PhotosListe.value = response.data.photos;
+        })
+        .finally(() => {
+            isLoading.value = false; // End loading
+        });
+};
+
+onMounted(() => {
+    getPhotos();
+});
+
 </script>
 
 <template>
-    <StoreImage />
-    <PhotoEditing
-        :photo="photo"
-    />
-
+    <StoreImage @update:photos="getPhotos"/>
+    <div class="spinner-container" v-if="isLoading">
+        <span class="loading loading-spinner loading-md"></span>
+    </div>
+    <PhotosTables v-else :photos="PhotosListe" />
 </template>
 
 <style scoped>
-
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Adjust this value according to your needs */
+}
 </style>

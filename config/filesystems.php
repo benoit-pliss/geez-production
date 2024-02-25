@@ -73,4 +73,12 @@ return [
         public_path('storage') => storage_path('app/public'),
     ],
 
+    'sftp' => [
+        'driver' => 'sftp',
+        'host' => '62.72.37.27',
+        'username' => 'u882725468',
+        'password' => 'Geez-victor3',
+        'root' => 'images',
+    ],
+
 ];

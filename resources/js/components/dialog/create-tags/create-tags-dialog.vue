@@ -1,31 +1,29 @@
 <script setup>
-import { ref } from 'vue'
+import {ref, watch} from 'vue'
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import ComboboxTags from "./combobox-tags.vue";
 import {storeTag} from "../../../services/tagsService.js";
 import notificationService from "../../../services/notificationService.js";
+import ColorsSelect from "./colors-select.vue";
 
 const open = ref(true)
 const formdata = ref({
     name: '',
     description: '',
     ParentTag: '',
+    color: ''
 })
-const emit = defineEmits(['update:tags'])
 const handleSelectedTagUpdate = (value) => {
     formdata.value.ParentTag = value.id;
-    console.log(formdata.value)
 }
 
 const props = defineProps({
     onUpdatedTags: Function
 })
 const saveTag = () => {
-    console.log(formdata.value);
     storeTag(formdata.value)
         .then( (res) => {
             if (!res.data.success){
-                console.log(res.data.message);
                 notificationService.addToast('res.data.message', 'error');
             } else {
                 open.value = false
@@ -64,6 +62,8 @@ const saveTag = () => {
                                         <textarea v-model="formdata.description" rows="4" name="comment" id="comment" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Description" />
                                     </div>
                                 </div>
+
+                                <colors-select @update:model-value="formdata.color = $event" />
 
                                 <ComboboxTags @update:selectedTag="handleSelectedTagUpdate" />
 

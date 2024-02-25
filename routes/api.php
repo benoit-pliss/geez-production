@@ -24,7 +24,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/tags', [\App\Http\Controllers\Tags\TagsController::class, 'getTags']);
     Route::post('/tag/store', [\App\Http\Controllers\Tags\TagsController::class, 'store']);
 
+    Route::get('/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'getListe']);
+    Route::get('/photosWithTags', [\App\Http\Controllers\Fichiers\ImageController::class, 'getPhotosWithTags']);
+    Route::put('/photo/update', [\App\Http\Controllers\Fichiers\ImageController::class, 'update']);
+
+
 });
 
-Route::get('/images', [\App\Http\Controllers\Fichiers\ImageController::class, 'getListe']);
+Route::get('/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'getListe']);
 

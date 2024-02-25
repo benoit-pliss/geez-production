@@ -11,6 +11,13 @@ import {
 } from '@headlessui/vue'
 import {getTags} from '../../../services/tagsService.js'
 
+const props = defineProps({
+    isAssigned: {
+        type: Boolean,
+        required: false,
+        default: true,
+    },
+})
 const emit = defineEmits(['update:selectedTag'])
 const tags = ref([])
 getTags().then(response => {
@@ -38,7 +45,7 @@ watch(selectedTags, (value) => {
 
 <template>
     <Combobox as="div" v-model="selectedTags">
-        <ComboboxLabel class="block text-sm font-medium leading-6 text-gray-900">Assigned to</ComboboxLabel>
+        <ComboboxLabel v-if="isAssigned" class="block text-sm font-medium leading-6 text-gray-900">Assigned to</ComboboxLabel>
         <div class="relative mt-2">
             <ComboboxInput class="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" @change="query = $event.target.value" :display-value="(person) => person?.name" />
             <ComboboxButton class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
