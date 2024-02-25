@@ -97,8 +97,9 @@ const navigation = {
     { name: 'Blog', href: '#' },
   ],
   partenariats: [
-    { name: 'Partenariats 1', href: '#' },
-    { name: 'Partenariats 2', href: '#' },
+    { name: 'NAZA ESPORT', href: '#' },
+    { name: 'EWA', href: 'https://ewaproductions.fr' },
+    { name: 'MAIN DREAM', href: '#' },
   ],
   editeurs: [
     { name: 'Ragee MOUDAWI', href: '/home' },

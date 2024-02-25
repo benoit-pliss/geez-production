@@ -13,7 +13,7 @@
             </div>
             <div class="mx-auto max-w-2xl text-center z-10">
                 <h2 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">Patience</h2>
-                <p class="mt-6 text-lg leading-8 text-gray-300">Nos dévellopeurs travaillent d'arrache-pied pour vous offrir une expérience unique. Revenez bientôt pour découvrir notre contenu.</p>
+                <p class="mt-6 text-lg leading-8 text-gray-300">Nos développeurs travaillent d'arrache-pied pour vous offrir une expérience unique. Revenez bientôt pour découvrir notre contenu.</p>
             </div>
         </div>
 

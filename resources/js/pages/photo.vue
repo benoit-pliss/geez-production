@@ -13,8 +13,8 @@ import Galerie from "../components/galerie.vue";
       <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-12 gap-y-16 lg:mx-0 lg:min-w-full lg:max-w-none lg:flex-none lg:gap-y-8">
         <div class="lg:col-end-1 lg:w-full lg:max-w-lg lg:pb-8">
           <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Photographie</h2>
-          <p class="mt-6 text-xl leading-8 text-gray-600">Quasi est quaerat. Sit molestiae et. Provident ad dolorem occaecati eos iste. Soluta rerum quidem minus ut molestiae velit error quod. Excepturi quidem expedita molestias quas.</p>
-          <p class="mt-6 text-base leading-7 text-gray-600">Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat. Quasi aperiam sit non sit neque reprehenderit.</p>
+          <p class="mt-6 text-xl leading-8 text-gray-600">Passionné par l’art de capturer des moments uniques, je suis votre photographe dévoué dans la création d’images exceptionnelles pour événement, entreprises, et portraits. Ma mission est de donner vie à vos idées à travers des clichés authentiques et mémorables.</p>
+          <p class="mt-6 text-base leading-7 text-gray-600">Que ce soit pour sublimer votre entreprise, mettre en valeur vos événements ou immortaliser des moments précieux en portraits, je m’investis pleinement dans chaque projet. Avec une passion profonde pour la photographie, je m’engage à capturer l’essence de chaque sujet, en mettant en valeur sa beauté et son authenticité.</p>
           <div class="mt-10 flex">
             <button class="animate-bounce w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center mx-3 text-white"
               id="scroll-down-gallery-button">
@@ -38,6 +38,13 @@ import Galerie from "../components/galerie.vue";
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="px-4 md:px-8 lg:px-12">
+      <div class="mt-16 text-center">
+        <p class="mt-6 text-base leading-7 text-gray-600">En choisissant mes services, vous optez pour un photographe qui accorde une attention particulière à vos besoins. Je prends le temps nécessaire pour comprendre vos attentes et je m’engage à fournir un travail de qualité exceptionnelle. Votre satisfaction est ma priorité, et je m’efforcerai toujours de dépasser vos espérances.</p>
+        <p class="mt-6 text-base leading-7 text-gray-600">Ensemble, créons des souvenirs visuels qui dureront toute une vie.</p>
+        <p class="mt-6 text-base leading-7 text-gray-600 font-bold">Merci de faire confiance à GEEZ PRODUCTION Photographie !</p>
       </div>
     </div>
   </div>
