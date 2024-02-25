@@ -1,6 +1,7 @@
 <script setup>
 import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
 import Badge from '../components/Badge.vue';
+import {Tags} from "../Models/Tags.js";
 </script>
 
 <template>
@@ -26,12 +27,14 @@ import Badge from '../components/Badge.vue';
                 <div class="mt-3 sm:ml-4 sm:mt-0">
                     <div class="flex rounded-md shadow-sm">
                         <div class="relative flex-grow focus-within:z-10">
-                            <input list="tags" type="text" name="search-tag" id="search-tag" class="w-full rounded-none rounded-l-md border-0 px-3 py-1.5 text-sm leading-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-gray-900" placeholder="Ajouter un filtre" />
+                            <input list="tags" type="text" name="search-tag" id="search-tag" v-model="selectedTag" class="w-full rounded-none rounded-l-md border-0 px-3 py-1.5 text-sm leading-6 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-gray-900" placeholder="Ajouter un filtre" />
                             <datalist id="tags">
-                                <option v-for="tag in load_tags" :key="tag.id" :value="tag.label"></option>
+                                <option v-for="tag in load_tags" :key="tag.id" :value="tag.name"></option>
                             </datalist>
                         </div>
-                        <button type="button" class="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50" id="add-tag-button">
+                        <button type="button" class="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50" id="add-tag-button" v-on:click="addTag(
+                            load_tags.find(tag => tag.name === selectedTag)
+                        )">
                             <MagnifyingGlassIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
                         </button>
                     </div>
@@ -43,9 +46,9 @@ import Badge from '../components/Badge.vue';
                     <div v-for="image in images" :key="image.name" class="pt-8 sm:inline-block sm:w-full sm:px-4">
                         <!-- quand hover rendre visible la div des Badges-->
                         <div class="overflow-hidden transition duration-300 transform rounded-lg hover:scale-105"  v-on:mouseover="image.hidden = true" v-on:mouseleave="image.hidden = false">
-                            <img :src="image.url" class="object-cover w-full h-auto" />
+                            <img :src="image.url" class="object-cover w-full h-auto" alt="geez"/>
                                 <div class="absolute inset-0 flex place-content-end justify-start flex-wrap-reverse gap-2 p-4" :class="{ 'hidden' : !image.hidden }">
-                                    <Badge v-for="tag in image.tags" :key="tag.id" :label="tag.name" :color="tag.color" type="add" :onClick="addTag" :id="tag.id"/>
+                                    <Badge v-for="tag in image.tags" :key="tag.id" :label="tag.name" :color="tag.color" type="add" v-on:click="addTag(tag)" :id="tag.id"/>
                             </div>
                         </div>
                     </div>
@@ -59,24 +62,26 @@ import Badge from '../components/Badge.vue';
 
 <script>
 import {getTags} from "../services/tagsService.js";
-import {getListePhotosWithTags} from "../services/Photo-service.js";
+import {get30RandomPhotosWithTags, getListePhotosByTags} from "../services/Photo-service.js";
+import {Tags} from "../Models/Tags.js";
 
 export default {
     data () {
         return {
             load_tags : [],
             current_tags : [],
-
+            selectedTag : null,
             images : [],
         };
     },
     methods: {
 
-        addTag(tag_id) {
-            const tag = this.load_tags.find(tag => tag.id === tag_id);
+        addTag(tag) {
+            console.log(tag);
             if (tag) {
                 this.current_tags.push(tag);
             }
+            this.fetchImages();
         },
 
         removeTag(tag_id) {
@@ -84,6 +89,7 @@ export default {
             if (index !== -1) {
                 this.current_tags.splice(index, 1);
             }
+            this.fetchImages();
         },
 
 
@@ -98,29 +104,27 @@ export default {
         },
 
         fetchImages() {
-            getListePhotosWithTags()
-                .then(response => {
-                    this.images = response.data.photos;
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+            if (this.current_tags.length > 0) {
+                getListePhotosByTags(this.current_tags.map(tag => tag.id))
+                    .then(response => {
+                        this.images = response.data.photos;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            } else {
+                get30RandomPhotosWithTags()
+                    .then(response => {
+                        this.images = response.data.photos;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            }
         }
 
     },
     mounted() {
-        document.getElementById('add-tag-button').addEventListener('click', () => {
-            let searchTag = document.getElementById('search-tag');
-            let tag = this.load_tags.find(tag => tag.label === searchTag.value);
-            if (tag && !this.current_tags.find(t => t.id === tag.id)) {
-                this.addTag(tag.id);
-            }else {
-                console.log('Tag not found or already added');
-            }
-            searchTag.value = '';
-
-        });
-
         for (let image of this.images) {
             image.hidden = true;
         }
@@ -128,7 +132,6 @@ export default {
         this.fetchImages();
         this.fetchTags();
 
-        console.log(this.load_tags);
     }
 }
 </script>

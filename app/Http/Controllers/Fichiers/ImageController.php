@@ -77,23 +77,30 @@ class ImageController extends Controller
         ]);
     }
 
-    public function getListeByTag($tagsListe) : JsonResponse
+    public function get30RandomPhotosWithTags() : JsonResponse
+    {
+        $photos = Images::with('tags')->inRandomOrder()->limit(30)->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Liste des 30 images aléatoires avec tags',
+            'photos' => $photos,
+        ]);
+    }
+
+    public function getPhotosByTags(Request $request) : JsonResponse
     {
 
-        $tags = explode(',', $tagsListe);
-        $images = [];
-        foreach ($tags as $tag) {
-            $tag = Tags::class::where('name', $tag)->first();
-            if ($tag) {
-                $filesTags = FilesTags::class::where('tag_id', $tag['id'])->get();
-                foreach ($filesTags as $fileTag) {
-                    $image = Images::class::where('id', $fileTag['file_id'])->first();
-                    if ($image) {
-                        $images[] = $image;
-                    }
-                }
-            }
-        }
+        $request->validate([
+            'tags' => 'required|array',
+        ]);
+
+        $tags = $request->input('tags');
+        $images = Images::with('tags')->whereHas('tags', function($query) use ($tags) {
+            $query->whereIn('tags.id', $tags);
+        })->get();
+
+
         return response()->json([
             'success' => true,
             'message' => 'Liste des images par tag',

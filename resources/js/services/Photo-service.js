@@ -12,6 +12,19 @@ export function getListePhotosWithTags() {
     return axiosClient.get("/photosWithTags");
 }
 
+export function getListePhotosByTags(tags) {
+
+    return axiosClient.get(`/photosByTags`, {
+        params: {
+            tags: tags
+        }
+    });
+}
+
+export function get30RandomPhotosWithTags() {
+    return axiosClient.get("/get30RandomPhotosWithTags");
+}
+
 export function updatePhoto(photo) {
 
     return axiosClient.put(`/photo/update`, {

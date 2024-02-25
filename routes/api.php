@@ -24,8 +24,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/tags', [\App\Http\Controllers\Tags\TagsController::class, 'getTags']);
     Route::post('/tag/store', [\App\Http\Controllers\Tags\TagsController::class, 'store']);
 
-    Route::get('/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'getListe']);
-    Route::get('/photosWithTags', [\App\Http\Controllers\Fichiers\ImageController::class, 'getPhotosWithTags']);
     Route::put('/photo/update', [\App\Http\Controllers\Fichiers\ImageController::class, 'update']);
 
 
@@ -33,9 +31,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 Route::get('/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'getListe']);
 Route::get('/photosWithTags', [\App\Http\Controllers\Fichiers\ImageController::class, 'getPhotosWithTags']);
+Route::get('/photosByTags', [\App\Http\Controllers\Fichiers\ImageController::class, 'getPhotosByTags']);
+Route::get('/get30RandomPhotosWithTags', [\App\Http\Controllers\Fichiers\ImageController::class, 'get30RandomPhotosWithTags']);
 
 Route::get('/tags', [\App\Http\Controllers\Tags\TagsController::class, 'getTags']);
 
+Route::post('/newsletter/subscribe', [\App\Http\Controllers\Newsletter\NewsletterController::class, 'subscribe']);
 
 Route::get('/videos/{file_name}', function ($file_name) {
     $path = storage_path('app/public/videos/' . $file_name);
