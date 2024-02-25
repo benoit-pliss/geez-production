@@ -32,6 +32,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 });
 
 Route::get('/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'getListe']);
+Route::get('/photosWithTags', [\App\Http\Controllers\Fichiers\ImageController::class, 'getPhotosWithTags']);
+
+Route::get('/tags', [\App\Http\Controllers\Tags\TagsController::class, 'getTags']);
 
 
 Route::get('/videos/{file_name}', function ($file_name) {

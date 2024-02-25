@@ -1,8 +1,5 @@
 <script setup>
-import VueMasonry from 'vue-masonry-css'
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
-import { PlusIcon, MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
+import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
 import Badge from '../components/Badge.vue';
 </script>
 
@@ -19,13 +16,13 @@ import Badge from '../components/Badge.vue';
                     <h3 class="text-base font-semibold leading-6 text-gray-900">Filtres</h3>
                     <div class="flex mt-3 sm:mt-0 gap-x-2">
                         <!--Add all unselcted tags-->
-                        <Badge v-for="tag in current_tags" :key="tag.id" :label="tag.label" :color="tag.color" :id="tag.id" :onClick="removeTag" type="remove"/>
+                        <Badge v-for="tag in current_tags" :key="tag.id" :label="tag.name" :color="tag.color" :id="tag.id" :onClick="removeTag" type="remove"/>
                         <!--Message if no tag is selected-->
                         <span v-if="current_tags.length === 0" class="text-sm font-medium text-gray-500">Aucun filtre sélectionné</span>
                     </div>
                 </div>
-                
-                
+
+
                 <div class="mt-3 sm:ml-4 sm:mt-0">
                     <div class="flex rounded-md shadow-sm">
                         <div class="relative flex-grow focus-within:z-10">
@@ -48,32 +45,26 @@ import Badge from '../components/Badge.vue';
                         <div class="overflow-hidden transition duration-300 transform rounded-lg hover:scale-105"  v-on:mouseover="image.hidden = true" v-on:mouseleave="image.hidden = false">
                             <img :src="image.url" class="object-cover w-full h-auto" />
                                 <div class="absolute inset-0 flex place-content-end justify-start flex-wrap-reverse gap-2 p-4" :class="{ 'hidden' : !image.hidden }">
-                                    <Badge v-for="tag in load_tags" :key="tag.id" :label="tag.label" :color="tag.color" type="add" :onClick="addTag" :id="tag.id"/>
+                                    <Badge v-for="tag in image.tags" :key="tag.id" :label="tag.name" :color="tag.color" type="add" :onClick="addTag" :id="tag.id"/>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
 
         </div>
     </div>
 </template>
 
 <script>
+import {getTags} from "../services/tagsService.js";
+import {getListePhotosWithTags} from "../services/Photo-service.js";
+
 export default {
     data () {
         return {
-            // Replace with API call to get tags from database
-            load_tags : [
-                { id: 1, label: 'Mariage', color: 'fill-red-500' },
-                { id: 2, label: 'Portrait', color: 'fill-yellow-500' },
-                { id: 3, label: 'Paysage', color: 'fill-green-500' },
-                { id: 4, label: 'Nature', color: 'fill-blue-500' },
-                { id: 5, label: 'Voyage', color: 'fill-indigo-500' },
-                { id: 6, label: 'Famille', color: 'fill-purple-500' },
-                { id: 7, label: 'Animaux', color: 'fill-pink-500' }
-            ],
+            load_tags : [],
             current_tags : [],
 
             images : [],
@@ -95,13 +86,25 @@ export default {
             }
         },
 
-        async fetchImages() {
-            try {
-                const response = await axios.get('/api/images');
-                this.images = response.data.images;
-            } catch (error) {
-                console.log(error.response);
-            }
+
+        fetchTags() {
+            getTags()
+                .then(response => {
+                    this.load_tags = response.data.tags;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        fetchImages() {
+            getListePhotosWithTags()
+                .then(response => {
+                    this.images = response.data.photos;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         }
 
     },
@@ -123,6 +126,9 @@ export default {
         }
 
         this.fetchImages();
+        this.fetchTags();
+
+        console.log(this.load_tags);
     }
 }
 </script>
