@@ -1,60 +1,75 @@
 {
+  "public/logo-geez.png": {
+    "file": "assets/logo-geez-19f53bcf.png",
+    "src": "public/logo-geez.png"
+  },
   "resources/css/app.css": {
-    "file": "assets/app-8e9a9492.css",
+    "file": "assets/app-108ef8e1.css",
     "isEntry": true,
     "src": "resources/css/app.css"
+  },
+  "resources/img/acceuil/B4EADABF-5904-414F-9E02-40E69F5A5963_1_105_c.jpeg": {
+    "file": "assets/B4EADABF-5904-414F-9E02-40E69F5A5963_1_105_c-ee39901c.jpeg",
+    "src": "resources/img/acceuil/B4EADABF-5904-414F-9E02-40E69F5A5963_1_105_c.jpeg"
+  },
+  "resources/img/acceuil/DSC00832.jpg": {
+    "file": "assets/DSC00832-707aa45b.jpg",
+    "src": "resources/img/acceuil/DSC00832.jpg"
+  },
+  "resources/img/acceuil/DSC01026.jpg": {
+    "file": "assets/DSC01026-8a4a84d6.jpg",
+    "src": "resources/img/acceuil/DSC01026.jpg"
+  },
+  "resources/img/acceuil/DSC09363.jpg": {
+    "file": "assets/DSC09363-ba320575.jpg",
+    "src": "resources/img/acceuil/DSC09363.jpg"
+  },
+  "resources/img/acceuil/DSC09388.jpg": {
+    "file": "assets/DSC09388-528459f8.jpg",
+    "src": "resources/img/acceuil/DSC09388.jpg"
+  },
+  "resources/img/acceuil/IMG_6480.jpg": {
+    "file": "assets/IMG_6480-884f2439.jpg",
+    "src": "resources/img/acceuil/IMG_6480.jpg"
+  },
+  "resources/img/acceuil/videos/EV1.mp4": {
+    "file": "assets/EV1-b3dad82e.mp4",
+    "src": "resources/img/acceuil/videos/EV1.mp4"
   },
   "resources/img/bg-neon.jpg": {
     "file": "assets/bg-neon-60e27fad.jpg",
     "src": "resources/img/bg-neon.jpg"
   },
+  "resources/img/logo/logogeez.png": {
+    "file": "assets/logogeez-db7b49b2.png",
+    "src": "resources/img/logo/logogeez.png"
+  },
   "resources/img/pexels-aleksandar-pasaric-1820770.jpg": {
     "file": "assets/pexels-aleksandar-pasaric-1820770-3727c93a.jpg",
     "src": "resources/img/pexels-aleksandar-pasaric-1820770.jpg"
   },
-  "resources/img/pexels-josh-hild-4424567.jpg": {
-    "file": "assets/pexels-josh-hild-4424567-f0aa8c78.jpg",
-    "src": "resources/img/pexels-josh-hild-4424567.jpg"
-  },
-  "resources/img/pexels-redrec-2743739.jpg": {
-    "file": "assets/pexels-redrec-2743739-fe75947e.jpg",
-    "src": "resources/img/pexels-redrec-2743739.jpg"
-  },
-  "resources/img/pexels-ricky-esquivel-1964474.jpg": {
-    "file": "assets/pexels-ricky-esquivel-1964474-5106400c.jpg",
-    "src": "resources/img/pexels-ricky-esquivel-1964474.jpg"
-  },
-  "resources/img/pexels-timea-kadar-2215609.jpg": {
-    "file": "assets/pexels-timea-kadar-2215609-c4d4064b.jpg",
-    "src": "resources/img/pexels-timea-kadar-2215609.jpg"
-  },
-  "resources/img/pexels_videos_1534965.mp4": {
-    "file": "assets/pexels_videos_1534965-62d6bd5e.mp4",
-    "src": "resources/img/pexels_videos_1534965.mp4"
-  },
-  "resources/img/production_id_4440816.mp4": {
-    "file": "assets/production_id_4440816-5331649a.mp4",
-    "src": "resources/img/production_id_4440816.mp4"
-  },
   "resources/js/app.css": {
-    "file": "assets/app-9d70d72b.css",
+    "file": "assets/app-5123f413.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
     "assets": [
-      "assets/pexels-redrec-2743739-fe75947e.jpg",
-      "assets/pexels-josh-hild-4424567-f0aa8c78.jpg",
-      "assets/pexels-ricky-esquivel-1964474-5106400c.jpg",
-      "assets/pexels-timea-kadar-2215609-c4d4064b.jpg",
-      "assets/production_id_4440816-5331649a.mp4",
-      "assets/pexels_videos_1534965-62d6bd5e.mp4",
-      "assets/bg-neon-60e27fad.jpg",
-      "assets/pexels-aleksandar-pasaric-1820770-3727c93a.jpg"
+      "assets/IMG_6480-884f2439.jpg",
+      "assets/EV1-b3dad82e.mp4",
+      "assets/logo-geez-19f53bcf.png",
+      "assets/logogeez-db7b49b2.png",
+      "assets/DSC09363-ba320575.jpg",
+      "assets/B4EADABF-5904-414F-9E02-40E69F5A5963_1_105_c-ee39901c.jpeg",
+      "assets/DSC00832-707aa45b.jpg",
+      "assets/DSC01026-8a4a84d6.jpg",
+      "assets/DSC09388-528459f8.jpg",
+      "assets/pexels-aleksandar-pasaric-1820770-3727c93a.jpg",
+      "assets/bg-neon-60e27fad.jpg"
     ],
     "css": [
-      "assets/app-9d70d72b.css"
+      "assets/app-5123f413.css"
     ],
-    "file": "assets/app-0d9ac170.js",
+    "file": "assets/app-d8768ee6.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }
