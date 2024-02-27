@@ -74,8 +74,6 @@
 import Navbar from "../components/navbar.vue";
 import FooterPage from "../components/footer-page.vue";
 
-import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/vue'
-
 const tabs = [
   {
     name: 'ALCHEMIA LOUNGE CUISINE',

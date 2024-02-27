@@ -113,7 +113,7 @@ const navigation = {
   social: [
     {
       name: 'Instagram',
-      href: '#',
+      href: 'https://instagram.com/gee.z_prod?igshid=OGQ5ZDc2ODk2ZA==',
       icon: defineComponent({
         render: () =>
           h('svg', { fill: 'currentColor', viewBox: '0 0 24 24' }, [
@@ -141,7 +141,7 @@ const navigation = {
     },
     {
         name: 'TikTok',
-        href: '#',
+        href: 'https://www.tiktok.com/@gee.z_prod?_t=8fxkxEsPeC0&_r=1',
         icon: defineComponent({
           render: () =>
             h('svg', { fill: 'currentColor', viewBox: '0 0 24 24' }, [
