@@ -1,8 +1,7 @@
 import axios from "axios";
-import store from "../store";
 
 const axiosClient = axios.create({
-    baseURL: "http://localhost:8000/api",
+    baseURL: "https://geez-production.com/api",
 })
 
 axiosClient.interceptors.request.use(config => {
