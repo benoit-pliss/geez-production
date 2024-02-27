@@ -59,6 +59,5 @@ export default {
 };
 </script>
 
-<style scoped>.header-image {
-    background-image: url('../../img/pexels-aleksandar-pasaric-1820770.jpg');
-}</style>
+<style scoped>
+</style>
