@@ -8,33 +8,33 @@
     "isEntry": true,
     "src": "resources/css/app.css"
   },
-  "resources/img/acceuil/B4EADABF-5904-414F-9E02-40E69F5A5963_1_105_c.jpeg": {
-    "file": "assets/B4EADABF-5904-414F-9E02-40E69F5A5963_1_105_c-ee39901c.jpeg",
-    "src": "resources/img/acceuil/B4EADABF-5904-414F-9E02-40E69F5A5963_1_105_c.jpeg"
-  },
-  "resources/img/acceuil/DSC00832.jpg": {
-    "file": "assets/DSC00832-707aa45b.jpg",
-    "src": "resources/img/acceuil/DSC00832.jpg"
-  },
-  "resources/img/acceuil/DSC01026.jpg": {
-    "file": "assets/DSC01026-8a4a84d6.jpg",
-    "src": "resources/img/acceuil/DSC01026.jpg"
-  },
-  "resources/img/acceuil/DSC09363.jpg": {
-    "file": "assets/DSC09363-ba320575.jpg",
-    "src": "resources/img/acceuil/DSC09363.jpg"
-  },
   "resources/img/acceuil/DSC09388.jpg": {
     "file": "assets/DSC09388-528459f8.jpg",
     "src": "resources/img/acceuil/DSC09388.jpg"
   },
-  "resources/img/acceuil/IMG_6480.jpg": {
-    "file": "assets/IMG_6480-884f2439.jpg",
-    "src": "resources/img/acceuil/IMG_6480.jpg"
+  "resources/img/acceuil/static/home-1.jpeg": {
+    "file": "assets/home-1-f8eba3fa.jpeg",
+    "src": "resources/img/acceuil/static/home-1.jpeg"
   },
-  "resources/img/acceuil/videos/EV1.mp4": {
-    "file": "assets/EV1-b3dad82e.mp4",
-    "src": "resources/img/acceuil/videos/EV1.mp4"
+  "resources/img/acceuil/static/home-2.mp4": {
+    "file": "assets/home-2-36133f28.mp4",
+    "src": "resources/img/acceuil/static/home-2.mp4"
+  },
+  "resources/img/acceuil/static/photo-1.jpeg": {
+    "file": "assets/photo-1-758bc80b.jpeg",
+    "src": "resources/img/acceuil/static/photo-1.jpeg"
+  },
+  "resources/img/acceuil/static/photo-2.jpeg": {
+    "file": "assets/photo-2-65db2524.jpeg",
+    "src": "resources/img/acceuil/static/photo-2.jpeg"
+  },
+  "resources/img/acceuil/static/photo-3.jpeg": {
+    "file": "assets/photo-3-bf45d99d.jpeg",
+    "src": "resources/img/acceuil/static/photo-3.jpeg"
+  },
+  "resources/img/acceuil/static/photo-4.jpeg": {
+    "file": "assets/photo-4-5d8be005.jpeg",
+    "src": "resources/img/acceuil/static/photo-4.jpeg"
   },
   "resources/img/bg-neon.jpg": {
     "file": "assets/bg-neon-60e27fad.jpg",
@@ -44,32 +44,27 @@
     "file": "assets/logogeez-db7b49b2.png",
     "src": "resources/img/logo/logogeez.png"
   },
-  "resources/img/pexels-aleksandar-pasaric-1820770.jpg": {
-    "file": "assets/pexels-aleksandar-pasaric-1820770-3727c93a.jpg",
-    "src": "resources/img/pexels-aleksandar-pasaric-1820770.jpg"
-  },
   "resources/js/app.css": {
-    "file": "assets/app-5123f413.css",
+    "file": "assets/app-5f831713.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
     "assets": [
-      "assets/IMG_6480-884f2439.jpg",
-      "assets/EV1-b3dad82e.mp4",
+      "assets/home-1-f8eba3fa.jpeg",
+      "assets/home-2-36133f28.mp4",
       "assets/logo-geez-19f53bcf.png",
       "assets/logogeez-db7b49b2.png",
-      "assets/DSC09363-ba320575.jpg",
-      "assets/B4EADABF-5904-414F-9E02-40E69F5A5963_1_105_c-ee39901c.jpeg",
-      "assets/DSC00832-707aa45b.jpg",
-      "assets/DSC01026-8a4a84d6.jpg",
+      "assets/photo-4-5d8be005.jpeg",
+      "assets/photo-1-758bc80b.jpeg",
+      "assets/photo-2-65db2524.jpeg",
+      "assets/photo-3-bf45d99d.jpeg",
       "assets/DSC09388-528459f8.jpg",
-      "assets/pexels-aleksandar-pasaric-1820770-3727c93a.jpg",
       "assets/bg-neon-60e27fad.jpg"
     ],
     "css": [
-      "assets/app-5123f413.css"
+      "assets/app-5f831713.css"
     ],
-    "file": "assets/app-d8768ee6.js",
+    "file": "assets/app-be4468c5.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }
