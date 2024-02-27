@@ -15,7 +15,7 @@ const hovered = ref('')
         <div class="flex h-screen flex-col md:flex-row">
             <!-- Curtain 1 - Initially 50% and Increases to 70% on Hover -->
             <a class="relative w-full md:w-1/2 h-full hover:z-10 transition-all duration-500"
-                @mouseover="hovered = 'left'" 
+                @mouseover="hovered = 'left'"
                 @mouseleave="hovered = ''"
                 :class="{ 'md:w-2/3 z-10': hovered === 'left', 'md:w-1/3 z-10': hovered === 'right'}"
                 href="/photo">
@@ -24,10 +24,10 @@ const hovered = ref('')
                     <h1 class="text-4xl font-bold text-white">Photographie</h1>
                 </div>
             </a>
-            
+
             <!-- Curtain 2 - Initially 50% and Decreases to 30% on Hover of the other -->
             <a class="relative w-full md:w-1/2 h-full hover:z-10 transition-all duration-500"
-                @mouseover="hovered = 'right'" 
+                @mouseover="hovered = 'right'"
                 @mouseleave="hovered = ''"
                 :class="{ 'md:w-1/3 z-10': hovered === 'left', ' md:w-2/3 z-10': hovered === 'right'}"
                 href="/video">

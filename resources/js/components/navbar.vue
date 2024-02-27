@@ -5,7 +5,7 @@
         <div class="flex lg:flex-1">
           <a href="/home" class="-m-1.5 p-1.5">
             <span class="sr-only">Geez Production</span>
-            <img class="h-14 w-auto" src="logo-geez.png" alt="Logo Geez Production" />
+            <img class="h-14 w-auto" src="../../../public/logo-geez.png" alt="Logo Geez Production" />
           </a>
         </div>
         <div class="flex lg:hidden">
@@ -27,7 +27,7 @@
           <div class="flex items-center justify-between">
             <a href="/home" class="-m-1.5 p-1.5">
               <span class="sr-only">Geez Production</span>
-              <img class="h-14 w-auto" src="logo-geez.png" alt="Logo Geez Production" />
+              <img class="h-14 w-auto" src="../../../public/logo-geez.png" alt="Logo Geez Production" />
             </a>
             <button type="button" class="-m-2.5 rounded-md p-2.5 text-gray-400" @click="mobileMenuOpen = false">
               <span class="sr-only">Fermer le menu</span>
@@ -48,12 +48,12 @@
       </Dialog>
     </header>
   </template>
-  
+
   <script setup>
 import { ref } from 'vue'
 import { Dialog, DialogPanel } from '@headlessui/vue'
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
-  
+
   const navigation = [
     { name: 'Home', href: '/home' },
     { name: 'Photographie', href: '/photo' },
@@ -61,6 +61,6 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
     //{ name: 'Audiovisuel', href: '/audiovisual' },
     { name: 'Contact', href: '/contact' },
   ]
-  
+
   const mobileMenuOpen = ref(false)
   </script>
