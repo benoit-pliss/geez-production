@@ -159,7 +159,7 @@ const navigation = {
 const newsletterAddress = ref('');
 
 const subscribe = () => {
-    subscribeToNewsletter(newsletterAddress)
+    subscribeToNewsletter(newsletterAddress.value)
         .then((res) => {
             notificationService.addToast(res.data.message, 'success');
         })
