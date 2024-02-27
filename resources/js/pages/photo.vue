@@ -18,17 +18,17 @@
         </div>
         <div class="flex flex-wrap items-start justify-end gap-6 sm:gap-8 lg:contents">
           <div class="w-0 flex-auto lg:ml-auto lg:w-auto lg:flex-none lg:self-end">
-            <img src="/storage/images/DSC09363.jpg" alt="" class="aspect-[7/5] w-[37rem] max-w-none rounded-2xl bg-gray-50 object-cover" />
+            <img src="/build/assets/static/photo-4.jpeg" alt="" class="aspect-[7/5] w-[37rem] max-w-none rounded-2xl bg-gray-50 object-cover" />
           </div>
           <div class="contents lg:col-span-2 lg:col-end-2 lg:ml-auto lg:flex lg:w-[37rem] lg:items-start lg:justify-end lg:gap-x-8">
             <div class="order-first flex w-64 flex-none justify-end self-end lg:w-auto">
-              <img src="/storage/images/B4EADABF-5904-414F-9E02-40E69F5A5963_1_105_c.jpeg" alt="" class="aspect-[4/3] w-[24rem] max-w-none flex-none rounded-2xl bg-gray-50 object-cover" />
+              <img src="/build/assets/static/photo-1.jpeg" alt="" class="aspect-[4/3] w-[24rem] max-w-none flex-none rounded-2xl bg-gray-50 object-cover" />
             </div>
             <div class="flex w-96 flex-auto justify-end lg:w-auto lg:flex-none">
-              <img src="/storage/images/DSC00832.jpg" alt="" class="aspect-[7/5] w-[37rem] max-w-none flex-none rounded-2xl bg-gray-50 object-cover" />
+              <img src="/build/assets/static/photo-2.jpeg" alt="" class="aspect-[7/5] w-[37rem] max-w-none flex-none rounded-2xl bg-gray-50 object-cover" />
             </div>
             <div class="hidden sm:block sm:w-0 sm:flex-auto lg:w-auto lg:flex-none">
-              <img src="/storage/images/DSC01026.jpg" alt="" class="aspect-[4/3] w-[24rem] max-w-none rounded-2xl bg-gray-50 object-cover" />
+              <img src="/build/assets/static/photo-3.jpeg" alt="" class="aspect-[4/3] w-[24rem] max-w-none rounded-2xl bg-gray-50 object-cover" />
             </div>
           </div>
         </div>
