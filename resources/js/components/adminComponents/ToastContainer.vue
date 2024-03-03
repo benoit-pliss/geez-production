@@ -1,18 +1,13 @@
 <script setup>
+import { inject, watch } from 'vue';
 import Toast from './Toast.vue';
-import {watch} from "vue";
+import {state as toastsState} from "../../services/notificationService.js";
 
-const props = defineProps({
-    toasts: Array
+const toasts = toastsState.toasts;
+
+watch(() => toasts, (newToasts) => {
+    console.log(newToasts);
 });
-
-watch(() => props.toasts, (toasts) => {
-    console.log(toasts);
-});
-
-console.log("toast");
-console.log(props.toasts);
-console.log(props.toasts.length);
 </script>
 
 <template>
