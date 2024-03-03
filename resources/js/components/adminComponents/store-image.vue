@@ -1,7 +1,6 @@
 <script setup>
 import {ref} from "vue";
 import {uploadPhoto} from "../../services/Photo-service.js";
-import {Photos} from "../../Models/Photos.js";
 import { PhotoIcon } from '@heroicons/vue/24/solid'
 import notificationService from "../../services/notificationService.js";
 import ListeTags from "./tags/liste-tags.vue";
@@ -18,6 +17,9 @@ const FileTypeAccepted = [
     'image/png'
 ];
 const TagsSelected = ref([]);
+const isUploading = ref(false);
+
+
 
 const onFileChange = (e) => {
     const filesTmp = e.target.files;
@@ -39,6 +41,7 @@ async function upload() {
     }
     try {
 
+        isUploading.value = true;
         for (let i = 0; i < files.value.length; i++) {
             const formData = new FormData();
 
@@ -72,6 +75,7 @@ async function upload() {
         }
 
         emits('update:photos');
+        isUploading.value = false;
 
     } catch (error) {
         notificationService.addToast('ERROROROROROR', 'error');
@@ -142,10 +146,12 @@ const removeTag = (tag) => {
             </div>
         </div>
         <div class="mt-6 flex justify-center items-center">
-            <button type="button" @click="upload"
+            <button v-if="!isUploading" type="button" @click="upload"
                     class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus-visible:outline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500">
                 Valider
             </button>
+
+            <progress v-if="isUploading" class="progress w-56"></progress>
         </div>
     </div>
 
