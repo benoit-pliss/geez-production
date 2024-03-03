@@ -4,7 +4,7 @@
     "src": "public/logo-geez.png"
   },
   "resources/css/app.css": {
-    "file": "assets/app-108ef8e1.css",
+    "file": "assets/app-bea58762.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
@@ -64,7 +64,7 @@
     "css": [
       "assets/app-5f831713.css"
     ],
-    "file": "assets/app-f88238e1.js",
+    "file": "assets/app-48058a98.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }
