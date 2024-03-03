@@ -1,5 +1,5 @@
 <script setup>
-import { inject, watch } from 'vue';
+import { watch } from 'vue';
 import Toast from './Toast.vue';
 import {state as toastsState} from "../../services/notificationService.js";
 

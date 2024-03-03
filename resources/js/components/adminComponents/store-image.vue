@@ -4,7 +4,6 @@ import {uploadPhoto} from "../../services/Photo-service.js";
 import { PhotoIcon } from '@heroicons/vue/24/solid'
 import notificationService from "../../services/notificationService.js";
 import ListeTags from "./tags/liste-tags.vue";
-import {logout} from "../../services/authService.js";
 
 const emits = defineEmits([
     'update:photos'
