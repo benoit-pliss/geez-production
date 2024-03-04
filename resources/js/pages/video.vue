@@ -73,7 +73,7 @@
 
 import Navbar from "../components/navbar.vue";
 import FooterPage from "../components/footer-page.vue";
-
+w
 const tabs = [
   {
     name: 'ALCHEMIA LOUNGE CUISINE',

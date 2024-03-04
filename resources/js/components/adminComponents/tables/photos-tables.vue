@@ -3,6 +3,7 @@
 import {ref} from "vue";
 import {updatePhoto} from "../../../services/Photo-service.js";
 import ComboboxTags from "../../dialog/create-tags/combobox-tags.vue";
+import notificationService from "../../../services/notificationService.js";
 
 let editingId = ref(null);
 
@@ -11,13 +12,19 @@ const props = defineProps({
 })
 
 const addtags = (tag) => {
-    if (!props.photos.find(p => p.tags.find(t => t.id === tag.id))) {
-        props.photos.find(p => p.id === editingId.value).tags.push(tag);
+    const photo = props.photos.find(p => p.id === editingId.value);
+    if (!photo.tags.some(existingTag => existingTag.id === tag.id)) {
+        photo.tags.push(tag);
+    } else {
+        notificationService.addToast(
+            "Ce tag est déjà associé à cette photo",
+            "error"
+        )
     }
 }
 
 const removeTag = (tag) => {
-    if (props.photos.find(p => p.tags.find(t => t.id === tag.id))) {
+    if (props.photos.find(p => p.id === editingId.value).tags.includes(tag)) {
         props.photos.find(p => p.id === editingId.value).tags = props.photos.find(p => p.id === editingId.value).tags.filter(t => t.id !== tag.id);
     }
 }
