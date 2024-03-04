@@ -1,6 +1,6 @@
 <script setup>
 
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {updatePhoto} from "../../../services/Photo-service.js";
 import ComboboxTags from "../../dialog/create-tags/combobox-tags.vue";
 import notificationService from "../../../services/notificationService.js";
@@ -9,6 +9,14 @@ let editingId = ref(null);
 
 const props = defineProps({
     photos: Array
+})
+
+const emits = defineEmits(['searchName']);
+
+const name = ref('');
+
+watch(name, (newValue) => {
+    emits('searchName', newValue);
 })
 
 const addtags = (tag) => {
@@ -59,6 +67,13 @@ async function saveChanges(photo) {
                         </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
+<!--                        <tr>-->
+<!--                            <td></td> &lt;!&ndash; Empty cell for "Miniature" column &ndash;&gt;-->
+<!--                            <td class="py-4 pl-4 pr-3 sm:pl-0"> &lt;!&ndash; Cell for "Name" column &ndash;&gt;-->
+<!--                                <input type="text" v-model="name" placeholder="Search by name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>-->
+<!--                            </td>-->
+<!--                            &lt;!&ndash; Add more empty cells for other columns if needed &ndash;&gt;-->
+<!--                        </tr>-->
                         <tr v-for="photo in props.photos" :key="photo.id">
                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                 <img :src="photo.url" alt="Photo miniature" width="50" height="50">

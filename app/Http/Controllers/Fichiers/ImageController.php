@@ -68,7 +68,13 @@ class ImageController extends Controller
 
     public function getPhotosWithTags(Request $request) : JsonResponse
     {
-        $photos = Images::with('tags')->paginate(10);
+        $searchName = $request->input('searchName');
+
+        $photos = Images::with('tags')
+            ->when($searchName, function ($query, $searchName) {
+                return $query->where('name', 'like', '%' . $searchName . '%');
+            })
+            ->paginate(10);
 
         return response()->json([
             'success' => true,
