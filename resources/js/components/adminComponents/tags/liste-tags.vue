@@ -13,7 +13,9 @@ const emit = defineEmits([
     'remove-tag'
 ]);
 
-
+const props = defineProps({
+    isDashboard: Boolean || false
+});
 const color = 'blue';
 
 
@@ -33,6 +35,9 @@ const openCreateTagsDialog = () => {
 
 
 const selectTag = (tag) => {
+    if (props.isDashboard) {
+        return;
+    }
     if (!selectedTags.value.find(t => t === tag)) {
         selectedTags.value.push(tag);
         emit('add-tag', tag)
@@ -57,12 +62,7 @@ const removeTag = (tag) => {
             <div class="flex flex-wrap w-full">
                 <div v-for="(tag, index) in Tags" :key="index" class="relative flex flex-row items-start py-4 pr-2">
 
-<!--                    <span -->
-<!--                          class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-700/10 cursor-pointer">-->
-<!--                        {{ tag.name }}-->
-<!--                    </span>-->
-
-                    <Badge v-if="!selectedTags.find(t => t === tag)" @click="selectTag(tag)"  :label="tag.name" :color="tag.color ? tag.color : null" />
+                    <Badge v-if="!selectedTags.find(t => t === tag)" @click="selectTag(tag)"  :is-dashboard="isDashboard" :label="tag.name" :color="tag.color ? tag.color : null" />
 
 
 

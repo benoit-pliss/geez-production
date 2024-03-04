@@ -13,7 +13,6 @@ const formData = ref({
 const errors = ref({});
 
 const login = () => {
-    console.log(formData.value)
     AuthLogin(formData.value)
         .then((res) => {
             errors.value = {}
