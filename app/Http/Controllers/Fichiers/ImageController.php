@@ -66,9 +66,9 @@ class ImageController extends Controller
         ]);
     }
 
-    public function getPhotosWithTags() {
-        $photos = Images::with('tags')->get();
-
+    public function getPhotosWithTags(Request $request) : JsonResponse
+    {
+        $photos = Images::with('tags')->paginate(10);
 
         return response()->json([
             'success' => true,
