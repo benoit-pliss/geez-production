@@ -4,8 +4,6 @@ import StoreImage from "./store-image.vue";
 import PhotosTables from "./tables/photos-tables.vue";
 import {getListePhotosWithTags} from "../../services/Photo-service.js";
 import {onMounted, ref} from "vue";
-import {logout} from "../../services/authService.js";
-
 const PhotosListe = ref([]);
 const isLoading = ref(false); // New loading state
 
