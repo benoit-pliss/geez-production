@@ -1,5 +1,5 @@
 <script setup>
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import { Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/vue'
 import { ArrowRightIcon, Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import DashboardPhotos from "../../components/adminComponents/dashboard-photos.vue";
 import {isTokenValid, logout} from "../../services/authService.js";
