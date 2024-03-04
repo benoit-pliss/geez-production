@@ -4,7 +4,7 @@
     "src": "public/logo-geez.png"
   },
   "resources/css/app.css": {
-    "file": "assets/app-5f16f428.css",
+    "file": "assets/app-b537f3a8.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
@@ -45,7 +45,7 @@
     "src": "resources/img/logo/logogeez.png"
   },
   "resources/js/app.css": {
-    "file": "assets/app-4c344f67.css",
+    "file": "assets/app-5ae77aed.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
@@ -62,9 +62,9 @@
       "assets/bg-neon-60e27fad.jpg"
     ],
     "css": [
-      "assets/app-4c344f67.css"
+      "assets/app-5ae77aed.css"
     ],
-    "file": "assets/app-dc989c5e.js",
+    "file": "assets/app-9e4d181b.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }
