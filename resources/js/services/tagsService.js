@@ -5,6 +5,5 @@ export function getTags() {
 }
 
 export function storeTag(data) {
-    console.log(data);
     return axiosClient.post("/tag/store", data);
 }

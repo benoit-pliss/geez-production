@@ -7,6 +7,7 @@ import Dashboard from "../pages/admin/dashboard.vue";
 import Photo from "../pages/photo.vue";
 import Video from "../pages/video.vue";
 import Contact from "../pages/contact.vue";
+import DashboardPhotos from "../components/adminComponents/dashboard-photos.vue";
 
 const routes = [
     {
@@ -55,9 +56,6 @@ const routes = [
         path: '/admin/dashboard',
         name: 'dashboard',
         component: Dashboard,
-        data: {
-            theme: 'light'
-        },
         meta: {
             requiresAuth: true
         }
@@ -68,6 +66,14 @@ const routes = [
         component: Login,
         data: {
             theme: 'light'
+        }
+    },
+    {
+        path: '/admin/photos',
+        name: 'admin-photos',
+        component: DashboardPhotos,
+        meta: {
+            requiresAuth: true
         }
     }
 

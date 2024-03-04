@@ -50,9 +50,6 @@ export default {
             hovered: false
         };
     },
-    onMounted() {
-        console.log('mounted')
-    }
 
 
 

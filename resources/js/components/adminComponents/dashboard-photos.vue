@@ -11,12 +11,12 @@ const currentPage = ref(1);
 const lastPage = ref(0);
 const total = ref(0);
 const to = ref(0);
+const searchName = ref('');
 
 const getPhotos = async () => {
     isLoading.value = true;
-    await getListePhotosWithTags(currentPage.value)
+    await getListePhotosWithTags(currentPage.value, 10, searchName.value)
         .then(response => {
-            console.log(response.data.photos);
             PhotosListe.value = response.data.photos.data;
             lastPage.value = response.data.photos.last_page;
             total.value = response.data.photos.total;
@@ -33,6 +33,11 @@ const changePage = (newPage) => { // Nouveau
     getPhotos();
 };
 
+const updateListe = (name) => {
+    searchName.value = name;
+    getPhotos();
+};
+
 onMounted(() => {
     getPhotos();
 });
@@ -44,7 +49,7 @@ onMounted(() => {
     <div class="spinner-container" v-if="isLoading">
         <span class="loading loading-spinner loading-md"></span>
     </div>
-    <PhotosTables v-else :photos="PhotosListe" />
+    <PhotosTables v-else :photos="PhotosListe" @searchName="updateListe" />
     <paginator v-model="currentPage" :to="to" :total="total" :last-page="lastPage" @change="changePage" />
 </template>
 

@@ -70,6 +70,7 @@ async function upload() {
                 })
                 .catch(error => {
                     notificationService.addToast('Erreur lors de l\'enregistrement du fichier', 'error');
+                    console.log(error);
                 });
 
         }
@@ -88,12 +89,10 @@ async function upload() {
 
 const addTag = (tag) => {
     TagsSelected.value.push(tag);
-    console.log(TagsSelected.value);
 }
 
 const removeTag = (tag) => {
     TagsSelected.value = TagsSelected.value.filter(t => t !== tag);
-    console.log(TagsSelected.value);
 }
 
 
