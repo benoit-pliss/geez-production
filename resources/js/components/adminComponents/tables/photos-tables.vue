@@ -4,7 +4,6 @@ import {ref} from "vue";
 import {updatePhoto} from "../../../services/Photo-service.js";
 import ComboboxTags from "../../dialog/create-tags/combobox-tags.vue";
 import notificationService from "../../../services/notificationService.js";
-import Paginator from "./paginator.vue";
 
 let editingId = ref(null);
 
@@ -46,9 +45,6 @@ async function saveChanges(photo) {
         <div class="mt-8 flow-root">
             <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                    <div class="mb-4">
-                        <h2 class="text-lg font-semibold text-gray-900">Nombre de photos: {{ props.photos.length }}</h2>
-                    </div>
                     <table class="min-w-full divide-y divide-gray-300">
                         <thead>
                         <tr>
