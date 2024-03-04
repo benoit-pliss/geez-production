@@ -1,10 +1,9 @@
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
-import StoreImage from "../../components/adminComponents/store-image.vue";
-import DashboardContent from "../../components/adminComponents/dashboard-content.vue";
-
+import DashboardPhotos from "../../components/adminComponents/dashboard-photos.vue";
 import {isTokenValid, logout} from "../../services/authService.js";
+import {ref} from "vue";
 
 const user = {
     name: 'Tom Cook',
@@ -12,16 +11,22 @@ const user = {
     imageUrl:
         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
+
+const selectedNavigation = ref('Photos');
+
 const navigation = [
-    { name: 'Dashboard', href: '#', current: false },
-    { name: 'Photos', href: '#', current: true },
-    { name: 'Vidéos', href: '#', current: false },
+    { name: 'Dashboard', href: '/dashboard', current: true },
+    { name: 'Photos', href: '/dashboard/photos', current: false },
+    { name: 'Albums', href: '/dashboard/albums', current: false },
+    { name: 'Tags', href: '/dashboard/tags', current: false },
 ]
+
 const userNavigation = [
     { name: 'Your Profile', href: '#' },
     { name: 'Settings', href: '#' },
     { name: 'Sign out', href: '/logout' },
 ]
+
 
 isTokenValid().then(response => {
     console.log(response);
@@ -29,6 +34,10 @@ isTokenValid().then(response => {
         logout();
     }
 });
+
+const changePage = (e) => {
+    selectedNavigation.value = e.name;
+};
 
 
 
@@ -56,7 +65,9 @@ isTokenValid().then(response => {
                                 </div>
                                 <div class="hidden md:block">
                                     <div class="ml-10 flex items-baseline space-x-4">
-                                        <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</a>
+                                        <a v-for="item in navigation" :key="item.name" @click="changePage(item)" :class="[item.name === selectedNavigation ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']" :aria-current="item.current ? 'page' : undefined">
+                                            {{ item.name }}
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -102,7 +113,9 @@ isTokenValid().then(response => {
 
                 <DisclosurePanel class="border-b border-gray-700 md:hidden">
                     <div class="space-y-1 px-2 py-3 sm:px-3">
-                        <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block rounded-md px-3 py-2 text-base font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</DisclosureButton>
+                        <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block rounded-md px-3 py-2 text-base font-medium']" :aria-current="item.current ? 'page' : undefined">
+                            {{ item.name }}
+                        </DisclosureButton>
                     </div>
                     <div class="border-t border-gray-700 pb-3 pt-4">
                         <div class="flex items-center px-5">
@@ -136,7 +149,7 @@ isTokenValid().then(response => {
             <div class="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
                 <div class="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
 
-                    <DashboardContent />
+                    <DashboardPhotos v-if="selectedNavigation === 'Photos'"/>
 
                 </div>
             </div>
