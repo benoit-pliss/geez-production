@@ -1,21 +1,36 @@
 <script setup>
-
 import StoreImage from "./store-image.vue";
 import PhotosTables from "./tables/photos-tables.vue";
 import {getListePhotosWithTags} from "../../services/Photo-service.js";
 import {onMounted, ref} from "vue";
+import Paginator from "./tables/paginator.vue";
+
 const PhotosListe = ref([]);
-const isLoading = ref(false); // New loading state
+const isLoading = ref(false);
+const currentPage = ref(1);
+const lastPage = ref(0);
+const total = ref(0);
+const to = ref(0);
 
 const getPhotos = async () => {
-    isLoading.value = true; // Start loading
-    await getListePhotosWithTags()
+    isLoading.value = true;
+    await getListePhotosWithTags(currentPage.value)
         .then(response => {
-            PhotosListe.value = response.data.photos;
+            console.log(response.data.photos);
+            PhotosListe.value = response.data.photos.data;
+            lastPage.value = response.data.photos.last_page;
+            total.value = response.data.photos.total;
+            to.value = response.data.photos.to;
+
         })
         .finally(() => {
-            isLoading.value = false; // End loading
+            isLoading.value = false;
         });
+};
+
+const changePage = (newPage) => { // Nouveau
+    currentPage.value = newPage;
+    getPhotos();
 };
 
 onMounted(() => {
@@ -30,6 +45,7 @@ onMounted(() => {
         <span class="loading loading-spinner loading-md"></span>
     </div>
     <PhotosTables v-else :photos="PhotosListe" />
+    <paginator v-model="currentPage" :to="to" :total="total" :last-page="lastPage" @change="changePage" />
 </template>
 
 <style scoped>

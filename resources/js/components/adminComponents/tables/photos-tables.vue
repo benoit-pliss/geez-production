@@ -4,6 +4,7 @@ import {ref} from "vue";
 import {updatePhoto} from "../../../services/Photo-service.js";
 import ComboboxTags from "../../dialog/create-tags/combobox-tags.vue";
 import notificationService from "../../../services/notificationService.js";
+import Paginator from "./paginator.vue";
 
 let editingId = ref(null);
 

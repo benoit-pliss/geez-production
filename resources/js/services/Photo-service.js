@@ -8,8 +8,8 @@ export function getListePhotos() {
     return axiosClient.get("/photos");
 }
 
-export function getListePhotosWithTags() {
-    return axiosClient.get("/photosWithTags");
+export async function getListePhotosWithTags(page = 1, pageSize = 10) {
+    return axiosClient.get(`/photosWithTags?page=${page}&pageSize=10`);
 }
 
 export function getListePhotosByTags(tags) {
