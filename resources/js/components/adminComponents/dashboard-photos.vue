@@ -17,7 +17,6 @@ const getPhotos = async () => {
     isLoading.value = true;
     await getListePhotosWithTags(currentPage.value, 10, searchName.value)
         .then(response => {
-            console.log(response.data.photos);
             PhotosListe.value = response.data.photos.data;
             lastPage.value = response.data.photos.last_page;
             total.value = response.data.photos.total;

@@ -77,7 +77,6 @@ export default {
     methods: {
 
         addTag(tag) {
-            console.log(tag);
             if (tag) {
                 this.current_tags.push(tag);
             }

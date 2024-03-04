@@ -1,13 +1,8 @@
 <script setup>
-import { watch } from 'vue';
 import Toast from './Toast.vue';
 import {state as toastsState} from "../../services/notificationService.js";
 
 const toasts = toastsState.toasts;
-
-watch(() => toasts, (newToasts) => {
-    console.log(newToasts);
-});
 </script>
 
 <template>

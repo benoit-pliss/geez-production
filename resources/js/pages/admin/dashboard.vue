@@ -30,7 +30,6 @@ const userNavigation = [
 
 
 isTokenValid().then(response => {
-    console.log(response);
     if (!response) {
         logout();
     }

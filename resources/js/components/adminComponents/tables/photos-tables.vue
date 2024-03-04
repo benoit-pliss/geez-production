@@ -40,9 +40,6 @@ const removeTag = (tag) => {
 async function saveChanges(photo) {
 
     await updatePhoto(photo)
-        .then(response => {
-            console.log(response);
-        })
     editingId.value = null;
 }
 

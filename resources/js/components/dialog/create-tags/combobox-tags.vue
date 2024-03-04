@@ -21,9 +21,7 @@ const props = defineProps({
 const emit = defineEmits(['update:selectedTag'])
 const tags = ref([])
 getTags().then(response => {
-    console.log(response.data);
     tags.value = response.data.tags;
-    console.log(tags.value);
 });
 
 const query = ref('')
