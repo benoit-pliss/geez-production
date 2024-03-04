@@ -4,7 +4,8 @@ const props = defineProps({
     color : String,
     id : Number,
     onClick : Function,
-    type : String
+    type : String,
+    isDashboard : Boolean || false
 });
 const colors = [
     'fill-red-500',
@@ -27,7 +28,7 @@ function getRandColor() {
         </svg>
         {{ label }}
 
-        <button v-if="type === 'remove'" class="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-gray-500/20" @click="onClick(id)" :id="`button-tag-${id}`">
+        <button v-if="type === 'remove' && !isDashboard" class="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-gray-500/20" @click="onClick(id)" :id="`button-tag-${id}`">
             <span class="sr-only">Remove</span>
             <svg viewBox="0 0 14 14" class="h-3.5 w-3.5 stroke-gray-600/50 group-hover:stroke-gray-600/75">
                 <path d="M4 4l6 6m0-6l-6 6" />
@@ -35,7 +36,7 @@ function getRandColor() {
             <span class="absolute -inset-1" />
         </button>
 
-        <button v-else class="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-gray-500/20" @click="onClick(id)" :id="`button-tag-${id}`">
+        <button v-if="type !== 'remove' && !isDashboard" class="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-gray-500/20" @click="onClick(id)" :id="`button-tag-${id}`">
             <span class="sr-only">Add</span>
             <svg viewBox="0 0 14 14" class="h-3.5 w-3.5 stroke-gray-600/50 group-hover:stroke-gray-600/75">
                 <path d="M4 7h6m-3-3v6" />

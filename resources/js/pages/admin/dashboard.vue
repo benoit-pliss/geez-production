@@ -4,6 +4,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import DashboardPhotos from "../../components/adminComponents/dashboard-photos.vue";
 import {isTokenValid, logout} from "../../services/authService.js";
 import {ref} from "vue";
+import ListeTags from "../../components/adminComponents/tags/liste-tags.vue";
 
 const user = {
     name: 'Tom Cook',
@@ -113,7 +114,7 @@ const changePage = (e) => {
 
                 <DisclosurePanel class="border-b border-gray-700 md:hidden">
                     <div class="space-y-1 px-2 py-3 sm:px-3">
-                        <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block rounded-md px-3 py-2 text-base font-medium']" :aria-current="item.current ? 'page' : undefined">
+                        <DisclosureButton v-for="item in navigation" :key="item.name" as="a" @click="changePage(item)" :class="[item.name === selectedNavigation ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block rounded-md px-3 py-2 text-base font-medium']" :aria-current="item.current ? 'page' : undefined">
                             {{ item.name }}
                         </DisclosureButton>
                     </div>
@@ -150,6 +151,7 @@ const changePage = (e) => {
                 <div class="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
 
                     <DashboardPhotos v-if="selectedNavigation === 'Photos'"/>
+                    <ListeTags v-else-if="selectedNavigation === 'Tags'" :is-dashboard="true"/>
 
                 </div>
             </div>
