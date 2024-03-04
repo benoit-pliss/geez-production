@@ -70,6 +70,7 @@ async function upload() {
                 })
                 .catch(error => {
                     notificationService.addToast('Erreur lors de l\'enregistrement du fichier', 'error');
+                    console.log(error);
                 });
 
         }
