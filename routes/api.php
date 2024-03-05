@@ -38,6 +38,13 @@ Route::get('/tags', [\App\Http\Controllers\Tags\TagsController::class, 'getTags'
 
 Route::post('/newsletter/subscribe', [\App\Http\Controllers\Newsletter\NewsletterController::class, 'subscribe']);
 
+Route::post('/contact/send', [\App\Http\Controllers\Message\MessageController::class, 'send']);
+Route::get('/messages', [\App\Http\Controllers\Message\MessageController::class, 'getMessages']);
+Route::get('/message/archived', [\App\Http\Controllers\Message\MessageController::class, 'getArchivedMessages']);
+Route::post('/message/read', [\App\Http\Controllers\Message\MessageController::class, 'read']);
+Route::post('/message/archive', [\App\Http\Controllers\Message\MessageController::class, 'archive']);
+Route::post('/message/delete', [\App\Http\Controllers\Message\MessageController::class, 'delete']);
+
 Route::get('/videos/{file_name}', function ($file_name) {
     $path = storage_path('app/public/videos/' . $file_name);
     $url = env('APP_URL') . '/storage/videos/' . $file_name;

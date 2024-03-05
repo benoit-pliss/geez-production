@@ -32,9 +32,8 @@ import {Tags} from "../Models/Tags.js";
                                 <option v-for="tag in load_tags" :key="tag.id" :value="tag.name"></option>
                             </datalist>
                         </div>
-                        <button type="button" class="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50" id="add-tag-button" v-on:click="addTag(
-                            load_tags.find(tag => tag.name === selectedTag)
-                        )">
+                        <button type="button" class="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50" id="add-tag-button" 
+                        @click="addTag(load_tags.find(tag => tag.name === selectedTag))">
                             <MagnifyingGlassIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
                         </button>
                     </div>
@@ -80,6 +79,7 @@ export default {
             if (tag) {
                 this.current_tags.push(tag);
             }
+            this.selectedTag = null;
             this.fetchImages();
         },
 
