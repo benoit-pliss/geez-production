@@ -69,7 +69,10 @@
             <component :is="item.icon" class="h-6 w-6" aria-hidden="true" />
           </a>
         </div>
-        <p class="mt-8 text-xs leading-5 text-gray-400 md:order-1 md:mt-0">&copy; 2023 Geez Production - Tous droits réservés</p>
+        <div class="flex flex-row items-center justify-center md:order-1 md:mt-0 space-x-6">
+          <p class="mt-8 text-xs leading-5 text-gray-400 md:order-1 md:mt-0">&copy; 2023 Geez Production - Tous droits réservés</p>
+          <a class="mt-8 text-xs leading-5 text-gray-400 md:order-1 md:mt-0" href="/admin/login">Espace admin</a>
+        </div>
       </div>
     </div>
   </footer>

@@ -14,7 +14,8 @@
             <router-view></router-view>
         </div>
 
-
+        <!-- Umami -->
+        <script defer src="https://analytics.eu.umami.is/script.js" data-website-id="dae1e59b-eb64-4764-b0b6-2be23f661401"></script>
 
         <script src="https://kit.fontawesome.com/895b664c37.js" crossorigin="anonymous"></script>
     </body>
