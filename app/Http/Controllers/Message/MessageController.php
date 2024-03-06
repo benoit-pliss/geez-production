@@ -48,7 +48,7 @@ class MessageController extends Controller
 
     public function getMessages()
     {
-        $messages = Message::whereNull('archived_at')->get();
+        $messages = Message::whereNull('archived_at')->orderBy('created_at', 'desc')->get();
 
         return response()->json([
             'success' => true,
@@ -59,7 +59,7 @@ class MessageController extends Controller
     
     public function getArchivedMessages()
     {
-        $messages = Message::whereNotNull('archived_at')->get();
+        $messages = Message::whereNotNull('archived_at')->orderBy('created_at', 'desc')->get();
 
         return response()->json([
             'success' => true,
