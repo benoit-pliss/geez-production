@@ -106,15 +106,17 @@
 import Navbar from "../components/navbar.vue";
 import FooterPage from "../components/footer-page.vue";
 import { BuildingOffice2Icon, EnvelopeIcon, PhoneIcon } from '@heroicons/vue/24/outline'
-import { postMessage } from "../services/contactService.js";
+import { postMessage } from "../services/messagesService.js";
 import notificationService from "../services/notificationService.js";
 import {ref} from 'vue'
 
-const firstname = ref('');
-const lastname = ref('');
-const email = ref('');
-const phone = ref('');
-const message = ref('');
+const formdata = ref({
+    firstname: '',
+    lastname: '',
+    email: '',
+    phone: '',
+    message: ''
+});
 
 const submit = () => {
     postMessage(
