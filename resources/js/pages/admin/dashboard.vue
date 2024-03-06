@@ -5,6 +5,7 @@ import DashboardPhotos from "../../components/adminComponents/dashboard-photos.v
 import {isTokenValid, logout} from "../../services/authService.js";
 import {ref} from "vue";
 import ListeTags from "../../components/adminComponents/tags/liste-tags.vue";
+import ListeMessage from "../../components/adminComponents/messages/liste-messages.vue";
 
 const user = {
     name: 'Tom Cook',
@@ -20,6 +21,7 @@ const navigation = [
     { name: 'Photos', href: '/dashboard/photos', current: false },
     { name: 'Albums', href: '/dashboard/albums', current: false },
     { name: 'Tags', href: '/dashboard/tags', current: false },
+    { name: 'Messages', href: '/dashboard/users', current: false },
 ]
 
 const userNavigation = [
@@ -58,7 +60,7 @@ const deconnection = () => {
                         <div class="flex h-16 items-center justify-between px-4 sm:px-0">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
-                                    <img class="h-8 w-8" src="../../../img/logo/logogeez.png" alt="Your Company" />
+                                    <img class="h-10" src="../../../img/logo/logo-geez.png" alt="Your Company" />
                                 </div>
                                 <div class="hidden md:block">
                                     <div class="ml-10 flex items-baseline space-x-4">
@@ -131,6 +133,7 @@ const deconnection = () => {
 
                     <DashboardPhotos v-if="selectedNavigation === 'Photos'"/>
                     <ListeTags v-else-if="selectedNavigation === 'Tags'" :is-dashboard="true"/>
+                    <ListeMessage v-else-if="selectedNavigation === 'Messages'" :is-dashboard="true"/>
 
                 </div>
             </div>
