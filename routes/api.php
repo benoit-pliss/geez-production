@@ -26,7 +26,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::put('/photo/update', [\App\Http\Controllers\Fichiers\ImageController::class, 'update']);
 
-
+    
+    Route::get('/messages', [\App\Http\Controllers\Message\MessageController::class, 'getMessages']);
+    Route::get('/message/archived', [\App\Http\Controllers\Message\MessageController::class, 'getArchivedMessages']);
+    Route::post('/message/read', [\App\Http\Controllers\Message\MessageController::class, 'read']);
+    Route::post('/message/archive', [\App\Http\Controllers\Message\MessageController::class, 'archive']);
+    Route::post('/message/delete', [\App\Http\Controllers\Message\MessageController::class, 'delete']);
 });
 
 Route::get('/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'getListe']);
@@ -34,9 +39,13 @@ Route::get('/photosWithTags', [\App\Http\Controllers\Fichiers\ImageController::c
 Route::get('/photosByTags', [\App\Http\Controllers\Fichiers\ImageController::class, 'getPhotosByTags']);
 Route::get('/get30RandomPhotosWithTags', [\App\Http\Controllers\Fichiers\ImageController::class, 'get30RandomPhotosWithTags']);
 
+Route::post('/message/send', [\App\Http\Controllers\Message\MessageController::class, 'send']);
+
 Route::get('/tags', [\App\Http\Controllers\Tags\TagsController::class, 'getTags']);
 
 Route::post('/newsletter/subscribe', [\App\Http\Controllers\Newsletter\NewsletterController::class, 'subscribe']);
+
+
 
 Route::get('/videos/{file_name}', function ($file_name) {
     $path = storage_path('app/public/videos/' . $file_name);
