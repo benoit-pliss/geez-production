@@ -8,6 +8,7 @@ import Photo from "../pages/photo.vue";
 import Video from "../pages/video.vue";
 import Contact from "../pages/contact.vue";
 import DashboardPhotos from "../components/adminComponents/dashboard-photos.vue";
+import CarouselVideos from "../components/videos/carousel-videos.vue";
 
 const routes = [
     {
@@ -18,7 +19,7 @@ const routes = [
     {
         path: '/sandbox',
         name: 'sandbox',
-        component: Dashboard,
+        component: CarouselVideos,
     },
     {
         path: '/home',
