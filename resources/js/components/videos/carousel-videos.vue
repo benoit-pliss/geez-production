@@ -1,6 +1,6 @@
 <script>
 // Import Swiper core and required modules
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import { Navigation, Pagination, Scrollbar, A11y, EffectCoverflow } from 'swiper/modules';
 
 // Import Swiper Vue.js components
 import {Swiper, SwiperSlide} from 'swiper/vue';
@@ -10,6 +10,10 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+
+import 'swiper/css/effect-coverflow';
+import 'swiper/css/pagination';
+
 import {onMounted, ref} from "vue";
 
 // Import Swiper styles
@@ -69,7 +73,7 @@ export default {
             onSwiper,
             onSlideChange,
             reachEnd,
-            modules: [Navigation, Pagination, Scrollbar, A11y],
+            modules: [Navigation, Pagination, Scrollbar, A11y, EffectCoverflow]
         };
     },
 
@@ -105,6 +109,9 @@ export default {
         };
     },
 };
+
+
+
 </script>
 
 
@@ -117,16 +124,28 @@ export default {
             ref="mySwiper"
             :modules="modules"
             :slides-per-view="3"
-            :space-between="50"
+            :space-between="100"
             navigation
-            :scrollbar="{ draggable: false }"
+            :scrollbar="{ draggable: false, hide : true , el: '.swiper-scrollbar' }"
             @swiper="onSwiper"
             @slideChange="onSlideChange"
             @reachEnd="reachEnd"
-            centeredSlides
+            centeredSlide
+            
+
+            :effect="'coverflow'"
+            :grabCursor="true"
+            :centeredSlides="true"
+            :coverflowEffect="{
+            rotate: 50,
+            stretch: 0,
+            depth: 100,
+            modifier: 1,
+            slideShadows: true
+            }"
         >
             <swiper-slide v-for="video in videos" :key="video.id">
-                <video ref="videos" class="absolute inset-0 object-cover"  loop muted v-bind="video">
+                <video ref="videos" class="absolute inset-0 object-cover size-full"  loop muted v-bind="video">
                     <source :src="video.url" type="video/mp4">
                 </video>
             </swiper-slide>
