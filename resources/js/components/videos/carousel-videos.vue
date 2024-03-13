@@ -62,9 +62,12 @@ export default {
             //lancer la première vidéo
             videos.value[0].play();
 
-            // videos.value.forEach((video, index) => {
-            //     video.currentTime = 0.2; // Réinitialise la position de lecture de la vidéo
-            // });
+            // Précharger les vidéos
+            videos.value.forEach((video) => {
+                const videoElement = document.createElement('video');
+                videoElement.src = video.url;
+                videoElement.preload = 'auto';
+            });
         });
 
         return {
@@ -124,15 +127,14 @@ export default {
             ref="mySwiper"
             :modules="modules"
             :slides-per-view="3"
-            :space-between="100"
+            :space-between="50"
             navigation
+            pagination
             :scrollbar="{ draggable: false, hide : true , el: '.swiper-scrollbar' }"
             @swiper="onSwiper"
             @slideChange="onSlideChange"
             @reachEnd="reachEnd"
             centeredSlide
-            
-
             :effect="'coverflow'"
             :grabCursor="true"
             :centeredSlides="true"
@@ -143,16 +145,18 @@ export default {
             modifier: 1,
             slideShadows: true
             }"
+            :autoHeight="true"
+
         >
             <swiper-slide v-for="video in videos" :key="video.id">
-                <video ref="videos" class="absolute inset-0 object-cover size-full"  loop muted v-bind="video">
+                <video ref="videos" class="video-slide" loop muted v-bind="video" preload="auto" controls>
                     <source :src="video.url" type="video/mp4">
+                    <track kind="captions" :src="video.captions" srclang="fr" label="French captions">
                 </video>
             </swiper-slide>
         </swiper>
     </div>
 </template>
-
 
 <style scoped>
 .swiper-slide {
@@ -164,5 +168,33 @@ export default {
     top: auto;
     bottom: 10px;
 }
-</style>
 
+.swiper-pagination-bullet {
+    width: 12px;
+    height: 12px;
+    background: #fff;
+}
+
+.swiper-pagination-bullet-active {
+    background: #007aff;
+}
+
+.video-slide {
+    width: 100%;
+    height: auto; /* Ajuste la hauteur en fonction de la vidéo */
+    object-fit: cover;
+}
+
+.swiper-slide {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-container {
+    height: 500px; /* Ajustez cette valeur en fonction de vos besoins */
+}
+
+.swiper-slide, .video-slide {
+    height: 100%; /* Cela permettra à ces éléments de prendre la hauteur totale de leur conteneur parent */
+}
+</style>
