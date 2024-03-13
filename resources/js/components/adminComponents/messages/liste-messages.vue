@@ -3,6 +3,13 @@
 import {onMounted, ref, defineEmits} from "vue";
 import {getMessages, getArchivedMessages, deleteMessage, archiveMessage, readMessage} from "../../../services/messagesService.js";
 import notificationService from "../../../services/notificationService.js";
+import { 
+    CheckCircleIcon,
+    ArchiveBoxIcon,
+    TrashIcon,
+    ChevronDownIcon,
+ } from "@heroicons/vue/24/outline";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 
 const messages = ref([]);
 const archiveVue = ref(false);
@@ -86,7 +93,7 @@ const read = (id) => {
       </div>
     </div>
     <div class="mt-8 flow-root">
-      <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div class="-mx-4 -my-2  sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
           <table class="min-w-full divide-y divide-gray-300">
             <thead>
@@ -126,22 +133,42 @@ const read = (id) => {
                     <div class="mt-1 text-gray-500 whitespace-pre-wrap">{{ message.message }}</div>
                 </td>
                 <td class="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                    <div class="flex items-center justify-center space-x-5 flex-col sm:flex-row">
-                        <button 
-                        href="#" 
-                        v-if="message.read_at === null"
-                        class="text-indigo-600 hover:text-indigo-900" 
-                        @click="read(message.id)"><i class="fa-solid fa-check-to-slot"></i><span class="sr-only">, {{ message.name }}</span></button>
-                        <button 
-                        href="#" 
-                        class="text-indigo-600 hover:text-indigo-900" 
-                        @click="remove(message.id)"><i class="fa-solid fa-trash-can"></i><span class="sr-only">, {{ message.name }}</span></button>
-                        <button 
-                        href="#" 
-                        v-if="archiveVue === false"
-                        class="text-indigo-600 hover:text-indigo-900" 
-                        @click="archive(message.id)"><i class="fa-solid fa-box-archive"></i><span class="sr-only">, {{ message.name }}</span></button>
-                    </div>
+                    
+                    <Menu as="div" class="relative inline-block text-left">
+                        <div>
+                        <MenuButton class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                            Options
+                            <ChevronDownIcon class="-mr-1 h-4 w-4 text-gray-400" aria-hidden="true" />
+                        </MenuButton>
+                        </div>
+
+                        <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
+                        <MenuItems class="absolute right-0 z-30 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <div class="py-1">
+                                <MenuItem v-slot="{ active }" v-if="message.read_at === null">
+                                <a href="#" @click="read(message.id)" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
+                                    <CheckCircleIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                                    Marquer comme lu
+                                </a>
+                                </MenuItem>
+                                <MenuItem v-slot="{ active }">
+                                <a href="#" @click="archive(message.id)" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
+                                    <ArchiveBoxIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                                    Archiver
+                                </a>
+                                </MenuItem>
+                                <MenuItem v-slot="{ active }">
+                                <a href="#" @click="remove(message.id)" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
+                                    <TrashIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                                    Supprimer
+                                </a>
+                                </MenuItem>
+                            </div>
+                        </MenuItems>
+                        </transition>
+                    </Menu>
+
+
                 </td>
               </tr>
             </tbody>
