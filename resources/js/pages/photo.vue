@@ -58,7 +58,7 @@ export default {
     components: {
         Navbar,
         FooterPage,
-        Galerie
+        Galerie,
     },
     mounted() {
         document.getElementById('scroll-down-gallery-button').addEventListener('click', () => {

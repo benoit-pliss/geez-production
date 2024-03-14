@@ -1,9 +1,3 @@
-<script setup>
-import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
-import Badge from '../components/Badge.vue';
-import {Tags} from "../Models/Tags.js";
-</script>
-
 <template>
     <div class="bg-white pb-24 sm:pb-32 pt-10" id="gallery">
         <div class="mx-auto px-6 lg:px-8">
@@ -23,21 +17,23 @@ import {Tags} from "../Models/Tags.js";
                     </div>
                 </div>
 
+                
+                <Combobox as="div" v-model="selectedTags">
+                    <div class="relative mt-2">
+                        <ComboboxInput class="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" @change="query = $event.target.value"/>
+                        <ComboboxButton class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
+                            <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+                        </ComboboxButton>
 
-                <div class="mt-3 sm:ml-4 sm:mt-0">
-                    <div class="flex rounded-md shadow-sm">
-                        <div class="relative flex-grow focus-within:z-10">
-                            <input list="tags" type="text" name="search-tag" id="search-tag" v-model="selectedTag" class="w-full rounded-none rounded-l-md border-0 px-3 py-1.5 text-sm leading-6 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-gray-900" placeholder="Ajouter un filtre" />
-                            <datalist id="tags">
-                                <option v-for="tag in load_tags" :key="tag.id" :value="tag.name"></option>
-                            </datalist>
-                        </div>
-                        <button type="button" class="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50" id="add-tag-button" 
-                        @click="addTag(load_tags.find(tag => tag.name === selectedTag))">
-                            <MagnifyingGlassIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
-                        </button>
+                        <ComboboxOptions v-if="filteredTags.length > 0" class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                            <ComboboxOption v-for="tag in filteredTags" :key="tag.id" :value="tag" as="template" v-slot="{ active }">
+                                <li :class="['relative cursor-default select-none py-2 pl-3 pr-9', active ? 'bg-gray-200' : 'text-gray-900']" v-on:click="addTag(tag)">
+                                    {{ tag.name }}
+                                </li>
+                            </ComboboxOption>
+                        </ComboboxOptions>
                     </div>
-                </div>
+                </Combobox>
             </div>
 
             <div class="mx-auto mt-16 flow-root max-w-2xl sm:mt-20 lg:mx-0 lg:max-w-none">
@@ -53,86 +49,101 @@ import {Tags} from "../Models/Tags.js";
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 </template>
 
-<script>
+<script setup>
+import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
+import Badge from '../components/Badge.vue';
 import {getTags} from "../services/tagsService.js";
 import {get30RandomPhotosWithTags, getListePhotosByTags} from "../services/Photo-service.js";
+import {
+  Combobox,
+  ComboboxButton,
+  ComboboxInput,
+  ComboboxLabel,
+  ComboboxOption,
+  ComboboxOptions,
+} from '@headlessui/vue'
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 import {Tags} from "../Models/Tags.js";
-
-export default {
-    data () {
-        return {
-            load_tags : [],
-            current_tags : [],
-            selectedTag : null,
-            images : [],
-        };
-    },
-    methods: {
-
-        addTag(tag) {
-            if (tag) {
-                this.current_tags.push(tag);
-            }
-            this.selectedTag = null;
-            this.fetchImages();
-        },
-
-        removeTag(tag_id) {
-            const index = this.current_tags.findIndex(tag => tag.id === tag_id);
-            if (index !== -1) {
-                this.current_tags.splice(index, 1);
-            }
-            this.fetchImages();
-        },
+import {ref, onMounted, computed} from 'vue'
 
 
-        fetchTags() {
-            getTags()
-                .then(response => {
-                    this.load_tags = response.data.tags;
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-        },
 
-        fetchImages() {
-            if (this.current_tags.length > 0) {
-                getListePhotosByTags(this.current_tags.map(tag => tag.id))
-                    .then(response => {
-                        this.images = response.data.photos;
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
-            } else {
-                get30RandomPhotosWithTags()
-                    .then(response => {
-                        this.images = response.data.photos;
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
-            }
-        }
+const load_tags = ref([])
+const current_tags = ref([])
+const images = ref([])
 
-    },
-    mounted() {
-        for (let image of this.images) {
-            image.hidden = true;
-        }
+const addTag = (tag) => {
+    if (tag) {
+        current_tags.value.push(tag);
+    }
+    query.value = '';
+    fetchImages();
+}
 
-        this.fetchImages();
-        this.fetchTags();
+const removeTag = (tag_id) => {
+    const index = current_tags.value.findIndex(tag => tag.id === tag_id);
+    if (index !== -1) {
+        current_tags.value.splice(index, 1);
+    }
+    fetchImages();
+}
 
+const fetchTags = () => {
+    getTags()
+        .then(response => {
+            load_tags.value = response.data.tags;
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
+const fetchImages = () => {
+    if (current_tags.value.length > 0) {
+        getListePhotosByTags(current_tags.value.map(tag => tag.id))
+            .then(response => {
+                images.value = response.data.photos;
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    } else {
+        get30RandomPhotosWithTags()
+            .then(response => {
+                images.value = response.data.photos;
+            })
+            .catch(error => {
+                console.log(error);
+            });
     }
 }
+
+
+const query = ref('')
+
+const selectedTags = ref(null)
+
+const filteredTags = computed(() =>
+    query.value === ''
+        ? load_tags.value
+        : load_tags.value.filter((tag) => {
+            return tag.name.toLowerCase().includes(query.value.toLowerCase())
+        })
+)
+
+onMounted(() => {
+    for (let image of images.value) {
+        image.hidden = true;
+    }
+
+    fetchImages();
+    fetchTags();
+
+})
 </script>
 
 <style scoped>

@@ -146,19 +146,21 @@ const read = (id) => {
                         <MenuItems class="absolute right-0 z-30 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                             <div class="py-1">
                                 <MenuItem v-slot="{ active }" v-if="message.read_at === null">
-                                <a href="#" @click="read(message.id)" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
+                                <a href="#" 
+                                v-on:click="read(message.id)"
+                                :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
                                     <CheckCircleIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                                     Marquer comme lu
                                 </a>
                                 </MenuItem>
                                 <MenuItem v-slot="{ active }">
-                                <a href="#" @click="archive(message.id)" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
+                                <a href="#" v-on:click="archive(message.id)" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
                                     <ArchiveBoxIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                                     Archiver
                                 </a>
                                 </MenuItem>
                                 <MenuItem v-slot="{ active }">
-                                <a href="#" @click="remove(message.id)" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
+                                <a href="#" v-on:click="remove(message.id)" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
                                     <TrashIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                                     Supprimer
                                 </a>
