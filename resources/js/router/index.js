@@ -7,6 +7,7 @@ import Dashboard from "../pages/admin/dashboard.vue";
 import Photo from "../pages/photo.vue";
 import Video from "../pages/video.vue";
 import Contact from "../pages/contact.vue";
+import Legal from "../pages/legal.vue";
 import DashboardPhotos from "../components/adminComponents/dashboard-photos.vue";
 
 const routes = [
@@ -50,6 +51,14 @@ const routes = [
         component: Contact,
         data: {
             theme: 'light'
+        }
+    },
+    {
+        path: '/legal',
+        name: 'legal',
+        component: Legal,
+        data: {
+            theme: 'dark'
         }
     },
     {
