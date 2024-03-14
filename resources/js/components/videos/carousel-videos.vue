@@ -22,6 +22,11 @@ export default {
         Swiper,
         SwiperSlide,
     },
+    methods: {
+        updateSwiperHeight() {
+            this.mySwiper.updateAutoHeight();
+        }
+    },
     setup() {
         const mySwiper = ref(null);
         const videos = ref([]);
@@ -140,8 +145,8 @@ export default {
             :centeredSlides="true"
             :coverflowEffect="{
             rotate: 50,
-            stretch: 0,
-            depth: 100,
+            stretch: 30,
+            depth: 200,
             modifier: 1,
             slideShadows: true
             }"
@@ -149,7 +154,7 @@ export default {
 
         >
             <swiper-slide v-for="video in videos" :key="video.id">
-                <video ref="videos" class="video-slide" loop muted v-bind="video" preload="auto" controls>
+                <video ref="videos" class="video-slide" loop muted v-bind="video" preload="auto" controls @loadedmetadata="updateSwiperHeight">
                     <source :src="video.url" type="video/mp4">
                     <track kind="captions" :src="video.captions" srclang="fr" label="French captions">
                 </video>
@@ -159,42 +164,24 @@ export default {
 </template>
 
 <style scoped>
+.swiper {
+    width: 100%;
+    height: auto;
+}
+
 .swiper-slide {
-    width: 600px;
-    height: 600px;
-}
-
-.swiper-button-next, .swiper-button-prev {
-    top: auto;
-    bottom: 10px;
-}
-
-.swiper-pagination-bullet {
-    width: 12px;
-    height: 12px;
+    text-align: center;
+    font-size: 18px;
     background: #fff;
 }
 
-.swiper-pagination-bullet-active {
-    background: #007aff;
+.swiper .swiper-slide {
+    height: 300px;
+    line-height: 300px;
 }
 
-.video-slide {
-    width: 100%;
-    height: auto; /* Ajuste la hauteur en fonction de la vidéo */
-    object-fit: cover;
-}
-
-.swiper-slide {
-    width: 100%;
-    height: 100%;
-}
-
-.swiper-container {
-    height: 500px; /* Ajustez cette valeur en fonction de vos besoins */
-}
-
-.swiper-slide, .video-slide {
-    height: 100%; /* Cela permettra à ces éléments de prendre la hauteur totale de leur conteneur parent */
+.swiper .swiper-slide:nth-child(2n) {
+    height: auto;
+    line-height: 500px;
 }
 </style>
