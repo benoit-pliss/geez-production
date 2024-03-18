@@ -17,7 +17,7 @@
                     </div>
                 </div>
 
-                
+
                 <Combobox as="div" v-model="selectedTags">
                     <div class="relative mt-2">
                         <ComboboxInput class="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" @change="query = $event.target.value"/>
@@ -41,7 +41,7 @@
                     <div v-for="image in images" :key="image.name" class="pt-8 sm:inline-block sm:w-full sm:px-4">
                         <!-- quand hover rendre visible la div des Badges-->
                         <div class="overflow-hidden transition duration-300 transform rounded-lg hover:scale-105"  v-on:mouseover="image.hidden = true" v-on:mouseleave="image.hidden = false">
-                            <img :src="image.url" class="object-cover w-full h-auto" alt="geez"/>
+                            <img :src="image.url" loading="lazy" class="object-cover w-full h-auto" alt="geez"/>
                                 <div class="absolute inset-0 flex place-content-end justify-start flex-wrap-reverse gap-2 p-4" :class="{ 'hidden' : !image.hidden }">
                                     <Badge v-for="tag in image.tags" :key="tag.id" :label="tag.name" :color="tag.color" type="add" v-on:click="addTag(tag)" :id="tag.id"/>
                             </div>
@@ -54,7 +54,6 @@
 </template>
 
 <script setup>
-import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
 import Badge from '../components/Badge.vue';
 import {getTags} from "../services/tagsService.js";
 import {get30RandomPhotosWithTags, getListePhotosByTags} from "../services/Photo-service.js";
@@ -66,15 +65,14 @@ import {
   ComboboxOption,
   ComboboxOptions,
 } from '@headlessui/vue'
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
-import {Tags} from "../Models/Tags.js";
+import { ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 import {ref, onMounted, computed} from 'vue'
-
-
+import LazyLoad from "../directives/LazyLoad.js";
 
 const load_tags = ref([])
 const current_tags = ref([])
 const images = ref([])
+
 
 const addTag = (tag) => {
     if (tag) {
