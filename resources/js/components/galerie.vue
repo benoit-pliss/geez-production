@@ -61,13 +61,11 @@ import {
   Combobox,
   ComboboxButton,
   ComboboxInput,
-  ComboboxLabel,
   ComboboxOption,
   ComboboxOptions,
 } from '@headlessui/vue'
 import { ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 import {ref, onMounted, computed} from 'vue'
-import LazyLoad from "../directives/LazyLoad.js";
 
 const load_tags = ref([])
 const current_tags = ref([])
