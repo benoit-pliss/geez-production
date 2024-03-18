@@ -46,7 +46,3 @@ Route::get('/tags', [\App\Http\Controllers\Tags\TagsController::class, 'getTags'
 
 Route::post('/newsletter/subscribe', [\App\Http\Controllers\Newsletter\NewsletterController::class, 'subscribe']);
 
-
-Route::post('/testStoreData', [ImageController::class, 'storeV2']);
-Route::get('/testFtpConnection', [ImageController::class, 'testFtpConnection']);
-
