@@ -11,6 +11,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Image;
+use Intervention\Image\ImageManager;
 
 class ImageController extends Controller
 {
@@ -22,7 +24,7 @@ class ImageController extends Controller
 
         $file = $request->file('file');
         $originalName = $file->getClientOriginalName();
-        $filename = time().'_'.$originalName;
+        $filename = pathinfo($originalName, PATHINFO_FILENAME) . '.webp';
 
         // Vérifiez si l'image existe déjà en base de données
         if (Images::class::where('name', pathinfo($originalName, PATHINFO_FILENAME))->exists()) {
@@ -32,8 +34,11 @@ class ImageController extends Controller
             ], 400);
         }
 
-        // Stocker l'image sur le serveur FTP
-        Storage::disk('ftp')->put('images/'.$filename, file_get_contents($file), 'public');
+        // Convertir l'image en WEBP et la stocker sur le serveur FTP
+        $manager = new ImageManager(array('driver' => 'gd'));
+
+        $image = $manager->make($file)->encode('webp', 75);
+        Storage::disk('ftp')->put('images/'.$filename, (string) $image, 'public');
 
         // Enregistrez l'URL en base de données
         $image = Images::class::create([
