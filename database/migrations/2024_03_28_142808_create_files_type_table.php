@@ -19,6 +19,7 @@ return new class extends Migration
 
         Schema::table('files', function (Blueprint $table) {
             $table->renameColumn('type', 'id_type');
+            $table->string('poster_url')->nullable();
         });
     }
 
@@ -30,6 +31,7 @@ return new class extends Migration
         Schema::dropIfExists('files_type');
 
         Schema::table('files', function (Blueprint $table) {
+            $table->dropColumn('poster_url');
             $table->renameColumn('id_type', 'type');
         });
     }
