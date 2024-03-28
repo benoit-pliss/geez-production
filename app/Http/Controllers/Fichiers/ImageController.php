@@ -10,38 +10,44 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Image;
+use Intervention\Image\ImageManager;
 
 class ImageController extends Controller
 {
-    public function upload(Request $request) : JsonResponse
+    public function uploadAndStore(Request $request) : JsonResponse
     {
         $request->validate([
             'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
         ]);
 
-
-        // Enregistrez l'image dans le répertoire 'data' et obtenez le chemin du fichier
         $file = $request->file('file');
         $originalName = $file->getClientOriginalName();
-        $path = $file->storeAs('public/images', $originalName);
+        $filename = pathinfo($originalName, PATHINFO_FILENAME) . '.webp';
 
-
-        if (Images::class::where('name', $originalName)->exists()) {
+        // Vérifiez si l'image existe déjà en base de données
+        if (Images::class::where('name', pathinfo($originalName, PATHINFO_FILENAME))->exists()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Cette image existe déjà en base de données.',
             ], 400);
         }
 
+        // Convertir l'image en WEBP et la stocker sur le serveur FTP
+        $manager = new ImageManager(array('driver' => 'gd'));
+
+        $image = $manager->make($file)->encode('webp', 75);
+        Storage::disk('ftp')->put('images/'.$filename, (string) $image, 'public');
+
         // Enregistrez l'URL en base de données
         $image = Images::class::create([
             'name' => pathinfo($originalName, PATHINFO_FILENAME),
             'description' => $request->input('description'),
-            'url' => env('APP_URL') . '/storage/images/' . $originalName,
-        ], 200);
+            'url' => env('DATA_URL') . '/images/' . $filename,
+        ]);
 
         if ($request->has('tags')) {
-
             $tags = $request->input('tags');
             $tagsArray = json_decode($tags, true);
             foreach ($tagsArray as $tag) {
@@ -51,7 +57,7 @@ class ImageController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Image uploaded',
+            'message' => 'Image uploaded and stored successfully',
             'entity' => $image,
         ]);
     }
