@@ -3,43 +3,51 @@
 namespace App\Http\Controllers\Fichiers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Files;
 use App\Models\FilesTags;
+use App\Models\Images;
 use App\Models\Tags;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Image;
+use Intervention\Image\ImageManager;
 
 class ImageController extends Controller
 {
-    public function upload(Request $request) : JsonResponse
+    public function uploadAndStore(Request $request) : JsonResponse
     {
         $request->validate([
             'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
         ]);
 
-
         $file = $request->file('file');
         $originalName = $file->getClientOriginalName();
-        $path = $file->storeAs('public/images', $originalName);
+        $filename = pathinfo($originalName, PATHINFO_FILENAME) . '.webp';
 
-
-        if (Files::class::where('name', $originalName)->exists()) {
+        // Vérifiez si l'image existe déjà en base de données
+        if (Images::class::where('name', pathinfo($originalName, PATHINFO_FILENAME))->exists()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Cette image existe déjà en base de données.',
             ], 400);
         }
 
-        $image = Files::class::create([
+        // Convertir l'image en WEBP et la stocker sur le serveur FTP
+        $manager = new ImageManager(array('driver' => 'gd'));
+
+        $image = $manager->make($file)->encode('webp', 75);
+        Storage::disk('ftp')->put('images/'.$filename, (string) $image, 'public');
+
+        // Enregistrez l'URL en base de données
+        $image = Images::class::create([
             'name' => pathinfo($originalName, PATHINFO_FILENAME),
             'description' => $request->input('description'),
-            'url' => env('APP_URL') . '/storage/images/' . $originalName,
-        ], 200);
+            'url' => env('DATA_URL') . '/images/' . $filename,
+        ]);
 
         if ($request->has('tags')) {
-
             $tags = $request->input('tags');
             $tagsArray = json_decode($tags, true);
             foreach ($tagsArray as $tag) {
@@ -49,16 +57,18 @@ class ImageController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Image uploaded',
+            'message' => 'Image uploaded and stored successfully',
             'entity' => $image,
         ]);
     }
+
+
 
     public function getListe() {
         return response()->json([
             'success' => true,
             'message' => 'Liste des images',
-            'photos' => Files::all(),
+            'photos' => Images::all(),
         ]);
     }
 
@@ -66,7 +76,7 @@ class ImageController extends Controller
     {
         $searchName = $request->input('searchName');
 
-        $photos = Files::with('tags')
+        $photos = Images::with('tags')
             ->when($searchName, function ($query, $searchName) {
                 return $query->where('name', 'like', '%' . $searchName . '%');
             })
@@ -81,7 +91,7 @@ class ImageController extends Controller
 
     public function get30RandomPhotosWithTags() : JsonResponse
     {
-        $photos = Files::with('tags')->inRandomOrder()->limit(30)->get();
+        $photos = Images::with('tags')->inRandomOrder()->limit(30)->get();
 
         return response()->json([
             'success' => true,
@@ -98,7 +108,7 @@ class ImageController extends Controller
         ]);
 
         $tags = $request->input('tags');
-        $images = Files::with('tags')->whereHas('tags', function($query) use ($tags) {
+        $images = Images::with('tags')->whereHas('tags', function($query) use ($tags) {
             $query->whereIn('tags.id', $tags);
         })->get();
 
@@ -113,13 +123,17 @@ class ImageController extends Controller
 
     public function update(Request $request) : JsonResponse
     {
+        // Valider les données de la requête
         Log::info($request);
         $request->validate([
             'id' => 'required|integer',
+            // Ajoutez ici d'autres champs si nécessaire
         ]);
 
-        $image = Files::findOrFail($request->input('id'));
+        // Trouver l'image par son ID
+        $image = Images::findOrFail($request->input('id'));
 
+        // Mettre à jour l'image avec les nouvelles données
         $image->update($request->all());
 
         if ($request->has('tags') && $request->input('tags') !== null) {
@@ -128,9 +142,11 @@ class ImageController extends Controller
                 return $tag['id'];
             }, $tags);
 
+            // Supprimer tous les tags actuels de l'image et ajouter les nouveaux tags
             $image->tags()->sync($tagsArray);
         }
 
+        // Retourner une réponse
         return response()->json([
             'success' => true,
             'message' => 'Image updated successfully',
