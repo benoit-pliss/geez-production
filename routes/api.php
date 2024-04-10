@@ -20,7 +20,6 @@ Route::post('register', [\App\Http\Controllers\Auth\AuthController::class, 'regi
 
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::post('/upload/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'uploadAndStore']);
 
     Route::get('/tags', [\App\Http\Controllers\Tags\TagsController::class, 'getTags']);
     Route::post('/tag/store', [\App\Http\Controllers\Tags\TagsController::class, 'store']);
@@ -34,6 +33,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/message/archive', [\App\Http\Controllers\Message\MessageController::class, 'archive']);
     Route::post('/message/delete', [\App\Http\Controllers\Message\MessageController::class, 'delete']);
 });
+
+Route::post('/upload/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'uploadAndStore']);
+Route::post('/upload/videos', [\App\Http\Controllers\Fichiers\VideosController::class, 'upload']);
+
 
 Route::get('/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'getListe']);
 Route::get('/photosWithTags', [\App\Http\Controllers\Fichiers\ImageController::class, 'getPhotosWithTags']);

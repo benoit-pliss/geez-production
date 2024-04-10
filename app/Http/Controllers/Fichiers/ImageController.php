@@ -3,15 +3,11 @@
 namespace App\Http\Controllers\Fichiers;
 
 use App\Http\Controllers\Controller;
-use App\Models\FilesTags;
-use App\Models\Images;
-use App\Models\Tags;
-use Illuminate\Database\QueryException;
+use App\Models\Files;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 
 class ImageController extends Controller
@@ -27,7 +23,7 @@ class ImageController extends Controller
         $filename = pathinfo($originalName, PATHINFO_FILENAME) . '.webp';
 
         // Vérifiez si l'image existe déjà en base de données
-        if (Images::class::where('name', pathinfo($originalName, PATHINFO_FILENAME))->exists()) {
+        if (Files::class::where('name', pathinfo($originalName, PATHINFO_FILENAME))->exists()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Cette image existe déjà en base de données.',
@@ -36,16 +32,17 @@ class ImageController extends Controller
 
         // Convertir l'image en WEBP et la stocker sur le serveur FTP
         $manager = new ImageManager(array('driver' => 'gd'));
-
         $image = $manager->make($file)->encode('webp', 75);
-        Storage::disk('ftp')->put('images/'.$filename, (string) $image, 'public');
+
+        FilesController::storeFileOnServer($image, $filename, 'images');
 
         // Enregistrez l'URL en base de données
-        $image = Images::class::create([
-            'name' => pathinfo($originalName, PATHINFO_FILENAME),
-            'description' => $request->input('description'),
-            'url' => env('DATA_URL') . '/images/' . $filename,
-        ]);
+        $image = FilesController::storeFileOnDatabase(
+            $originalName,
+            env('DATA_URL') . '/images/' . $filename,
+            $request->input('description'),
+            null
+        );
 
         if ($request->has('tags')) {
             $tags = $request->input('tags');
@@ -68,7 +65,7 @@ class ImageController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des images',
-            'photos' => Images::all(),
+            'photos' => Files::all(),
         ]);
     }
 
@@ -76,7 +73,7 @@ class ImageController extends Controller
     {
         $searchName = $request->input('searchName');
 
-        $photos = Images::with('tags')
+        $photos = Files::with('tags')
             ->when($searchName, function ($query, $searchName) {
                 return $query->where('name', 'like', '%' . $searchName . '%');
             })
@@ -91,7 +88,7 @@ class ImageController extends Controller
 
     public function get30RandomPhotosWithTags() : JsonResponse
     {
-        $photos = Images::with('tags')->inRandomOrder()->limit(30)->get();
+        $photos = Files::with('tags')->inRandomOrder()->limit(30)->get();
 
         return response()->json([
             'success' => true,
@@ -108,7 +105,7 @@ class ImageController extends Controller
         ]);
 
         $tags = $request->input('tags');
-        $images = Images::with('tags')->whereHas('tags', function($query) use ($tags) {
+        $images = Files::with('tags')->whereHas('tags', function($query) use ($tags) {
             $query->whereIn('tags.id', $tags);
         })->get();
 
@@ -131,7 +128,7 @@ class ImageController extends Controller
         ]);
 
         // Trouver l'image par son ID
-        $image = Images::findOrFail($request->input('id'));
+        $image = Files::findOrFail($request->input('id'));
 
         // Mettre à jour l'image avec les nouvelles données
         $image->update($request->all());
