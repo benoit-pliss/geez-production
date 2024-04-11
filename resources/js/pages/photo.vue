@@ -1,7 +1,7 @@
 
 <template>
     <div data-theme="light">
-        <navbar></navbar>
+        <navbar @replaceTag="replaceTag"></navbar>
         <div class="overflow-hidden bg-white py-32">
     <div class="mx-auto max-w-7xl px-6 lg:flex lg:px-8">
       <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-12 gap-y-16 lg:mx-0 lg:min-w-full lg:max-w-none lg:flex-none lg:gap-y-8">
@@ -46,27 +46,28 @@
 
 
 
-        <footer-page></footer-page>
+        <footer-page pageTag=pageTag></footer-page>
     </div>
 </template>
 
-<script>
-import Navbar from "../components/navbar.vue";
-import FooterPage from "../components/footer-page.vue";
-import Galerie from "../components/galerie.vue";
-export default {
-    components: {
-        Navbar,
-        FooterPage,
-        Galerie,
-    },
-    mounted() {
-        document.getElementById('scroll-down-gallery-button').addEventListener('click', () => {
-            // Scroll à la galerie scroll lentement
-            document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
-        });
+<script setup>
 
-    }
+import Navbar from "../components/navbarPhoto.vue";
+import FooterPage from "../components/footer-light.vue";
+import Galerie from "../components/galerie.vue";
+import { onMounted, ref } from 'vue';
+
+onMounted(() => {
+    document.getElementById('scroll-down-gallery-button').addEventListener('click', () => {
+        // Scroll à la galerie scroll lentement
+        document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
+    });
+});
+const pageTag = ref(null);
+
+const replaceTag = (tag) => {
+  console.log('Home.vue: replaceTag', tag);
+  pageTag.value = tag;
 };
 </script>
 
