@@ -45,8 +45,11 @@ class FilesController extends Controller
                 unlink($imageName);
                 break;
             case 'videos':
-                $file->storeAs('videos', $filename, 'ftp');
+                Log::info('Saving the video file locally', ['filename' => $filename]);
+                // Ici, on suppose que $file est déjà sous forme de string/binaire. Sinon, adaptez selon besoin.
+                Storage::disk('ftp')->put('videos/'.$filename, (string) $file, 'public');
                 break;
+
         }
     }
 

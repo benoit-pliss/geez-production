@@ -13,7 +13,8 @@
         "laravel/tinker": "^2.8",
         "league/flysystem-ftp": "^3.25",
         "league/flysystem-sftp": "^3.22",
-        "pbmedia/laravel-ffmpeg": "^8.5"
+        "pbmedia/laravel-ffmpeg": "^8.5",
+        "pion/laravel-chunk-upload": "^1.5"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
