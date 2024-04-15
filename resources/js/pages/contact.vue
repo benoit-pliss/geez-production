@@ -1,8 +1,8 @@
 <template>
     <div data-theme="dark">
-        <navbar></navbar>
+        <Navbar></Navbar>
 
-        <div class="relative isolate bg-gray-900 min-h-screen">
+        <div class="relative isolate bg-slate-950/80 min-h-screen">
             <div class="mx-auto grid max-w-7xl grid-cols-1 lg:grid-cols-2">
                 <div class="relative px-6 pb-20 pt-24 sm:pt-32 lg:static lg:px-8 lg:py-48">
                     <div class="mx-auto max-w-xl lg:mx-0 lg:max-w-lg">
@@ -98,16 +98,16 @@
                 </div>
             </div>
         </div>
-        <footer-page></footer-page>
+        <Footer></Footer>
     </div>
 </template>
 
 <script setup>
-import Navbar from "../components/navbar.vue";
-import FooterPage from "../components/footer-page.vue";
+import Navbar from "@/components/NavbarGlobal.vue";
+import Footer from "@/components/FooterDark.vue";
 import { BuildingOffice2Icon, EnvelopeIcon, PhoneIcon } from '@heroicons/vue/24/outline'
-import { postMessage } from "../services/messagesService.js";
-import notificationService from "../services/notificationService.js";
+import { postMessage } from "@/services/messagesService.js";
+import notificationService from "@/services/notificationService.js";
 import {ref} from 'vue'
 
 const formdata = ref({

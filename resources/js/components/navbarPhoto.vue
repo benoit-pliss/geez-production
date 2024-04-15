@@ -4,7 +4,7 @@
     <header class="bg-white sticky top-0 transition-all duration-200 z-40">
       <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-2 lg:px-8" aria-label="Global">
         <div class="flex lg:flex-1">
-          <a href="/home" class="-m-1.5 p-1.5">
+          <a href="/home" class="-m-1.5 p-1.5 outline-none focus:outline-none">
             <span class="sr-only">Geez Production</span>
             <img class="h-16 w-auto" src="../../img/logo/logo-geez-dark.png" alt="Logo Geez Production" />
           </a>
@@ -24,8 +24,8 @@
             </PopoverButton>
 
             <transition enter-active-class="transition ease-out duration-200" enter-from-class="opacity-0 translate-y-1" enter-to-class="opacity-100 translate-y-0" leave-active-class="transition ease-in duration-150" leave-from-class="opacity-100 translate-y-0" leave-to-class="opacity-0 translate-y-1">
-              <PopoverPanel class="absolute left-1/2 z-10 mt-5 flex w-screen max-w-max -translate-x-1/2 px-4">
-                <div class="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
+              <PopoverPanel class="absolute right-0 z-10 mt-5 w-screen max-w-md px-4">
+                <div class="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5 m-2">
                   <div class="p-4">
                     <a v-for="item in solutions" :key="item.name" class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50" :href="item.href">
                       <div class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
@@ -49,7 +49,7 @@
         <div class="fixed inset-0 z-50" />
         <DialogPanel class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-2 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div class="flex items-center justify-between">
-            <a href="/home" class="-m-1.5 p-1.5">
+            <a href="/home" class="-m-1.5 p-1.5 outline-none focus:outline-none">
               <span class="sr-only">Geez Production</span>
               <img class="h-16 w-auto" src="../../img/logo/logo-geez-dark.png" alt="Logo Geez Production" />
             </a>
@@ -58,14 +58,18 @@
               <XMarkIcon class="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
-          <div class="mt-6 flow-root">
+          <div class="mt-12 flow-root">
             <div class="-my-6 divide-y divide-gray-500/25">
-              <div class="space-y-2 py-6">
-                <a v-for="item in navigation" :key="item.name" :href="item.href" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:text-gray-700">{{ item.name }}</a>
+              <div class="space-y-2 py-6 cursor-pointer">
+                <a v-for="item in navigation" :key="item.name" v-on:click="replaceTag(item.name)">
+                  <span class="block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:text-indigo-600">{{ item.name }}</span>
+                </a>
               </div>
               <div class="space-y-2 py-6">
-                <a v-for="item in solutions" :key="item.name" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:text-gray-700 cursor-pointer"
-                          v-on:click="replaceTag(item.name)">{{ item.name }}</a>
+                <a class="flex items-center justify-start space-x-1 text-gray-900 hover:text-indigo-600 cursor-pointer" v-for="item in solutions" :key="item.name" v-on:click="replaceTag(item.name)">
+                  <component :is="item.icon" aria-hidden="true" class="h-6 w-6"/>
+                  <span  class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7">{{ item.name }}</span>
+                </a>
               </div>
             </div>
           </div>
@@ -137,7 +141,6 @@ const navigation = [
 const emits = defineEmits(['replaceTag'])
 
 const replaceTag = (tag) => {
-  console.log('Navbar.vue: replaceTag', tag);
   emits('replaceTag', tag)
   mobileMenuOpen.value = false
 }
