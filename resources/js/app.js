@@ -5,7 +5,7 @@ import router from './router/index.js';
 
 import App from "./components/app.vue";
 import Home from "./pages/home.vue";
-import Footer from "./components/footer-page.vue";
+import Footer from "./components/FooterDark.vue";
 import Photo from "./pages/photo.vue";
 import Video from "./pages/video.vue";
 import LazyLoad from "./directives/LazyLoad.js";

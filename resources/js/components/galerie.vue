@@ -1,9 +1,9 @@
 <template>
-    <div class="bg-white pb-24 sm:pb-32 pt-10" id="gallery">
+    <div class="bg-white pb-24 sm:pb-32 pt-32" id="gallery">
         <div class="mx-auto px-6 lg:px-8">
-            <div class="mx-auto max-w-xl text-center">
+            <div class="mx-auto max-w-2xl text-center">
                 <h2 class="text-lg font-semibold leading-8 tracking-tight text-indigo-600">Galerie</h2>
-                <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Découvrez nos réalisations</p>
+                <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Découvrez nos réalisations<span v-if="props.pageTag"> - </span><span class="text-indigo-700" v-if="props.pageTag">{{ props.pageTag }}</span></p>
             </div>
 
             <div class="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between mt-10">
@@ -20,7 +20,7 @@
 
                 <Combobox as="div" v-model="selectedTags">
                     <div class="relative mt-2">
-                        <ComboboxInput class="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" @change="query = $event.target.value"/>
+                        <ComboboxInput class="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" @change="query = $event.target.value" v-on:keydown.enter.prevent="addTag(filteredTags[0])" placeholder="Rechercher un tag" />
                         <ComboboxButton class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
                             <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
                         </ComboboxButton>
@@ -65,14 +65,39 @@ import {
   ComboboxOptions,
 } from '@headlessui/vue'
 import { ChevronUpDownIcon } from '@heroicons/vue/20/solid'
-import {ref, onMounted, computed} from 'vue'
+import {ref, onMounted, computed, watch} from 'vue'
 
 const load_tags = ref([])
 const current_tags = ref([])
 const images = ref([])
 
+const props = defineProps({
+    pageTag: {
+        type: String,
+        required: false
+    }
+})
+
+watch(() => props.pageTag, (newValue) => {
+    if (newValue) {
+        const tag = load_tags.value.find(tag => tag.name === newValue);
+        if (tag) {
+            replaceAllTag(tag);
+        }
+    }
+    document.getElementById('gallery').scrollIntoView({ behavior: 'smooth', block: 'start' });
+})
+
+const replaceAllTag = (tag) => {
+    current_tags.value = [];
+    current_tags.value.push(tag);
+    fetchImages();
+}
 
 const addTag = (tag) => {
+    if (current_tags.value.find(t => t.id === tag.id)) {
+        return;
+    }
     if (tag) {
         current_tags.value.push(tag);
     }
