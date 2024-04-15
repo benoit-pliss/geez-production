@@ -79,8 +79,13 @@ onMounted(() => {
 });
 const pageTag = ref(null);
 
+const scrollDown = () => {
+  document.getElementById('gallery').scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
 const replaceTag = (tag) => {
   pageTag.value = tag;
+    scrollDown();
 };
 </script>
 

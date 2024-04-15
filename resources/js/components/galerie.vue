@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white pb-24 sm:pb-32 pt-32" id="gallery">
+    <div class="bg-white pb-24 sm:pb-32 pt-32" id="gallery" ref="gallery">
         <div class="mx-auto px-6 lg:px-8">
             <div class="mx-auto max-w-2xl text-center">
                 <h2 class="text-lg font-semibold leading-8 tracking-tight text-indigo-600">Galerie</h2>
@@ -75,6 +75,10 @@ const props = defineProps({
     pageTag: {
         type: String,
         required: false
+    },
+    scrollDown: {
+        type: Function,
+        required: false
     }
 })
 
@@ -85,13 +89,17 @@ watch(() => props.pageTag, (newValue) => {
             replaceAllTag(tag);
         }
     }
-    document.getElementById('gallery').scrollIntoView({ behavior: 'smooth', block: 'start' });
 })
+
+const scrollDown = () => {
+    document.getElementById('gallery').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
 const replaceAllTag = (tag) => {
     current_tags.value = [];
     current_tags.value.push(tag);
     fetchImages();
+    scrollDown();
 }
 
 const addTag = (tag) => {
