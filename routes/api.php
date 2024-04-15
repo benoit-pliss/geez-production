@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Fichiers\ImageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
@@ -19,14 +20,14 @@ Route::post('register', [\App\Http\Controllers\Auth\AuthController::class, 'regi
 
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::post('/upload/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'upload']);
+    Route::post('/upload/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'uploadAndStore']);
 
     Route::get('/tags', [\App\Http\Controllers\Tags\TagsController::class, 'getTags']);
     Route::post('/tag/store', [\App\Http\Controllers\Tags\TagsController::class, 'store']);
 
     Route::put('/photo/update', [\App\Http\Controllers\Fichiers\ImageController::class, 'update']);
 
-    
+
     Route::get('/messages', [\App\Http\Controllers\Message\MessageController::class, 'getMessages']);
     Route::get('/message/archived', [\App\Http\Controllers\Message\MessageController::class, 'getArchivedMessages']);
     Route::post('/message/read', [\App\Http\Controllers\Message\MessageController::class, 'read']);
@@ -45,32 +46,3 @@ Route::get('/tags', [\App\Http\Controllers\Tags\TagsController::class, 'getTags'
 
 Route::post('/newsletter/subscribe', [\App\Http\Controllers\Newsletter\NewsletterController::class, 'subscribe']);
 
-
-
-Route::get('/videos/{file_name}', function ($file_name) {
-    $path = storage_path('app/public/videos/' . $file_name);
-    $url = env('APP_URL') . '/storage/videos/' . $file_name;
-    $videos = [];
-
-    foreach (scandir($path) as $file) {
-        if (in_array($file, ['.', '..'])) {
-            continue;
-        }
-        // ignore .DS_Store file
-        if ($file === '.DS_Store') {
-            continue;
-        }
-
-        $videos[] = [
-            'name' => $file,
-            'size' => filesize($path . '/' . $file),
-            'type' => mime_content_type($path . '/' . $file),
-            'url' => $url . '/' . $file,
-        ];
-    }
-
-    return response()->json([
-        'success' => true,
-        'videos' => $videos,
-    ]);
-});

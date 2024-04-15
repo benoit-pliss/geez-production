@@ -9,7 +9,7 @@ import {
     ComboboxOption,
     ComboboxOptions,
 } from '@headlessui/vue'
-import {getTags} from '../../../services/tagsService.js'
+import {getTags} from '@/services/tagsService.js'
 
 const props = defineProps({
     isAssigned: {

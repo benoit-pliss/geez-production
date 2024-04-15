@@ -13,23 +13,23 @@ export function readMessage(id) {
     const formdata = new FormData();
     formdata.append("id", id);
 
-    return axiosClient.post("/message/read/", formdata);
+    return axiosClient.post("/message/read", formdata);
 }
 
 export function deleteMessage(id) {
-    
+
     const formdata = new FormData();
     formdata.append("id", id);
 
-    return axiosClient.post("/message/delete/", formdata);
+    return axiosClient.post("/message/delete", formdata);
 }
 
 export function archiveMessage(id) {
-    
+
     const formdata = new FormData();
     formdata.append("id", id);
 
-    return axiosClient.post("/message/archive/", formdata);
+    return axiosClient.post("/message/archive", formdata);
 }
 
 export function postMessage(firstname, lastname, email, phone, message) {
