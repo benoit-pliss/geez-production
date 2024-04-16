@@ -46,7 +46,7 @@
         </div>
       </nav>
       <Dialog as="div" class="lg:hidden" @close="mobileMenuOpen = false" :open="mobileMenuOpen">
-        <div class="fixed inset-0 z-50" />
+        <div class="fixed inset-0 z-50"/>
         <DialogPanel class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-2 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div class="flex items-center justify-between">
             <a href="/home" class="-m-1.5 p-1.5 outline-none focus:outline-none">
@@ -66,7 +66,7 @@
                 </a>
               </div>
               <div class="space-y-2 py-6">
-                <a class="flex items-center justify-start space-x-1 text-gray-900 hover:text-indigo-600 cursor-pointer" v-for="item in solutions" :key="item.name" v-on:click="replaceTag(item.name)">
+                <a class="flex items-center justify-start space-x-1 text-gray-900 hover:text-indigo-600 cursor-pointer" v-for="item in solutions" :key="item.name" :href="item.href">
                   <component :is="item.icon" aria-hidden="true" class="h-6 w-6"/>
                   <span  class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7">{{ item.name }}</span>
                 </a>
