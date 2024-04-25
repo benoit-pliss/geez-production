@@ -1,5 +1,5 @@
 <template>
-    <footer class="bg-gray-900" aria-labelledby="footer-heading">
+    <footer class="bg-slate-950" aria-labelledby="footer-heading">
     <h2 id="footer-heading" class="sr-only">Footer</h2>
     <div class="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8 lg:pt-32">
       <div class="xl:grid xl:grid-cols-3 xl:gap-8">
@@ -74,8 +74,8 @@
 
 <script setup>
 import {defineComponent, h, ref} from 'vue'
-import { subscribeToNewsletter } from "../services/newsletterService.js";
-import notificationService from "../services/notificationService.js";
+import { subscribeToNewsletter } from "@/services/newsletterService.js";
+import notificationService from "@/services/notificationService.js";
 
 const navigation = {
   services: [
@@ -110,11 +110,6 @@ const navigation = {
       name: 'Instagram',
       href: 'https://instagram.com/gee.z_prod?igshid=OGQ5ZDc2ODk2ZA==',
       icon: '<i class="fa-brands fa-instagram"></i>'
-    },
-    {
-      name: 'YouTube',
-      href: '#',
-      icon: '<i class="fa-brands fa-youtube"></i>'
     },
     {
         name: 'TikTok',
