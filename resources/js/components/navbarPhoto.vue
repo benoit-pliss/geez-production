@@ -16,7 +16,7 @@
           </button>
         </div>
         <div class="hidden lg:flex lg:gap-x-12">
-          <a v-for="item in navigation" :key="item.name" v-on:click="replaceTag(item.name)" class="text-sm font-semibold leading-6 hover:bg-gray-100 transition-all duration-200 py-2 px-4 rounded-lg text-gray-900 cursor-pointer">{{ item.name }}</a>
+          <a v-for="item in navigation" :key="item.name" v-on:click="replaceTag(item.name)" class="text-sm font-semibold leading-6 hover:bg-gray-100 transition-all duration-200 py-2 px-4 rounded-lg text-gray-900 cursor-pointer select-none">{{ item.name }}</a>
           <Popover class="relative">
             <PopoverButton class="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 outline-none hover:bg-gray-100 py-2 px-4 rounded-lg transition-all duration-200">
               <span>Menu</span>
@@ -27,8 +27,8 @@
               <PopoverPanel class="absolute right-0 z-10 mt-5 w-screen max-w-md px-4">
                 <div class="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5 m-2">
                   <div class="p-4">
-                    <a v-for="item in solutions" :key="item.name" class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50" :href="item.href">
-                      <div class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                    <a v-for="item in solutions" :key="item.name" class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50 transition-all duration-200" :href="item.href">
+                      <div class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white transition-all duration-200">
                         <component :is="item.icon" class="h-6 w-6 text-gray-600 group-hover:text-indigo-600" aria-hidden="true" />
                       </div>
                       <div>
