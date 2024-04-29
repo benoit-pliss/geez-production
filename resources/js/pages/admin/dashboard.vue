@@ -6,6 +6,7 @@ import {isTokenValid, logout} from "../../services/authService.js";
 import {ref} from "vue";
 import ListeTags from "../../components/adminComponents/tags/liste-tags.vue";
 import ListeMessage from "../../components/adminComponents/messages/liste-messages.vue";
+import DashboardVideos from "../../components/adminComponents/dashboard-videos.vue";
 
 const user = {
     name: 'Tom Cook',
@@ -132,8 +133,9 @@ const deconnection = () => {
                 <div class="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
 
                     <DashboardPhotos v-if="selectedNavigation === 'Photos'"/>
+                    <DashboardVideos v-else-if="selectedNavigation === 'Videos'"/>
                     <ListeTags v-else-if="selectedNavigation === 'Tags'" :is-dashboard="true"/>
-                    <ListeMessage v-else-if="selectedNavigation === 'Messages'" :is-dashboard="true"/>
+                    <ListeMessage v-else-if="selectedNavigation === 'Messages'"/>
 
                 </div>
             </div>
