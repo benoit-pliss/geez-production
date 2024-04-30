@@ -76,6 +76,8 @@ class ImageController extends Controller
     {
         $searchName = $request->input('searchName');
 
+
+
         $photos = Images::with('tags')
             ->when($searchName, function ($query, $searchName) {
                 return $query->where('name', 'like', '%' . $searchName . '%');

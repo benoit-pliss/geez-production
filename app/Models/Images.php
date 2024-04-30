@@ -9,6 +9,8 @@ class Images extends Model
 {
     use HasFactory;
 
+    protected $table = 'files';
+
     protected $fillable = [
         'name',
         'description',
