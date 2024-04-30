@@ -41,6 +41,8 @@ class VideosController extends Controller
 
     public function handleChunk(Request $request)
     {
+        Log::write('info', 'handleChunk');
+
         $receiver = new FileReceiver(
             UploadedFile::fake()->createWithContent('file', $request->getContent()),
             $request,
@@ -58,20 +60,24 @@ class VideosController extends Controller
         $save->handler();
     }
 
-    public function handleSuccess(Request $request)
+    public function handleSuccess(Request $request) : JsonResponse
     {
+        Log::write('info', 'handleSuccess');
         $path = $request->input('path');
         $name = $request->input('name');
 
         $file = new UploadedFile(storage_path('app/chunks/' . $path), $name);
         $url =  $file->storeAs('videos', Str::uuid() . '.mp4');
 
-        $this->video = FilesController::storeFileOnDatabase(
-            originalName: $file->getClientOriginalName(),
-            url: storage_path('app/public/' . $url),
-            description: null,
-            poster_url: $this->getFirstFrame($file, $name),
-        );
+        return response()->json([
+            'success' => true,
+            'entity' =>  FilesController::storeFileOnDatabase(
+                originalName: $file->getClientOriginalName(),
+                url: storage_path('app/public/' . $url),
+                description: null,
+                poster_url: $this->getFirstFrame($file, $name),
+            )
+        ]);
     }
 
 }
