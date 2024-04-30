@@ -35,10 +35,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 });
 
 Route::post('/upload/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'uploadAndStore']);
-Route::post('/upload/videos', [\App\Http\Controllers\Fichiers\VideosController::class, 'upload']);
 
-Route::post('/upload-advanced', [\App\Http\Controllers\Fichiers\VideosController::class, 'testUpload']);
-
+Route::post('/upload/chunks', [\App\Http\Controllers\Fichiers\VideosController::class, 'handleChunk']);
+Route::post('/upload/success' , [\App\Http\Controllers\Fichiers\VideosController::class, 'handleSuccess']);
 
 
 Route::get('/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'getListe']);

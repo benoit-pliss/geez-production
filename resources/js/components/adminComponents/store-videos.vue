@@ -1,75 +1,73 @@
-<script>
-import Resumable from 'resumablejs';
+<script setup>
+import { ref } from 'vue'
+import { PhotoIcon } from '@heroicons/vue/24/solid'
+import { createUpload} from "@mux/upchunk";
+import {handleSuccess} from "../../services/videosService.js";
 
-export default {
-    data() {
-        return {
-            resumable: null,
-        };
-    },
-    mounted() {
-        this.resumable = new Resumable({
-            target: 'api/upload-advanced',
-            chunkSize: 2 * 1024 * 1024, // Taille des morceaux à 2 MB
-            simultaneousUploads: 1, // Réduire les téléversements simultanés à 1
-            testChunks: false,
-            throttleProgressCallbacks: 1,
-            dropTarget: document.getElementById('drop-area'),
-        });
+window.createUpload = createUpload;
 
-        // Écouteur pour la progression du téléversement d'un fichier
-        this.resumable.on('fileProgress', (file) => {
-            console.log('Progress', file.fileName, file.progress());
-        });
+let uploader = null;
+const file = ref(null);
+const progress = 0;
 
-        // Écouteur pour le succès du téléversement d'un fichier
-        this.resumable.on('fileSuccess', (file, message) => {
-            console.log('File success', file.fileName, message);
-        });
+const submit = (e) => {
+    file.value = e.target.files[0];
 
-        // Écouteur pour une erreur lors du téléversement d'un fichier
-        this.resumable.on('fileError', (file, message) => {
-            console.log('File error', file.fileName, message);
-            // Implémentez ici une logique de réessai, par exemple avec un délai
-            setTimeout(() => {
-                this.resumable.upload(); // Réessayer l'upload
-            }, 30000); // Attendre 30 secondes avant de réessayer
-        });
+    if(!file.value) {
+        return;
+    }
 
-        // Écouteur pour l'ajout d'un fichier
-        this.resumable.on('fileAdded', (file, event) => {
-            console.log('File added', file.fileName);
-            this.resumable.upload(); // Commence l'upload directement après l'ajout
-        });
-    },
-    methods: {
-        handleFiles(event) {
-            const files = event.target.files;
-            for (let i = 0; i < files.length; i++) {
-                this.resumable.addFile(files[i]);
-            }
+    uploader = createUpload({
+        file: file.value,
+        endpoint: '/api/upload/chunks',
+        headers: {
+            'Content-Type': 'application/json',
+            'Bearer': 'Bearer ' + localStorage.getItem('token')
         },
-        handleDragOver(event) {
-            // Vous pouvez ajouter une logique supplémentaire pour gérer le survol
-        },
-        handleDrop(event) {
-            // Ajoute les fichiers déposés à Resumable pour l'upload
-            event.dataTransfer.files.forEach(file => {
-                this.resumable.addFile(file);
-            });
-        },
-    },
+        method: 'POST',
+        chunkSize: 10 * 1024,
+    });
+
+    uploader.on('chunkSuccess', (response) => {
+        if(!response.detail.response.body) {
+            return;
+        }
+
+        handleSuccess(file.value.name, JSON.parse(response.detail.response.body).file);
+
+    })
 };
+
 </script>
 
 <template>
-    <div>
-        <!-- Input pour sélectionner les fichiers -->
-        <input type="file" @change="handleFiles" multiple>
-        <!-- Vous pouvez aussi ajouter un drop area pour le glisser-déposer -->
-        <div id="drop-area" @dragover.prevent="handleDragOver" @drop.prevent="handleDrop" style="border: 2px dashed #ccc; padding: 20px; text-align: center;">
-            Glissez et déposez vos fichiers ici
+    <div class="col-span-full">
+        <label for="cover-photo" class="block text-sm font-medium leading-6 text-gray-900">Ajouter des vidéos</label>
+        <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+            <div class="text-center">
+                <PhotoIcon class="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
+                <div class="mt-4 flex text-sm leading-6 text-gray-600">
+                    <label for="file-upload" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                        <span>Upload a file</span>
+                        <input id="file-upload" name="file-upload" v-on:change.prevent="submit" type="file" class="hidden"/>
+                    </label>
+                    <p class="pl-1">or drag and drop</p>
+                </div>
+                <p v-if="file"
+                   class="mt-2 text-sm text-gray-500"
+                >
+                    {{ file.name }}
+                </p>
+            </div>
         </div>
+<!--        <div class="mt-6 flex justify-center items-center">-->
+<!--            <button v-if="!isUploading" type="button" @click="upload"-->
+<!--                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus-visible:outline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500">-->
+<!--                Valider-->
+<!--            </button>-->
+
+<!--            <progress v-if="isUploading" class="progress w-56"></progress>-->
+<!--        </div>-->
     </div>
 </template>
 
