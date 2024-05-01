@@ -75,7 +75,7 @@ class VideosController extends Controller
                 originalName: $file->getClientOriginalName(),
                 url: storage_path('app/public/' . $url),
                 description: null,
-                poster_url: $this->getFirstFrame($file, $name),
+                poster_url: 'thumbnail.example.com',
             )
         ]);
     }
