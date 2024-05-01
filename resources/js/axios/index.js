@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-    baseURL: "https://geez-production.com/api",
+    baseURL: "https://develop.geez-production.com/api",
 })
 
 axiosClient.interceptors.request.use(config => {
