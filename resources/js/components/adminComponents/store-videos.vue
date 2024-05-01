@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { PhotoIcon } from '@heroicons/vue/24/solid'
 import { createUpload} from "@mux/upchunk";
 import {handleSuccess} from "../../services/videosService.js";
+import notificationService from "../../services/notificationService.js";
 
 window.createUpload = createUpload;
 
@@ -29,13 +30,19 @@ const submit = (e) => {
     });
 
     uploader.on('chunkSuccess', (response) => {
-        if(!response.detail.response.body) {
+        if (!response.detail.response.body) {
             return;
         }
 
-        handleSuccess(file.value.name, JSON.parse(response.detail.response.body).file);
-
-    })
+        handleSuccess(file.value.name, JSON.parse(response.detail.response.body).file)
+            .then((res) => {
+                if (res.data.success){
+                    notificationService.addToast('Vidéo enregistrée avec succès', 'success');
+                } else {
+                    notificationService.addToast('Erreur lors de l\'enregistrement de la vidéo', 'error');
+                }
+            })
+    });
 };
 
 </script>

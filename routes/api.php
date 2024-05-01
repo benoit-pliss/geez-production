@@ -26,7 +26,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::put('/photo/update', [\App\Http\Controllers\Fichiers\ImageController::class, 'update']);
 
-    Route::post('/pourquoi' , [\App\Http\Controllers\Fichiers\VideosController::class, 'handleSuccess']);
+    Route::post('/upload/success' , [\App\Http\Controllers\Fichiers\VideosController::class, 'handleSuccess']);
 
     Route::get('/messages', [\App\Http\Controllers\Message\MessageController::class, 'getMessages']);
     Route::get('/message/archived', [\App\Http\Controllers\Message\MessageController::class, 'getArchivedMessages']);
@@ -36,7 +36,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 });
 
 Route::post('/upload/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'uploadAndStore']);
-
 Route::post('/upload/chunks', [\App\Http\Controllers\Fichiers\VideosController::class, 'handleChunk']);
 
 Route::get('/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'getListe']);
