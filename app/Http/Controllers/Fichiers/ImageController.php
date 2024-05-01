@@ -65,7 +65,7 @@ class ImageController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des images',
-            'photos' => Files::all(),
+            'photos' => Files::all()->where('id_type', 1),
         ]);
     }
 
@@ -73,7 +73,7 @@ class ImageController extends Controller
     {
         $searchName = $request->input('searchName');
 
-        $photos = Files::with('tags')
+        $photos = Files::with('tags')->where('id_type', 1)
             ->when($searchName, function ($query, $searchName) {
                 return $query->where('name', 'like', '%' . $searchName . '%');
             })
@@ -88,7 +88,7 @@ class ImageController extends Controller
 
     public function get30RandomPhotosWithTags() : JsonResponse
     {
-        $photos = Files::with('tags')->inRandomOrder()->limit(30)->get();
+        $photos = Files::with('tags')->where('id_type', 1)->inRandomOrder()->limit(30)->get();
 
         return response()->json([
             'success' => true,
@@ -105,7 +105,7 @@ class ImageController extends Controller
         ]);
 
         $tags = $request->input('tags');
-        $images = Files::with('tags')->whereHas('tags', function($query) use ($tags) {
+        $images = Files::with('tags')->where('id_type', 1)->whereHas('tags', function($query) use ($tags) {
             $query->whereIn('tags.id', $tags);
         })->get();
 

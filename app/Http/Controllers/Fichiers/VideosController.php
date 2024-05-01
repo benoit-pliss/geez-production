@@ -80,4 +80,59 @@ class VideosController extends Controller
         ]);
     }
 
+    public function getListe() {
+        return response()->json([
+            'success' => true,
+            'message' => 'Liste des vidéos',
+            'videos' => Files::all()->where('id_type', 2),
+        ]);
+    }
+
+    public function getVideosWithTags(Request $request) : JsonResponse
+    {
+        $searchName = $request->input('searchName');
+
+        $videos = Files::with('tags')->where('id_type', 2)
+            ->when($searchName, function ($query, $searchName) {
+                return $query->where('name', 'like', '%' . $searchName . '%');
+            })
+            ->paginate(10);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Liste des vidéos avec tags',
+            'videos' => $videos,
+        ]);
+    }
+
+    public function get30RandomVideosWithTags() : JsonResponse
+    {
+        $videos = Files::with('tags')->where('id_type', 2)->inRandomOrder()->limit(30)->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Liste des 30 vidéos aléatoires avec tags',
+            'videos' => $videos,
+        ]);
+    }
+
+    public function getVideoByTags(Request $request) : JsonResponse
+    {
+        $tags = $request->input('tags');
+
+        $videos = Files::with('tags')->where('id_type', 2)
+            ->whereHas('tags', function ($query) use ($tags) {
+                $query->whereIn('tags.id', $tags);
+            })
+            ->paginate(10);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Liste des vidéos par tags',
+            'videos' => $videos,
+        ]);
+    }
+
+
+
 }
