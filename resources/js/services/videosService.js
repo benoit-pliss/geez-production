@@ -1,8 +1,21 @@
 import axiosClient from "../axios/index.js";
+import {get30RandomPhotosWithTags} from "./Photo-service.js";
 
 export function handleSuccess(name, path ) {
     const data = new FormData();
     data.append("name", name);
     data.append("path", path);
     return axiosClient.post("/upload/success", data);
+}
+
+export function getListeVideoByTags(tags) {
+    return axiosClient.get("/videosByTags", {
+        params: {
+            tags: tags
+        }
+    });
+}
+
+export function get30RandomVideosWithTags() {
+    return axiosClient.get("/get30RandomVideosWithTags");
 }

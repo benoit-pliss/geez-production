@@ -84,7 +84,7 @@ class VideosController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des vidéos',
-            'videos' => Files::all()->where('id_type', 2),
+            'rows' => Files::all()->where('id_type', 2),
         ]);
     }
 
@@ -101,7 +101,7 @@ class VideosController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des vidéos avec tags',
-            'videos' => $videos,
+            'rows' => $videos,
         ]);
     }
 
@@ -112,7 +112,7 @@ class VideosController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des 30 vidéos aléatoires avec tags',
-            'videos' => $videos,
+            'rows' => $videos,
         ]);
     }
 
@@ -129,7 +129,7 @@ class VideosController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des vidéos par tags',
-            'videos' => $videos,
+            'rows' => $videos,
         ]);
     }
 

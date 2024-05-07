@@ -33,14 +33,15 @@
 
             <div class="mx-auto mt-16 flow-root max-w-2xl sm:mt-20 lg:mx-0 lg:max-w-none">
                 <div class="-mt-8 sm:-mx-4 sm:columns-2 sm:text-[0] lg:columns-2">
-                    <div v-for="image in images" :key="image.name" class="pt-8 sm:inline-block sm:w-full sm:px-4">
+                    <div v-for="video in videos" :key="video.name" class="pt-8 sm:inline-block sm:w-full sm:px-4">
                         <!-- quand hover rendre visible la div des Badges-->
-                        <div class="overflow-hidden transition duration-300 transform rounded-lg"  v-on:mouseover="image.hidden = true" v-on:mouseleave="image.hidden = false">
-                            <img :src="image.url" loading="lazy" class="object-cover w-full h-auto" alt="geez"/>
-                                <div class="absolute inset-0 flex place-content-end justify-start flex-wrap-reverse gap-2 p-4" :class="{ 'hidden' : !image.hidden }">
-                                    <Badge v-for="tag in image.tags" :key="tag.id" :label="tag.name" :color="tag.color" type="add" v-on:click="addTag(tag)" :id="tag.id"/>
+                        <div class="overflow-hidden transition duration-300 transform rounded-lg"  v-on:mouseover="video.hidden = true; playVideo(video)" v-on:mouseleave="video.hidden = false; pauseVideo(video)">
+                            <video :src="video.url" :poster="video.poster_url" :ref="el => { videoPlayers[video.id] = el; }" preload="none" class="object-cover w-full h-auto" :muted="false" loop data-id="video.id"></video>
+                            <div class="absolute inset-0 flex place-content-end justify-start flex-wrap-reverse gap-2 p-4" :class="{ 'hidden' : !video.hidden }">
+                                <Badge v-for="tag in video.tags" :key="tag.id" :label="tag.name" :color="tag.color" type="add" v-on:click="addTag(tag)" :id="tag.id"/>
                             </div>
                         </div>
+                        <button v-on:click="unmuteVideo(video)">Unmute</button>
                     </div>
                 </div>
             </div>
@@ -51,7 +52,7 @@
 <script setup>
 import Badge from '../components/Badge.vue';
 import {getTags} from "../services/tagsService.js";
-import {get30RandomPhotosWithTags, getListePhotosByTags} from "../services/Photo-service.js";
+import {getListeVideoByTags, get30RandomVideosWithTags} from "../services/videosService.js";
 import {
   Combobox,
   ComboboxButton,
@@ -60,11 +61,14 @@ import {
   ComboboxOptions,
 } from '@headlessui/vue'
 import { ChevronUpDownIcon } from '@heroicons/vue/20/solid'
-import {ref, onMounted, computed, watch} from 'vue'
+import {ref, onMounted, computed, watch, reactive, watchEffect} from 'vue'
 
 const load_tags = ref([])
 const current_tags = ref([])
-const images = ref([])
+const videos = ref([])
+const videoPlayers = reactive({});
+const observer = ref(null);
+
 
 const props = defineProps({
     pageTag: {
@@ -93,7 +97,7 @@ const scrollDown = () => {
 const replaceAllTag = (tag) => {
     current_tags.value = [];
     current_tags.value.push(tag);
-    fetchImages();
+    fetchVideos();
     scrollDown();
 }
 
@@ -105,7 +109,7 @@ const addTag = (tag) => {
         current_tags.value.push(tag);
     }
     query.value = '';
-    fetchImages();
+    fetchVideos();
 }
 
 const removeTag = (tag_id) => {
@@ -113,7 +117,7 @@ const removeTag = (tag_id) => {
     if (index !== -1) {
         current_tags.value.splice(index, 1);
     }
-    fetchImages();
+    fetchVideos();
 }
 
 const fetchTags = () => {
@@ -126,19 +130,19 @@ const fetchTags = () => {
         });
 }
 
-const fetchImages = () => {
+const fetchVideos = () => {
     if (current_tags.value.length > 0) {
-        getListePhotosByTags(current_tags.value.map(tag => tag.id))
+        getListeVideoByTags(current_tags.value.map(tag => tag.id))
             .then(response => {
-                images.value = response.data.photos;
+                videos.value = response.data.rows;
             })
             .catch(error => {
                 console.log(error);
             });
     } else {
-        get30RandomPhotosWithTags()
+        get30RandomVideosWithTags()
             .then(response => {
-                images.value = response.data.photos;
+                videos.value = response.data.rows;
             })
             .catch(error => {
                 console.log(error);
@@ -160,14 +164,53 @@ const filteredTags = computed(() =>
 )
 
 onMounted(() => {
-    for (let image of images.value) {
+    for (let image of videos.value) {
         image.hidden = true;
     }
 
-    fetchImages();
+    fetchVideos();
     fetchTags();
 
+    observer.value = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const videoId = entry.target.getAttribute('data-id');
+            const video = videos.value.find(video => video.id === videoId);
+            if (video) {
+                video.isInView = entry.isIntersecting;
+                if (entry.isIntersecting) {
+                    videoPlayers[video.id].load();
+                }
+            }
+        });
+    });
+
+    watchEffect(() => {
+        videos.value.forEach(video => {
+            const videoElement = videoPlayers[video.id];
+            if (videoElement) {
+                observer.value.observe(videoElement);
+            }
+        });
+    });
 })
+
+const playVideo = (video) => {
+    if (videoPlayers[video.id]) {
+        videoPlayers[video.id].play();
+    }
+}
+
+const pauseVideo = (video) => {
+    if (videoPlayers[video.id]) {
+        videoPlayers[video.id].pause();
+    }
+}
+
+const unmuteVideo = (video) => {
+    if (videoPlayers[video.id]) {
+        videoPlayers[video.id].muted = false;
+    }
+}
 </script>
 
 <style scoped>
