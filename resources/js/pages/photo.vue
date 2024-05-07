@@ -1,7 +1,7 @@
 <template>
   <div data-theme="light">
     <Navbar @replaceTag="replaceTag"></Navbar>
-    <div class="overflow-hidden bg-white pt-12">
+    <div class="overflow-hidden bg-white pt-12" v-if="pageTag === null">
       <div class="mx-auto max-w-7xl px-6 lg:flex lg:px-8">
         <div
           class="mx-auto grid max-w-2xl grid-cols-1 gap-x-12 gap-y-16 lg:mx-0 lg:min-w-full lg:max-w-none lg:flex-none lg:gap-y-8">
@@ -68,7 +68,7 @@
 
 import Navbar from "@/components/NavbarPhoto.vue";
 import Footer from "@/components/FooterLight.vue";
-import Galerie from "@/components/Galerie.vue";
+import Galerie from "@/components/GaleriePhoto.vue";
 import { onMounted, ref } from 'vue';
 
 onMounted(() => {

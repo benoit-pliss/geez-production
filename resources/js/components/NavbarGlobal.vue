@@ -15,7 +15,7 @@
           </button>
         </div>
         <div class="hidden lg:flex lg:gap-x-12">
-          <a v-for="item in navigation" :key="item.name" :href="item.href" class="text-sm font-semibold leading-6 text-white">{{ item.name }}</a>
+          <a v-for="item in navigation" :key="item.name" :href="item.href" class="text-sm font-semibold leading-6 hover:bg-slate-900 transition-all duration-200 py-2 px-4 rounded-lg text-white cursor-pointer select-none">{{ item.name }}</a>
         </div>
         <div class="hidden lg:flex lg:flex-1 lg:justify-end">
           <!-- <a href="#" class="text-sm font-semibold leading-6 text-white">Se connecter <span aria-hidden="true">&rarr;</span></a> -->
