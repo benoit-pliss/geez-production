@@ -25,8 +25,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/tag/store', [\App\Http\Controllers\Tags\TagsController::class, 'store']);
 
     Route::put('/photo/update', [\App\Http\Controllers\Fichiers\ImageController::class, 'update']);
-
-
+    Route::post('/upload/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'uploadAndStore']);
+    Route::post('/upload/chunks', [\App\Http\Controllers\Fichiers\VideosController::class, 'handleChunk']);
+    Route::get('/upload/success' , [\App\Http\Controllers\Fichiers\VideosController::class, 'handleSuccess']);
+    Route::post('/upload/success' , [\App\Http\Controllers\Fichiers\VideosController::class, 'handleSuccess']);
 
     Route::get('/messages', [\App\Http\Controllers\Message\MessageController::class, 'getMessages']);
     Route::get('/message/archived', [\App\Http\Controllers\Message\MessageController::class, 'getArchivedMessages']);
@@ -39,10 +41,16 @@ Route::post('/upload/photos', [\App\Http\Controllers\Fichiers\ImageController::c
 Route::post('/upload/thumbnails', [\App\Http\Controllers\Fichiers\ImageController::class, 'uploadAndStoreThumbnail']);
 Route::post('/upload/chunks', [\App\Http\Controllers\Fichiers\VideosController::class, 'handleChunk']);
 
+
 Route::get('/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'getListe']);
 Route::get('/photosWithTags', [\App\Http\Controllers\Fichiers\ImageController::class, 'getPhotosWithTags']);
 Route::get('/photosByTags', [\App\Http\Controllers\Fichiers\ImageController::class, 'getPhotosByTags']);
 Route::get('/get30RandomPhotosWithTags', [\App\Http\Controllers\Fichiers\ImageController::class, 'get30RandomPhotosWithTags']);
+
+Route::get('/videos', [\App\Http\Controllers\Fichiers\VideosController::class, 'getListe']);
+Route::get('/videosWithTags', [\App\Http\Controllers\Fichiers\VideosController::class, 'getVideosWithTags']);
+Route::get('/videosByTags', [\App\Http\Controllers\Fichiers\VideosController::class, 'getVideosByTags']);
+Route::get('/get30RandomVideosWithTags', [\App\Http\Controllers\Fichiers\VideosController::class, 'get30RandomVideosWithTags']);
 
 Route::post('/message/send', [\App\Http\Controllers\Message\MessageController::class, 'send']);
 
@@ -51,5 +59,3 @@ Route::get('/tags', [\App\Http\Controllers\Tags\TagsController::class, 'getTags'
 Route::post('/newsletter/subscribe', [\App\Http\Controllers\Newsletter\NewsletterController::class, 'subscribe']);
 
 
-Route::get('/upload/success' , [\App\Http\Controllers\Fichiers\VideosController::class, 'handleSuccess']);
-Route::post('/upload/success' , [\App\Http\Controllers\Fichiers\VideosController::class, 'handleSuccess']);
