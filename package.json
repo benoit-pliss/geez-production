@@ -19,6 +19,7 @@
         "@headlessui/vue": "^1.7.17",
         "@heroicons/vue": "^2.1.1",
         "@mux/upchunk": "^3.4.0",
+        "@rajesh896/video-thumbnails-generator": "^2.3.9",
         "@tailwindcss/aspect-ratio": "^0.4.2",
         "@vitejs/plugin-vue": "^4.3.4",
         "locomotive-scroll": "^4.1.4",

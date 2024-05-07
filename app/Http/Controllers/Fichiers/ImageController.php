@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
+use Psy\Util\Json;
 
 class ImageController extends Controller
 {
@@ -148,6 +149,28 @@ class ImageController extends Controller
             'success' => true,
             'message' => 'Image updated successfully',
             'image' => $image
+        ]);
+    }
+
+
+    public function uploadAndStoreThumbnail(Request $request) : JsonResponse
+    {
+        $request->validate([
+            'videoName' => 'required|string',
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+        ]);
+
+        $manager = new ImageManager(array('driver' => 'gd'));
+        $image = $manager->make($request->file('file'))->encode('webp', 75);
+        $url = FilesController::storeFileOnServer($image, $request->input('videoName'), 'posters');
+
+        $video = Files::class::where(['name', $request->input('videoName'), 'id_type' => 2])->first();
+        $video->update(['poster_url' => $url]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Thumbnail uploaded and stored successfully',
+            'url' => $video,
         ]);
     }
 
