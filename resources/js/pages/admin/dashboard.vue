@@ -6,6 +6,7 @@ import {isTokenValid, logout} from "../../services/authService.js";
 import {ref} from "vue";
 import ListeTags from "../../components/adminComponents/tags/liste-tags.vue";
 import ListeMessage from "../../components/adminComponents/messages/liste-messages.vue";
+import DashboardVideos from "../../components/adminComponents/dashboard-videos.vue";
 
 const user = {
     name: 'Tom Cook',
@@ -14,7 +15,7 @@ const user = {
         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
 
-const selectedNavigation = ref('Photos');
+const selectedNavigation = ref('Albums');
 
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', current: true },
@@ -132,8 +133,9 @@ const deconnection = () => {
                 <div class="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
 
                     <DashboardPhotos v-if="selectedNavigation === 'Photos'"/>
+                    <DashboardVideos v-else-if="selectedNavigation === 'Albums'"/>
                     <ListeTags v-else-if="selectedNavigation === 'Tags'" :is-dashboard="true"/>
-                    <ListeMessage v-else-if="selectedNavigation === 'Messages'" :is-dashboard="true"/>
+                    <ListeMessage v-else-if="selectedNavigation === 'Messages'"/>
 
                 </div>
             </div>

@@ -20,12 +20,12 @@ Route::post('register', [\App\Http\Controllers\Auth\AuthController::class, 'regi
 
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::post('/upload/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'uploadAndStore']);
 
     Route::get('/tags', [\App\Http\Controllers\Tags\TagsController::class, 'getTags']);
     Route::post('/tag/store', [\App\Http\Controllers\Tags\TagsController::class, 'store']);
 
     Route::put('/photo/update', [\App\Http\Controllers\Fichiers\ImageController::class, 'update']);
+
 
 
     Route::get('/messages', [\App\Http\Controllers\Message\MessageController::class, 'getMessages']);
@@ -34,6 +34,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/message/archive', [\App\Http\Controllers\Message\MessageController::class, 'archive']);
     Route::post('/message/delete', [\App\Http\Controllers\Message\MessageController::class, 'delete']);
 });
+
+Route::post('/upload/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'uploadAndStore']);
+Route::post('/upload/thumbnails', [\App\Http\Controllers\Fichiers\ImageController::class, 'uploadAndStoreThumbnail']);
+Route::post('/upload/chunks', [\App\Http\Controllers\Fichiers\VideosController::class, 'handleChunk']);
 
 Route::get('/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'getListe']);
 Route::get('/photosWithTags', [\App\Http\Controllers\Fichiers\ImageController::class, 'getPhotosWithTags']);
@@ -46,3 +50,6 @@ Route::get('/tags', [\App\Http\Controllers\Tags\TagsController::class, 'getTags'
 
 Route::post('/newsletter/subscribe', [\App\Http\Controllers\Newsletter\NewsletterController::class, 'subscribe']);
 
+
+Route::get('/upload/success' , [\App\Http\Controllers\Fichiers\VideosController::class, 'handleSuccess']);
+Route::post('/upload/success' , [\App\Http\Controllers\Fichiers\VideosController::class, 'handleSuccess']);

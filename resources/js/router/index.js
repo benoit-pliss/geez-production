@@ -9,6 +9,7 @@ import Video from "../pages/video.vue";
 import Contact from "../pages/contact.vue";
 import Legal from "../pages/legal.vue";
 import DashboardPhotos from "../components/adminComponents/dashboard-photos.vue";
+import storeVideos from "../components/adminComponents/store-videos.vue";
 
 const routes = [
     {
@@ -19,7 +20,7 @@ const routes = [
     {
         path: '/sandbox',
         name: 'sandbox',
-        component: Dashboard,
+        component: storeVideos,
     },
     {
         path: '/home',
