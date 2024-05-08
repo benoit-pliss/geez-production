@@ -62,12 +62,25 @@ class VideosController extends Controller
 
     public function handleSuccess(Request $request) : JsonResponse
     {
-        Log::write('info', 'handleSuccess');
         $path = $request->input('path');
         $name = $request->input('name');
 
         $file = new UploadedFile(storage_path('app/chunks/' . $path), $name);
         $url =  $file->storeAs('videos', Str::uuid() . '.mp4');
+
+
+        $fileToUpdate = Files::where('name', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))->first();
+
+        if($fileToUpdate) {
+
+            return response()->json([
+                'success' => true,
+                'entity' => $fileToUpdate->update([
+                    'name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+                    'url' => $url,
+                ])
+            ]);
+        }
 
         return response()->json([
             'success' => true,
