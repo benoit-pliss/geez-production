@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use FFMpeg\Coordinate\TimeCode;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -68,6 +69,21 @@ class VideosController extends Controller
 
         $file = new UploadedFile(storage_path('app/chunks/' . $path), $name);
         $url =  $file->storeAs('videos', Str::uuid() . '.mp4');
+
+        Log::write('info', $file->getClientOriginalName());
+
+        $fileToUpdate = Files::where('name', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))->first();
+
+        if($fileToUpdate) {
+
+            return response()->json([
+                'success' => true,
+                'entity' => $fileToUpdate->update([
+                    'name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+                    'url' => $url,
+                ])
+            ]);
+        }
 
         return response()->json([
             'success' => true,
