@@ -16,6 +16,16 @@ export function getListeVideoByTags(tags) {
     });
 }
 
+export async function getVideoWithTags(page = 1, pageSize = 10, searchName = "") {
+    return axiosClient.get(`/videosWithTags?page=${page}&pageSize=${pageSize}`, {
+        params: {
+            searchName: searchName
+        }
+    });
+}
+
+
+
 export function get30RandomVideosWithTags() {
     return axiosClient.get("/get30RandomVideosWithTags");
 }

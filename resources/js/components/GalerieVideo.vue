@@ -35,13 +35,12 @@
                 <div class="-mt-8 sm:-mx-4 sm:columns-2 sm:text-[0] lg:columns-2">
                     <div v-for="video in videos" :key="video.name" class="pt-8 sm:inline-block sm:w-full sm:px-4">
                         <!-- quand hover rendre visible la div des Badges-->
-                        <div class="overflow-hidden transition duration-300 transform rounded-lg"  v-on:mouseover="video.hidden = true; playVideo(video)" v-on:mouseleave="video.hidden = false; pauseVideo(video)">
-                            <video :src="video.url" :poster="video.poster_url" :ref="el => { videoPlayers[video.id] = el; }" preload="none" class="object-cover w-full h-auto" :muted="false" loop data-id="video.id"></video>
+                        <div class="overflow-hidden transition duration-300 transform rounded-lg w-2/5">
+                            <video :src="video.url" :poster="video.poster_url" :ref="el => { videoPlayers[video.id] = el; }" preload="none" class="object-cover w-full h-auto" :muted="false" :controls="true" v-on:mouseover="playVideo(video)" v-on:mouseleave="pauseVideo(video)" loop data-id="video.id"></video>
                             <div class="absolute inset-0 flex place-content-end justify-start flex-wrap-reverse gap-2 p-4" :class="{ 'hidden' : !video.hidden }">
                                 <Badge v-for="tag in video.tags" :key="tag.id" :label="tag.name" :color="tag.color" type="add" v-on:click="addTag(tag)" :id="tag.id"/>
                             </div>
                         </div>
-                        <button v-on:click="unmuteVideo(video)">Unmute</button>
                     </div>
                 </div>
             </div>
@@ -61,13 +60,12 @@ import {
   ComboboxOptions,
 } from '@headlessui/vue'
 import { ChevronUpDownIcon } from '@heroicons/vue/20/solid'
-import {ref, onMounted, computed, watch, reactive, watchEffect} from 'vue'
+import {ref, onMounted, computed, watch, reactive} from 'vue'
 
 const load_tags = ref([])
 const current_tags = ref([])
 const videos = ref([])
 const videoPlayers = reactive({});
-const observer = ref(null);
 
 
 const props = defineProps({
@@ -134,7 +132,7 @@ const fetchVideos = () => {
     if (current_tags.value.length > 0) {
         getListeVideoByTags(current_tags.value.map(tag => tag.id))
             .then(response => {
-                videos.value = response.data.rows;
+                videos.value = response.data.rows.data;
             })
             .catch(error => {
                 console.log(error);
@@ -170,28 +168,6 @@ onMounted(() => {
 
     fetchVideos();
     fetchTags();
-
-    observer.value = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            const videoId = entry.target.getAttribute('data-id');
-            const video = videos.value.find(video => video.id === videoId);
-            if (video) {
-                video.isInView = entry.isIntersecting;
-                if (entry.isIntersecting) {
-                    videoPlayers[video.id].load();
-                }
-            }
-        });
-    });
-
-    watchEffect(() => {
-        videos.value.forEach(video => {
-            const videoElement = videoPlayers[video.id];
-            if (videoElement) {
-                observer.value.observe(videoElement);
-            }
-        });
-    });
 })
 
 const playVideo = (video) => {
@@ -206,9 +182,24 @@ const pauseVideo = (video) => {
     }
 }
 
-const unmuteVideo = (video) => {
+let timeoutId = null;
+
+const showControls = (video) => {
     if (videoPlayers[video.id]) {
-        videoPlayers[video.id].muted = false;
+        clearTimeout(timeoutId);
+        video.showControls = true;
+    }
+}
+
+const hideControls = (video) => {
+    if (videoPlayers[video.id]) {
+        // Ajouter une condition pour vérifier si la vidéo est en cours de lecture
+        if (!videoPlayers[video.id].paused) {
+            return;
+        }
+        timeoutId = setTimeout(() => {
+            video.showControls = false;
+        }, 1000); // 1000 milliseconds = 1 second
     }
 }
 </script>

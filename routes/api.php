@@ -48,7 +48,7 @@ Route::get('/get30RandomPhotosWithTags', [\App\Http\Controllers\Fichiers\ImageCo
 
 Route::get('/videos', [\App\Http\Controllers\Fichiers\VideosController::class, 'getListe']);
 Route::get('/videosWithTags', [\App\Http\Controllers\Fichiers\VideosController::class, 'getVideosWithTags']);
-Route::get('/videosByTags', [\App\Http\Controllers\Fichiers\VideosController::class, 'getVideosByTags']);
+Route::get('/videosByTags', [\App\Http\Controllers\Fichiers\VideosController::class, 'getVideoByTags']);
 Route::get('/get30RandomVideosWithTags', [\App\Http\Controllers\Fichiers\VideosController::class, 'get30RandomVideosWithTags']);
 
 Route::post('/message/send', [\App\Http\Controllers\Message\MessageController::class, 'send']);
