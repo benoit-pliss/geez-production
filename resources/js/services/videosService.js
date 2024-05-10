@@ -24,8 +24,17 @@ export async function getVideoWithTags(page = 1, pageSize = 10, searchName = "")
     });
 }
 
-
-
 export function get30RandomVideosWithTags() {
     return axiosClient.get("/get30RandomVideosWithTags");
+}
+
+
+export function updateVideo(video) {
+
+    return axiosClient.put(`/video/update`, {
+        id: video.id,
+        name: video.name,
+        description: video.description,
+        tags: video.tags
+    });
 }

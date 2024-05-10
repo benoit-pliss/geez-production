@@ -121,16 +121,12 @@ const solutions = [
 
 const navigation = [
   { 
-    name: 'Évenement', 
-    onClick: () => replaceTag('Évenement')
-  },
-  { 
     name: 'Entreprise', 
     onClick: () => replaceTag('Entreprise')
   },
   { 
-    name: 'Shooting', 
-    onClick: () => replaceTag('Shooting')
+    name: 'Clip', 
+    onClick: () => replaceTag('Clip')
   },
   { 
     name: 'Fêtes', 

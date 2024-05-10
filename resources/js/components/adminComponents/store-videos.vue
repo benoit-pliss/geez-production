@@ -123,21 +123,23 @@ async function uploadThumbnailsmethod() {
         <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
             <div class="text-center">
                 <PhotoIcon class="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
-                <div class="mt-4 flex text-sm leading-6 text-gray-600">
+                <div class="mt-4 flex text-sm leading-6 text-gray-600 justify-center">
                     <label for="file-upload" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-                        <span>Upload a file</span>
+                        <span>Choisir un fichier</span>
                         <input id="file-upload" name="file-upload" v-on:change.prevent="onSubmit" type="file" class="hidden" multiple/>
                     </label>
-                    <p class="pl-1">or drag and drop</p>
+                    <p class="pl-1">ou glisser-déposer</p>
                 </div>
                 <p v-if="files"
                    class="mt-2 text-sm text-gray-500"
                 >
-                    {{ files.length }} files selected
+                    {{ files.length }} fichier(s) sélectionné(s)
                 </p>
                 <!-- Ajout des boutons -->
-                <button class="mt-4 btn btn-primary" v-on:click="submit">Upload</button>
-                <button class="mt-4 btn btn-secondary" v-on:click="generateThumbnail">Generate Thumbnail</button>
+                <div class="mt-4 flex leading-6 text-gray-600 justify-center space-x-4">
+                    <button class="bg-secondary rounded-lg text-white font-semibold text-xs px-4 py-3" v-on:click="submit">Ajouter</button>
+                    <button class="bg-primary rounded-lg text-white font-semibold text-xs px-4 py-3" v-on:click="generateThumbnail">Générer les vignettes</button>
+                </div>
             </div>
         </div>
     </div>

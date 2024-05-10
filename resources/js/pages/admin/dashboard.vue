@@ -1,12 +1,13 @@
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/vue'
-import { ArrowRightIcon, Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { ArrowRightIcon, Bars3Icon, BellIcon, XMarkIcon, LockClosedIcon, WindowIcon } from '@heroicons/vue/24/outline'
 import DashboardPhotos from "../../components/adminComponents/dashboard-photos.vue";
 import {isTokenValid, logout} from "../../services/authService.js";
 import {ref} from "vue";
 import ListeTags from "../../components/adminComponents/tags/liste-tags.vue";
 import ListeMessage from "../../components/adminComponents/messages/liste-messages.vue";
 import DashboardVideos from "../../components/adminComponents/dashboard-videos.vue";
+import DashboardHome from "../../components/adminComponents/dashboard-home.vue";
 
 const user = {
     name: 'Tom Cook',
@@ -15,20 +16,14 @@ const user = {
         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
 
-const selectedNavigation = ref('Albums');
+const selectedNavigation = ref('Dashboard');
 
 const navigation = [
-    { name: 'Dashboard', href: '/dashboard', current: true },
-    { name: 'Photos', href: '/dashboard/photos', current: false },
-    { name: 'Albums', href: '/dashboard/albums', current: false },
-    { name: 'Tags', href: '/dashboard/tags', current: false },
-    { name: 'Messages', href: '/dashboard/users', current: false },
-]
-
-const userNavigation = [
-    { name: 'Your Profile', href: '#' },
-    { name: 'Settings', href: '#' },
-    { name: 'Sign out', href: '/logout' },
+    { name: 'Dashboard'},
+    { name: 'Photos'},
+    { name: 'Vidéos'},
+    { name: 'Tags'},
+    { name: 'Messages'},
 ]
 
 
@@ -73,12 +68,14 @@ const deconnection = () => {
                             </div>
                             <div class="hidden md:block">
                                 <div class="ml-4 flex items-center md:ml-6">
+                                    <a href="/" class="text-gray-400 hover:text-white hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                                        <WindowIcon class="h-6 w-6" aria-hidden="true" />
+                                    </a>
                                     <button @click="deconnection" type="button" class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                                         <span class="absolute -inset-1.5" />
                                         <span class="sr-only">View notifications</span>
-                                        <ArrowRightIcon class="h-6 w-6" aria-hidden="true" />
+                                        <LockClosedIcon class="h-6 w-6" aria-hidden="true" />
                                     </button>
-
                                 </div>
                             </div>
                             <div class="-mr-2 flex md:hidden">
@@ -99,25 +96,12 @@ const deconnection = () => {
                         <DisclosureButton v-for="item in navigation" :key="item.name" as="a" @click="changePage(item)" :class="[item.name === selectedNavigation ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block rounded-md px-3 py-2 text-base font-medium']" :aria-current="item.current ? 'page' : undefined">
                             {{ item.name }}
                         </DisclosureButton>
-                    </div>
-                    <div class="border-t border-gray-700 pb-3 pt-4">
-                        <div class="flex items-center px-5">
-                            <div class="flex-shrink-0">
-                                <img class="h-10 w-10 rounded-full" :src="user.imageUrl" alt="" />
-                            </div>
-                            <div class="ml-3">
-                                <div class="text-base font-medium leading-none text-white">{{ user.name }}</div>
-                                <div class="text-sm font-medium leading-none text-gray-400">{{ user.email }}</div>
-                            </div>
-                            <button type="button" class="relative ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                                <span class="absolute -inset-1.5" />
-                                <span class="sr-only">View notifications</span>
-                                <BellIcon class="h-6 w-6" aria-hidden="true" />
-                            </button>
-                        </div>
-                        <div class="mt-3 space-y-1 px-2">
-                            <DisclosureButton v-for="item in userNavigation" :key="item.name" as="a" :href="item.href" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">{{ item.name }}</DisclosureButton>
-                        </div>
+                        <DisclosureButton href="/" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white w-full text-left">
+                            Retour au site
+                        </DisclosureButton>
+                        <DisclosureButton @click="deconnection" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white w-full text-left">
+                            Déconnexion
+                        </DisclosureButton>
                     </div>
                 </DisclosurePanel>
             </Disclosure>
@@ -132,8 +116,10 @@ const deconnection = () => {
             <div class="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
                 <div class="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
 
+
+                    <DashboardHome v-if="selectedNavigation === 'Dashboard'"/>
                     <DashboardPhotos v-if="selectedNavigation === 'Photos'"/>
-                    <DashboardVideos v-else-if="selectedNavigation === 'Albums'"/>
+                    <DashboardVideos v-else-if="selectedNavigation === 'Vidéos'"/>
                     <ListeTags v-else-if="selectedNavigation === 'Tags'" :is-dashboard="true"/>
                     <ListeMessage v-else-if="selectedNavigation === 'Messages'"/>
 

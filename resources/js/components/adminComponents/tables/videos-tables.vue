@@ -1,9 +1,11 @@
 <script setup>
 
 import {ref, watch} from "vue";
-import {updatePhoto} from "../../../services/Photo-service.js";
+import {updateVideo} from "../../../services/videosService.js";
 import ComboboxTags from "../../dialog/create-tags/combobox-tags.vue";
 import notificationService from "../../../services/notificationService.js";
+
+import Badge from "@/components/Badge.vue";
 
 let editingId = ref(null);
 
@@ -38,8 +40,7 @@ const removeTag = (tag) => {
 }
 
 async function saveChanges(photo) {
-
-    await updatePhoto(photo)
+    await updateVideo(photo)
     editingId.value = null;
 }
 
@@ -54,13 +55,11 @@ async function saveChanges(photo) {
                         <thead>
                         <tr>
                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Miniature</th>
-                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Name</th>
-                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Descirption</th>
-                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Tags</th>
+                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Nom de la vidéo</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Description</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Tags associés</th>
                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Visible</th>
-                            <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                                <span class="sr-only">Edit</span>
-                            </th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 text-right">Actions</th>
                         </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
@@ -81,7 +80,7 @@ async function saveChanges(photo) {
 
                                 <div v-else>
                                     <div class="mt-2">
-                                        <input type="text" name="name" id="name" v-model="photo.name"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
+                                        <input type="text" name="name" id="name" v-model="photo.name"  class="block w-full rounded-md border-0 py-1.5 px-2 bg-white text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
                                     </div>
                                 </div>
                             </td>
@@ -91,16 +90,13 @@ async function saveChanges(photo) {
 
                                 <div v-else>
                                     <div class="mt-2">
-                                        <input type="text" name="description" id="description" v-model="photo.description"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
+                                        <input type="text" name="description" id="description" v-model="photo.description"  class="block w-full rounded-md border-0 py-1.5 px-2 bg-white text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
                                     </div>
                                 </div>
                             </td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 max-w-xs">
                                 <div v-if="editingId !== photo.id" class="flex flex-wrap w-full gap-4">
-                                    <span v-for="tag in photo.tags" :key="tag.id"
-                                          class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-700/10 cursor-pointer">
-                                        {{ tag.name }}
-                                    </span>
+                                    <Badge v-for="tag in photo.tags" :key="tag.id" :is-dashboard="1" :label="tag.name" :color="tag.color ? tag.color : null" />
                                 </div>
 
                                 <div v-else>
@@ -116,7 +112,10 @@ async function saveChanges(photo) {
                                                       <span class="absolute -inset-1"/>
                                                 </button>
                                           </span>
+
+                                        <Badge v-for="tag in photo.tags" :key="tag.id" :label="tag.name" :color="tag.color ? tag.color : null" :id="tag.id" :onClick="removeTag" type="remove" :isDashboard="0"/>
                                     </div>
+
 
                                     <ComboboxTags
                                         :is-assigned="false"
@@ -128,10 +127,14 @@ async function saveChanges(photo) {
                             </td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ photo.type }}</td>
                             <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                                <a v-if="editingId !== photo.id" href="#" @click.prevent="editingId = photo.id" class="text-indigo-600 hover:text-indigo-900"
-                                >Edit<span class="sr-only">, {{ photo.name }}</span></a
-                                >
-                                <button v-else @click="saveChanges(photo)">Save</button>                            </td>
+                                <a v-if="editingId !== photo.id" href="#" @click.prevent="editingId = photo.id" class="text-blue-600 hover:text-blue-900">
+                                    Edit
+                                    <span class="sr-only">, {{ photo.name }}</span>
+                                </a>
+                                <button v-else @click="saveChanges(photo)" class="text-green-600 hover:text-green-900">
+                                    Save
+                                </button>
+                            </td>
                         </tr>
                         </tbody>
                     </table>

@@ -4,6 +4,7 @@ import dialogService from "../../../services/dialogService.js";
 import {getTags} from "../../../services/tagsService.js";
 import {onMounted, ref, defineEmits} from "vue";
 import Badge from "../../Badge.vue";
+import { PlusCircleIcon } from "@heroicons/vue/20/solid";
 
 const Tags = ref([]);
 const selectedTags = ref([]);
@@ -82,8 +83,9 @@ const removeTag = (tag) => {
 
         <div class="mt-6">
             <button type="button" @click="openCreateTagsDialog"
-                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus-visible:outline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500">
-                Add Tags
+                    class="px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex items-center gap-x-2">
+                <PlusCircleIcon class="h-5 w-5" aria-hidden="true"/>
+                Créer un tag
             </button>
         </div>
     </div>

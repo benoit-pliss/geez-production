@@ -34,6 +34,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/message/read', [\App\Http\Controllers\Message\MessageController::class, 'read']);
     Route::post('/message/archive', [\App\Http\Controllers\Message\MessageController::class, 'archive']);
     Route::post('/message/delete', [\App\Http\Controllers\Message\MessageController::class, 'delete']);
+
+    Route::put('/video/update', [\App\Http\Controllers\Fichiers\VideosController::class, 'update']);
 });
 
 Route::post('/upload/photos', [\App\Http\Controllers\Fichiers\ImageController::class, 'uploadAndStore']);

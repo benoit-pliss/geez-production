@@ -40,25 +40,25 @@ const changePage = (newPage) => {
         <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
             <div>
                 <p class="text-sm text-gray-700">
-                    Showing
+                    Montrer
                     {{ ' ' }}
                     <span class="font-medium">
                         {{ (currentPage - 1) * 10 + 1 }}
                     </span>
                     {{ ' ' }}
-                    to
+                    à
                     {{ ' ' }}
                     <span class="font-medium">
                         {{ Math.min(currentPage * 10, total)}}
                     </span>
                     {{ ' ' }}
-                    of
+                    de
                     {{ ' ' }}
                     <span class="font-medium">
                         {{ total }}
                     </span>
                     {{ ' ' }}
-                    results
+                    résultats
                 </p>
             </div>
             <div>
@@ -68,9 +68,15 @@ const changePage = (newPage) => {
                         <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
                     </a>
 
+                    <!--
                     <a href="#" @click.prevent="changePage(currentPage + 1)" class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-gray-100 ring-1 ring-indigo-500 ring-inset focus:z-10 focus:outline-none focus:ring-indigo-500 focus:ring-2 focus:ring-offset-2">
                         {{ currentPage }}
-                    </a>
+                    </a>-->
+                    <template v-for="page in lastPage">
+                        <a href="#" @click.prevent="changePage(page)" :class="[page === currentPage ? 'bg-gray-100' : 'bg-white', 'relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-500 ring-1 ring-gray-300 ring-inset focus:z-10 focus:outline-none focus:ring-indigo-500 focus:ring-2 focus:ring-offset-2']">
+                            {{ page }}
+                        </a>
+                    </template>
 
                     <a href="#" @click.prevent="changePage(currentPage + 1)" class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
                         <span class="sr-only">Next</span>
