@@ -34,10 +34,25 @@
             <div class="mx-auto mt-16 flow-root max-w-2xl sm:mt-20 lg:mx-0 lg:max-w-none">
                 <div class="-mt-8 sm:-mx-4 sm:columns-2 sm:text-[0] sm:columns-2 md:columns-2 lg:columns-3 xl:columns-4">
                     <div v-for="video in videos" :key="video.name" class="pt-8 sm:inline-block sm:w-full sm:px-4">
-                        <!-- quand hover rendre visible la div des Badges-->
                         <div class="overflow-hidden transition duration-300 transform rounded-lg">
-                            <video :src="video.url" :poster="video.poster_url" :ref="el => { videoPlayers[video.id] = el; }" preload="none" class="object-cover w-full h-auto" :muted="false" :controls="false" v-on:mouseover="playVideo(video)" v-on:mouseleave="pauseVideo(video)" loop data-id="video.id"></video>
-                            <div class="absolute inset-0 flex place-content-end justify-start flex-wrap-reverse gap-2 p-4" :class="{ 'hidden' : !video.hidden }">
+                            <video :src="video.url" :poster="video.poster_url" :ref="el => { videoPlayers[video.id] = el; }" preload="none" class="object-cover w-full h-auto" :muted="false" :controls="false" v-on:mouseover="playVideo(video)"
+                                loop data-id="video.id"></video>
+                            <div class="absolute bottom-0 flex place-content-end justify-start flex-wrap-reverse gap-2 p-4 h-fit" v-if="!video.showControls">
+                                <div class="flex gap-x-2 text-white backdrop-blur-md bg-black/10 rounded-lg items-center justify-center px-2 py-1">
+                                    <div>
+                                        <PlayIcon class="h-4 w-4"
+                                            v-if="!video.play"
+                                            v-on:click="playVideo(video)"/>
+                                        <PauseIcon class="h-4 w-4"
+                                            v-if="video.play"
+                                            v-on:click="pauseVideo(video)"/>
+                                    </div>
+                                    <div>
+                                        <ArrowPathIcon class="h-4 w-4"
+                                            v-on:click="goStart(video)"/>
+
+                                    </div>
+                                </div>
                                 <Badge v-for="tag in video.tags" :key="tag.id" :label="tag.name" :color="tag.color" type="add" v-on:click="addTag(tag)" :id="tag.id"/>
                             </div>
                         </div>
@@ -59,7 +74,7 @@ import {
   ComboboxOption,
   ComboboxOptions,
 } from '@headlessui/vue'
-import { ChevronUpDownIcon } from '@heroicons/vue/20/solid'
+import { ChevronUpDownIcon, PlayIcon, PauseIcon, ArrowPathIcon } from '@heroicons/vue/20/solid'
 import {ref, onMounted, computed, watch, reactive} from 'vue'
 
 const load_tags = ref([])
@@ -171,21 +186,31 @@ onMounted(() => {
 })
 
 const playVideo = (video) => {
+    // Pause all other videos
+    for (const otherVideo of videos.value) {
+        if (otherVideo.id !== video.id) {
+            pauseVideo(otherVideo);
+        }
+    }
+
     if (videoPlayers[video.id]) {
-        //enable controls
-        videoPlayers[video.id].controls = true;
+        video.play = true;
         videoPlayers[video.id].play();
     }
+
+    
 }
 
 const pauseVideo = (video) => {
     if (videoPlayers[video.id]) {
-        //disable controls
-        videoPlayers[video.id].controls = false;
+        video.play = false;
         videoPlayers[video.id].pause();
-        //compatibility with safari browser (on mouseleave, the video disappear)
-        video.hidden = false;
+    }
+}
 
+const goStart = (video) => {
+    if (videoPlayers[video.id]) {
+        videoPlayers[video.id].currentTime = 0;
     }
 }
 
