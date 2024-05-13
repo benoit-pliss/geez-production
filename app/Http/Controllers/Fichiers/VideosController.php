@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use FFMpeg\Coordinate\TimeCode;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -69,6 +70,21 @@ class VideosController extends Controller
         $file = new UploadedFile(storage_path('app/chunks/' . $path), $name);
         $url =  $file->storeAs('videos', Str::uuid() . '.mp4');
 
+        Log::write('info', $file->getClientOriginalName());
+
+        $fileToUpdate = Files::where('name', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))->first();
+
+        if($fileToUpdate) {
+
+            return response()->json([
+                'success' => true,
+                'entity' => $fileToUpdate->update([
+                    'name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+                    'url' => $url,
+                ])
+            ]);
+        }
+
         return response()->json([
             'success' => true,
             'entity' =>  FilesController::storeFileOnDatabase(
@@ -84,7 +100,7 @@ class VideosController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des vidéos',
-            'videos' => Files::all()->where('id_type', 2),
+            'rows' => Files::all()->where('id_type', 2),
         ]);
     }
 
@@ -101,7 +117,7 @@ class VideosController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des vidéos avec tags',
-            'videos' => $videos,
+            'rows' => $videos,
         ]);
     }
 
@@ -112,7 +128,7 @@ class VideosController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des 30 vidéos aléatoires avec tags',
-            'videos' => $videos,
+            'rows' => $videos,
         ]);
     }
 
@@ -129,7 +145,40 @@ class VideosController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des vidéos par tags',
-            'videos' => $videos,
+            'rows' => $videos,
+        ]);
+    }
+
+    public function update(Request $request) : JsonResponse
+    {
+        // Valider les données de la requête
+        Log::info($request);
+        $request->validate([
+            'id' => 'required|integer',
+            // Ajoutez ici d'autres champs si nécessaire
+        ]);
+
+        // Trouver l'image par son ID
+        $video = Files::findOrFail($request->input('id'));
+
+        // Mettre à jour l'image avec les nouvelles données
+        $video->update($request->all());
+
+        if ($request->has('tags') && $request->input('tags') !== null) {
+            $tags = $request->input('tags');
+            $tagsArray = array_map(function($tag) {
+                return $tag['id'];
+            }, $tags);
+
+            // Supprimer tous les tags actuels de l'image et ajouter les nouveaux tags
+            $video->tags()->sync($tagsArray);
+        }
+
+        // Retourner une réponse
+        return response()->json([
+            'success' => true,
+            'message' => 'Video updated successfully',
+            'video' => $video
         ]);
     }
 

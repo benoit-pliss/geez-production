@@ -39,7 +39,6 @@
             <div class="mx-auto mt-16 flow-root max-w-2xl sm:mt-20 md:mx-0 md:max-w-none">
                 <div class="-mt-8 sm:-mx-4 sm:text-[0] sm:columns-2 md:columns-2 lg:columns-3 xl:columns-4">
                     <div v-for="image in images" :key="image.name" class="pt-8 sm:inline-block sm:w-full sm:px-4">
-                        <!-- quand hover rendre visible la div des Badges-->
                         <div class="overflow-hidden transition duration-300 transform rounded-lg hover:scale-105"  v-on:mouseover="image.hidden = true" v-on:mouseleave="image.hidden = false">
                             <img :src="image.url" loading="lazy" class="object-cover w-full h-auto" alt="geez"/>
                                 <div class="absolute inset-0 flex place-content-end justify-start flex-wrap-reverse gap-2 p-4" :class="{ 'hidden' : !image.hidden }">
@@ -49,6 +48,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </template>

@@ -164,7 +164,7 @@ class ImageController extends Controller
         $image = $manager->make($request->file('file'))->encode('webp', 75);
         $url = FilesController::storeFileOnServer($image, $request->input('videoName'), 'posters');
 
-        $video = Files::class::where(['name', $request->input('videoName'), 'id_type' => 2])->first();
+        $video = Files::class::where(['name' => $request->input('videoName'), 'id_type' => 2])->first();
         $video->update(['poster_url' => $url]);
 
         return response()->json([

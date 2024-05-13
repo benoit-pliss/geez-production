@@ -32,13 +32,28 @@
             </div>
 
             <div class="mx-auto mt-16 flow-root max-w-2xl sm:mt-20 lg:mx-0 lg:max-w-none">
-                <div class="-mt-8 sm:-mx-4 sm:columns-2 sm:text-[0] lg:columns-2">
-                    <div v-for="image in images" :key="image.name" class="pt-8 sm:inline-block sm:w-full sm:px-4">
-                        <!-- quand hover rendre visible la div des Badges-->
-                        <div class="overflow-hidden transition duration-300 transform rounded-lg"  v-on:mouseover="image.hidden = true" v-on:mouseleave="image.hidden = false">
-                            <img :src="image.url" loading="lazy" class="object-cover w-full h-auto" alt="geez"/>
-                                <div class="absolute inset-0 flex place-content-end justify-start flex-wrap-reverse gap-2 p-4" :class="{ 'hidden' : !image.hidden }">
-                                    <Badge v-for="tag in image.tags" :key="tag.id" :label="tag.name" :color="tag.color" type="add" v-on:click="addTag(tag)" :id="tag.id"/>
+                <div class="-mt-8 sm:-mx-4 sm:columns-2 sm:text-[0] sm:columns-2 md:columns-2 lg:columns-3 xl:columns-4">
+                    <div v-for="video in videos" :key="video.name" class="pt-8 sm:inline-block sm:w-full sm:px-4">
+                        <div class="overflow-hidden transition duration-300 transform rounded-lg">
+                            <video :src="video.url" :poster="video.poster_url" :ref="el => { videoPlayers[video.id] = el; }" preload="none" class="object-cover w-full h-auto" :muted="false" :controls="false" v-on:mouseover="playVideo(video)"
+                                loop data-id="video.id"></video>
+                            <div class="absolute bottom-0 flex place-content-end justify-start flex-wrap-reverse gap-2 p-4 h-fit" v-if="!video.showControls">
+                                <div class="flex gap-x-2 text-white backdrop-blur-md bg-black/10 rounded-lg items-center justify-center px-2 py-1">
+                                    <div>
+                                        <PlayIcon class="h-4 w-4"
+                                            v-if="!video.play"
+                                            v-on:click="playVideo(video)"/>
+                                        <PauseIcon class="h-4 w-4"
+                                            v-if="video.play"
+                                            v-on:click="pauseVideo(video)"/>
+                                    </div>
+                                    <div>
+                                        <ArrowPathIcon class="h-4 w-4"
+                                            v-on:click="goStart(video)"/>
+
+                                    </div>
+                                </div>
+                                <Badge v-for="tag in video.tags" :key="tag.id" :label="tag.name" :color="tag.color" type="add" v-on:click="addTag(tag)" :id="tag.id"/>
                             </div>
                         </div>
                     </div>
@@ -51,7 +66,7 @@
 <script setup>
 import Badge from '../components/Badge.vue';
 import {getTags} from "../services/tagsService.js";
-import {get30RandomPhotosWithTags, getListePhotosByTags} from "../services/Photo-service.js";
+import {getListeVideoByTags, get30RandomVideosWithTags} from "../services/videosService.js";
 import {
   Combobox,
   ComboboxButton,
@@ -59,12 +74,14 @@ import {
   ComboboxOption,
   ComboboxOptions,
 } from '@headlessui/vue'
-import { ChevronUpDownIcon } from '@heroicons/vue/20/solid'
-import {ref, onMounted, computed, watch} from 'vue'
+import { ChevronUpDownIcon, PlayIcon, PauseIcon, ArrowPathIcon } from '@heroicons/vue/20/solid'
+import {ref, onMounted, computed, watch, reactive} from 'vue'
 
 const load_tags = ref([])
 const current_tags = ref([])
-const images = ref([])
+const videos = ref([])
+const videoPlayers = reactive({});
+
 
 const props = defineProps({
     pageTag: {
@@ -93,7 +110,7 @@ const scrollDown = () => {
 const replaceAllTag = (tag) => {
     current_tags.value = [];
     current_tags.value.push(tag);
-    fetchImages();
+    fetchVideos();
     scrollDown();
 }
 
@@ -105,7 +122,7 @@ const addTag = (tag) => {
         current_tags.value.push(tag);
     }
     query.value = '';
-    fetchImages();
+    fetchVideos();
 }
 
 const removeTag = (tag_id) => {
@@ -113,7 +130,7 @@ const removeTag = (tag_id) => {
     if (index !== -1) {
         current_tags.value.splice(index, 1);
     }
-    fetchImages();
+    fetchVideos();
 }
 
 const fetchTags = () => {
@@ -126,19 +143,19 @@ const fetchTags = () => {
         });
 }
 
-const fetchImages = () => {
+const fetchVideos = () => {
     if (current_tags.value.length > 0) {
-        getListePhotosByTags(current_tags.value.map(tag => tag.id))
+        getListeVideoByTags(current_tags.value.map(tag => tag.id))
             .then(response => {
-                images.value = response.data.photos;
+                videos.value = response.data.rows.data;
             })
             .catch(error => {
                 console.log(error);
             });
     } else {
-        get30RandomPhotosWithTags()
+        get30RandomVideosWithTags()
             .then(response => {
-                images.value = response.data.photos;
+                videos.value = response.data.rows;
             })
             .catch(error => {
                 console.log(error);
@@ -160,14 +177,63 @@ const filteredTags = computed(() =>
 )
 
 onMounted(() => {
-    for (let image of images.value) {
+    for (let image of videos.value) {
         image.hidden = true;
     }
 
-    fetchImages();
+    fetchVideos();
     fetchTags();
-
 })
+
+const playVideo = (video) => {
+    // Pause all other videos
+    for (const otherVideo of videos.value) {
+        if (otherVideo.id !== video.id) {
+            pauseVideo(otherVideo);
+        }
+    }
+
+    if (videoPlayers[video.id]) {
+        video.play = true;
+        videoPlayers[video.id].play();
+    }
+
+    
+}
+
+const pauseVideo = (video) => {
+    if (videoPlayers[video.id]) {
+        video.play = false;
+        videoPlayers[video.id].pause();
+    }
+}
+
+const goStart = (video) => {
+    if (videoPlayers[video.id]) {
+        videoPlayers[video.id].currentTime = 0;
+    }
+}
+
+let timeoutId = null;
+
+const showControls = (video) => {
+    if (videoPlayers[video.id]) {
+        clearTimeout(timeoutId);
+        video.showControls = true;
+    }
+}
+
+const hideControls = (video) => {
+    if (videoPlayers[video.id]) {
+        // Ajouter une condition pour vérifier si la vidéo est en cours de lecture
+        if (!videoPlayers[video.id].paused) {
+            return;
+        }
+        timeoutId = setTimeout(() => {
+            video.showControls = false;
+        }, 1000); // 1000 milliseconds = 1 second
+    }
+}
 </script>
 
 <style scoped>
