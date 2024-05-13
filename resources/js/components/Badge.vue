@@ -1,4 +1,6 @@
 <script setup>
+import { XMarkIcon, PlusIcon } from '@heroicons/vue/20/solid';
+
 const props = defineProps({
     label : String,
     color : String,
@@ -22,25 +24,21 @@ function getRandColor() {
 </script>
 
 <template>
-    <span class="inline-flex items-center gap-x-1.5 rounded-md px-2 py-1 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-200 bg-white/70">
+    <span class="inline-flex items-center gap-x-1.5 rounded-md px-2 py-1 text-xs font-medium text-white backdrop-blur-md bg-black/10">
         <svg class="h-1.5 w-1.5" viewBox="0 0 6 6" aria-hidden="true" :class="'fill-' + color + '-500' || getRandColor()">
         <circle cx="3" cy="3" r="3" />
         </svg>
         {{ label }}
 
-        <button v-if="type === 'remove' && !isDashboard" class="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-gray-500/20" @click="onClick(id)" :id="`button-tag-${id}`">
+        <button v-if="type === 'remove' && !isDashboard" class="text-white group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-gray-500/30" @click="onClick(id)" :id="`button-tag-${id}`">
             <span class="sr-only">Remove</span>
-            <svg viewBox="0 0 14 14" class="h-3.5 w-3.5 stroke-gray-600/50 group-hover:stroke-gray-600/75">
-                <path d="M4 4l6 6m0-6l-6 6" />
-            </svg>
+            <XMarkIcon class="h-3.5 w-3.5" aria-hidden="true" />
             <span class="absolute -inset-1" />
         </button>
 
-        <button v-if="type !== 'remove' && !isDashboard" class="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-gray-500/20" @click="onClick(id)" :id="`button-tag-${id}`">
+        <button v-if="type !== 'remove' && !isDashboard" class="text-white group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-gray-500/30" @click="onClick(id)" :id="`button-tag-${id}`">
             <span class="sr-only">Add</span>
-            <svg viewBox="0 0 14 14" class="h-3.5 w-3.5 stroke-gray-600/50 group-hover:stroke-gray-600/75">
-                <path d="M4 7h6m-3-3v6" />
-            </svg>
+            <PlusIcon class="h-3.5 w-3.5" aria-hidden="true" />
             <span class="absolute -inset-1" />
         </button>
 

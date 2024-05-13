@@ -4,6 +4,10 @@ export function uploadPhoto(formData) {
     return axiosClient.post("/upload/photos", formData);
 }
 
+export function uploadThumbnails(formData) {
+    return axiosClient.post("/upload/thumbnails", formData);
+}
+
 export function getListePhotos() {
     return axiosClient.get("/photos");
 }

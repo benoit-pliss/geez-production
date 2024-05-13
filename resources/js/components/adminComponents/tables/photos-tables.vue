@@ -5,6 +5,8 @@ import {updatePhoto} from "../../../services/Photo-service.js";
 import ComboboxTags from "../../dialog/create-tags/combobox-tags.vue";
 import notificationService from "../../../services/notificationService.js";
 
+import Badge from "@/components/Badge.vue";
+
 let editingId = ref(null);
 
 const props = defineProps({
@@ -54,9 +56,9 @@ async function saveChanges(photo) {
                         <thead>
                         <tr>
                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Miniature</th>
-                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Name</th>
-                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Descirption</th>
-                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Tags</th>
+                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Nom de la photo</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Description</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Tags associés</th>
                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Visible</th>
                             <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
                                 <span class="sr-only">Edit</span>
@@ -97,10 +99,7 @@ async function saveChanges(photo) {
                             </td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 max-w-xs">
                                 <div v-if="editingId !== photo.id" class="flex flex-wrap w-full gap-4">
-                                    <span v-for="tag in photo.tags" :key="tag.id"
-                                          class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-700/10 cursor-pointer">
-                                        {{ tag.name }}
-                                    </span>
+                                    <Badge v-for="tag in photo.tags" :key="tag.id" :is-dashboard="1" :label="tag.name" :color="tag.color ? tag.color : null" />
                                 </div>
 
                                 <div v-else>
@@ -116,6 +115,7 @@ async function saveChanges(photo) {
                                                       <span class="absolute -inset-1"/>
                                                 </button>
                                           </span>
+                                          <Badge v-for="tag in photo.tags" :key="tag.id" :label="tag.name" :color="tag.color ? tag.color : null" :id="tag.id" :onClick="removeTag" type="remove" :isDashboard="0"/>
                                     </div>
 
                                     <ComboboxTags

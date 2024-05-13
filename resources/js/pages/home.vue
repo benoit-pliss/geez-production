@@ -12,7 +12,7 @@
                 href="/photo">
                 <img class="absolute inset-0 h-full w-full object-cover" src="../../img/acceuil/static/home-1.jpeg" alt="Image">
                 <div class="absolute inset-0 flex items-start justify-end flex-col pb-20"> <!-- bg-black bg-opacity-50 -->
-                    <h1 class="text-4xl font-bold text-white backdrop-blur-md px-10 py-3 bg-gray-100/10 rounded-r-xl">Photographie</h1>
+                    <h1 class="text-4xl font-bold text-white backdrop-blur-md px-10 py-3 bg-black/10 rounded-r-xl">Photographie</h1>
                 </div>
             </a>
 
@@ -26,7 +26,7 @@
                     <source src="../../img/acceuil/static/home-2.mp4" type="video/mp4">
                 </video>
                 <div class="absolute inset-0 flex items-end justify-end flex-col pb-20">
-                    <h1 class="text-4xl font-bold text-white backdrop-blur-md px-10 py-3 bg-gray-100/25 rounded-l-xl">Audiovisuel</h1>
+                    <h1 class="text-4xl font-bold text-white backdrop-blur-md px-10 py-3 bg-black/10 rounded-l-xl">Audiovisuel</h1>
                 </div>
             </a>
         </div>

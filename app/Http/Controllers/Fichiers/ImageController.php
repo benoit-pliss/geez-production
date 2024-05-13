@@ -3,16 +3,13 @@
 namespace App\Http\Controllers\Fichiers;
 
 use App\Http\Controllers\Controller;
-use App\Models\FilesTags;
-use App\Models\Images;
-use App\Models\Tags;
-use Illuminate\Database\QueryException;
+use App\Models\Files;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
+use Psy\Util\Json;
 
 class ImageController extends Controller
 {
@@ -27,7 +24,7 @@ class ImageController extends Controller
         $filename = pathinfo($originalName, PATHINFO_FILENAME) . '.webp';
 
         // Vérifiez si l'image existe déjà en base de données
-        if (Images::class::where('name', pathinfo($originalName, PATHINFO_FILENAME))->exists()) {
+        if (Files::class::where('name', pathinfo($originalName, PATHINFO_FILENAME))->exists()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Cette image existe déjà en base de données.',
@@ -36,16 +33,17 @@ class ImageController extends Controller
 
         // Convertir l'image en WEBP et la stocker sur le serveur FTP
         $manager = new ImageManager(array('driver' => 'gd'));
-
         $image = $manager->make($file)->encode('webp', 75);
-        Storage::disk('ftp')->put('images/'.$filename, (string) $image, 'public');
+
+        FilesController::storeFileOnServer($image, $filename, 'images');
 
         // Enregistrez l'URL en base de données
-        $image = Images::class::create([
-            'name' => pathinfo($originalName, PATHINFO_FILENAME),
-            'description' => $request->input('description'),
-            'url' => env('DATA_URL') . '/images/' . $filename,
-        ]);
+        $image = FilesController::storeFileOnDatabase(
+            $originalName,
+            env('DATA_URL') . '/images/' . $filename,
+            $request->input('description'),
+            null
+        );
 
         if ($request->has('tags')) {
             $tags = $request->input('tags');
@@ -68,7 +66,7 @@ class ImageController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des images',
-            'photos' => Images::all(),
+            'photos' => Files::all()->where('id_type', 1),
         ]);
     }
 
@@ -76,9 +74,9 @@ class ImageController extends Controller
     {
         $searchName = $request->input('searchName');
 
-
-
-        $photos = Images::with('tags')
+        $photos = Files::with(['tags' => function ($query) {
+            $query->orderBy('name');
+        }])->where('id_type', 1)
             ->when($searchName, function ($query, $searchName) {
                 return $query->where('name', 'like', '%' . $searchName . '%');
             })
@@ -87,18 +85,20 @@ class ImageController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des images avec tags',
-            'photos' => $photos,
+            'photos' => FilesController::sortedFilesListe($photos),
         ]);
     }
 
     public function get30RandomPhotosWithTags() : JsonResponse
     {
-        $photos = Images::with('tags')->inRandomOrder()->limit(30)->get();
+        $photos = Files::with(['tags' => function ($query) {
+            $query->orderBy('name');
+        }])->where('id_type', 1)->inRandomOrder()->limit(30)->get();
 
         return response()->json([
             'success' => true,
             'message' => 'Liste des 30 images aléatoires avec tags',
-            'photos' => $photos,
+            'photos' => FilesController::sortedFilesListe($photos),
         ]);
     }
 
@@ -110,7 +110,9 @@ class ImageController extends Controller
         ]);
 
         $tags = $request->input('tags');
-        $images = Images::with('tags')->whereHas('tags', function($query) use ($tags) {
+        $images = Files::with(['tags' => function ($query) {
+            $query->orderBy('name');
+        }])->where('id_type', 1)->whereHas('tags', function($query) use ($tags) {
             $query->whereIn('tags.id', $tags);
         })->get();
 
@@ -118,9 +120,29 @@ class ImageController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des images par tag',
-            'photos' => $images,
+            'photos' => FilesController::sortedFilesListe($images),
         ]);
 
+    }
+
+    public function getPhotosSortedByTags() : JsonResponse
+    {
+        $photos = Files::with(['tags' => function ($query) {
+            $query->orderBy('name');
+        }])
+            ->where('id_type', 1)
+            ->get();
+
+        // Tri des photos par le nom du premier tag
+        $sortedPhotos = $photos->sortBy(function ($photo) {
+            return $photo->tags->first()->name ?? null;
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Liste des images triées par tags',
+            'photos' => $sortedPhotos->values()->all(),
+        ]);
     }
 
     public function update(Request $request) : JsonResponse
@@ -133,7 +155,7 @@ class ImageController extends Controller
         ]);
 
         // Trouver l'image par son ID
-        $image = Images::findOrFail($request->input('id'));
+        $image = Files::findOrFail($request->input('id'));
 
         // Mettre à jour l'image avec les nouvelles données
         $image->update($request->all());
@@ -153,6 +175,28 @@ class ImageController extends Controller
             'success' => true,
             'message' => 'Image updated successfully',
             'image' => $image
+        ]);
+    }
+
+
+    public function uploadAndStoreThumbnail(Request $request) : JsonResponse
+    {
+        $request->validate([
+            'videoName' => 'required|string',
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+        ]);
+
+        $manager = new ImageManager(array('driver' => 'gd'));
+        $image = $manager->make($request->file('file'))->encode('webp', 75);
+        $url = FilesController::storeFileOnServer($image, $request->input('videoName'), 'posters');
+
+        $video = Files::class::where(['name' => $request->input('videoName'), 'id_type' => 2])->first();
+        $video->update(['poster_url' => $url]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Thumbnail uploaded and stored successfully',
+            'url' => $video,
         ]);
     }
 
