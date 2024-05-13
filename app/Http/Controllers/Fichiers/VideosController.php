@@ -108,7 +108,9 @@ class VideosController extends Controller
     {
         $searchName = $request->input('searchName');
 
-        $videos = Files::with('tags')->where('id_type', 2)
+        $videos = Files::with(['tags' => function ($query) {
+            $query->orderBy('name');
+        }])->where('id_type', 2)
             ->when($searchName, function ($query, $searchName) {
                 return $query->where('name', 'like', '%' . $searchName . '%');
             })
@@ -117,24 +119,28 @@ class VideosController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des vidéos avec tags',
-            'rows' => $videos,
+            'rows' => FilesController::sortedFilesListe($videos),
         ]);
     }
 
     public function get30RandomVideosWithTags() : JsonResponse
     {
-        $videos = Files::with('tags')->where('id_type', 2)->inRandomOrder()->limit(30)->get();
+        $videos = Files::with(['tags' => function ($query) {
+            $query->orderBy('name');
+        }])->where('id_type', 2)->inRandomOrder()->limit(30)->get();
 
         return response()->json([
             'success' => true,
             'message' => 'Liste des 30 vidéos aléatoires avec tags',
-            'rows' => $videos,
+            'rows' => FilesController::sortedFilesListe($videos),
         ]);
     }
 
     public function getVideoByTags(Request $request) : JsonResponse
     {
-        $tags = $request->input('tags');
+        $tags = $request->input(['tags' => function ($query) {
+            $query->orderBy('name');
+        }]);
 
         $videos = Files::with('tags')->where('id_type', 2)
             ->whereHas('tags', function ($query) use ($tags) {
@@ -145,7 +151,7 @@ class VideosController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des vidéos par tags',
-            'rows' => $videos,
+            'rows' => FilesController::sortedFilesListe($videos),
         ]);
     }
 
