@@ -74,7 +74,9 @@ class ImageController extends Controller
     {
         $searchName = $request->input('searchName');
 
-        $photos = Files::with('tags')->where('id_type', 1)
+        $photos = Files::with(['tags' => function ($query) {
+            $query->orderBy('name');
+        }])->where('id_type', 1)
             ->when($searchName, function ($query, $searchName) {
                 return $query->where('name', 'like', '%' . $searchName . '%');
             })
@@ -83,18 +85,20 @@ class ImageController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des images avec tags',
-            'photos' => $photos,
+            'photos' => FilesController::sortedFilesListe($photos),
         ]);
     }
 
     public function get30RandomPhotosWithTags() : JsonResponse
     {
-        $photos = Files::with('tags')->where('id_type', 1)->inRandomOrder()->limit(30)->get();
+        $photos = Files::with(['tags' => function ($query) {
+            $query->orderBy('name');
+        }])->where('id_type', 1)->inRandomOrder()->limit(30)->get();
 
         return response()->json([
             'success' => true,
             'message' => 'Liste des 30 images aléatoires avec tags',
-            'photos' => $photos,
+            'photos' => FilesController::sortedFilesListe($photos),
         ]);
     }
 
@@ -106,7 +110,9 @@ class ImageController extends Controller
         ]);
 
         $tags = $request->input('tags');
-        $images = Files::with('tags')->where('id_type', 1)->whereHas('tags', function($query) use ($tags) {
+        $images = Files::with(['tags' => function ($query) {
+            $query->orderBy('name');
+        }])->where('id_type', 1)->whereHas('tags', function($query) use ($tags) {
             $query->whereIn('tags.id', $tags);
         })->get();
 
@@ -114,9 +120,29 @@ class ImageController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des images par tag',
-            'photos' => $images,
+            'photos' => FilesController::sortedFilesListe($images),
         ]);
 
+    }
+
+    public function getPhotosSortedByTags() : JsonResponse
+    {
+        $photos = Files::with(['tags' => function ($query) {
+            $query->orderBy('name');
+        }])
+            ->where('id_type', 1)
+            ->get();
+
+        // Tri des photos par le nom du premier tag
+        $sortedPhotos = $photos->sortBy(function ($photo) {
+            return $photo->tags->first()->name ?? null;
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Liste des images triées par tags',
+            'photos' => $sortedPhotos->values()->all(),
+        ]);
     }
 
     public function update(Request $request) : JsonResponse
