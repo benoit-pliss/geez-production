@@ -4,12 +4,12 @@
     "src": "resources/img/logo/logo-geez.png"
   },
   "resources/css/app.css": {
-    "file": "assets/app-e8f7932a.css",
+    "file": "assets/app-d2373881.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
   "resources/img/acceuil/static/home-1.jpeg": {
-    "file": "assets/home-1-f8eba3fa.jpeg",
+    "file": "assets/home-1-ae3b5f0d.jpeg",
     "src": "resources/img/acceuil/static/home-1.jpeg"
   },
   "resources/img/acceuil/static/home-2.mp4": {
@@ -45,12 +45,12 @@
     "src": "resources/img/logo/logo-geez.png"
   },
   "resources/js/app.css": {
-    "file": "assets/app-764eb62e.css",
+    "file": "assets/app-ddfa63ae.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
     "assets": [
-      "assets/home-1-f8eba3fa.jpeg",
+      "assets/home-1-ae3b5f0d.jpeg",
       "assets/home-2-36133f28.mp4",
       "assets/logo-geez-dark-db7b49b2.png",
       "assets/logo-geez-19f53bcf.png",
@@ -61,9 +61,9 @@
       "assets/video-1-01cbdb61.jpeg"
     ],
     "css": [
-      "assets/app-764eb62e.css"
+      "assets/app-ddfa63ae.css"
     ],
-    "file": "assets/app-459a6459.js",
+    "file": "assets/app-8a7e7434.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }
