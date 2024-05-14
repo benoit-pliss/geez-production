@@ -147,6 +147,7 @@ const fetchVideos = () => {
     if (current_tags.value.length > 0) {
         getListeVideoByTags(current_tags.value.map(tag => tag.id))
             .then(response => {
+
                 videos.value = response.data.rows.data;
             })
             .catch(error => {
@@ -155,7 +156,9 @@ const fetchVideos = () => {
     } else {
         get30RandomVideosWithTags()
             .then(response => {
+                console.log(response.data.rows);
                 videos.value = response.data.rows;
+                console.log(response);
             })
             .catch(error => {
                 console.log(error);
@@ -198,7 +201,7 @@ const playVideo = (video) => {
         videoPlayers[video.id].play();
     }
 
-    
+
 }
 
 const pauseVideo = (video) => {

@@ -119,7 +119,7 @@ class VideosController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des vidéos avec tags',
-            'rows' => FilesController::sortedFilesListe($videos),
+            'rows' => $videos,
         ]);
     }
 
@@ -132,15 +132,13 @@ class VideosController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des 30 vidéos aléatoires avec tags',
-            'rows' => FilesController::sortedFilesListe($videos),
+            'rows' => $videos,
         ]);
     }
 
     public function getVideoByTags(Request $request) : JsonResponse
     {
-        $tags = $request->input(['tags' => function ($query) {
-            $query->orderBy('name');
-        }]);
+        $tags = $request->input('tags');
 
         $videos = Files::with('tags')->where('id_type', 2)
             ->whereHas('tags', function ($query) use ($tags) {
@@ -151,7 +149,7 @@ class VideosController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des vidéos par tags',
-            'rows' => FilesController::sortedFilesListe($videos),
+            'rows' => $videos,
         ]);
     }
 

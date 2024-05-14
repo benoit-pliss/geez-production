@@ -74,12 +74,13 @@ class ImageController extends Controller
     {
         $searchName = $request->input('searchName');
 
-        $photos = Files::with(['tags' => function ($query) {
-            $query->orderBy('name');
-        }])->where('id_type', 1)
+        $photos = Files::where(['id_type' => 1])
             ->when($searchName, function ($query, $searchName) {
                 return $query->where('name', 'like', '%' . $searchName . '%');
             })
+            ->with(['tags' => function ($query) {
+                $query->orderBy('name');
+            }])
             ->paginate(10);
 
         return response()->json([

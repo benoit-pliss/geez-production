@@ -19,6 +19,7 @@ const props = defineProps({
     },
 })
 const emit = defineEmits(['update:selectedTag'])
+
 const tags = ref([])
 getTags().then(response => {
     tags.value = response.data.tags;

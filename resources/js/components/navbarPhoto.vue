@@ -94,46 +94,46 @@ import {
 } from '@heroicons/vue/24/outline'
 
 const solutions = [
-  { 
-    name: 'Accueil', 
+  {
+    name: 'Accueil',
     description: 'Ici, toujours plus de nouveautés !',
-    href: '/home', icon: HomeIcon 
+    href: '/home', icon: HomeIcon
   },
-  { 
-    name: 'Photographie', 
+  {
+    name: 'Photographie',
     description: 'Parcourez nos plus beaux clichés',
     href: '/photo',
-    icon: CameraIcon 
+    icon: CameraIcon
   },
-  { 
-    name: 'Audiovisuel', 
+  {
+    name: 'Audiovisuel',
     description: 'Découvrez notre galerie de vidéos',
     href: '/video',
-    icon: VideoCameraIcon 
+    icon: VideoCameraIcon
   },
-  { 
-    name: 'Contact', 
+  {
+    name: 'Contact',
     description: 'Une question ? Une réponse !',
     href: '/contact',
-    icon: ChatBubbleBottomCenterTextIcon 
+    icon: ChatBubbleBottomCenterTextIcon
   },
 ]
 
 const navigation = [
-  { 
-    name: 'Évenement', 
+  {
+    name: 'Évenement',
     onClick: () => replaceTag('Évenement')
   },
-  { 
-    name: 'Entreprise', 
+  {
+    name: 'Entreprise',
     onClick: () => replaceTag('Entreprise')
   },
-  { 
-    name: 'Shooting', 
+  {
+    name: 'Shooting',
     onClick: () => replaceTag('Shooting')
   },
-  { 
-    name: 'Fêtes', 
+  {
+    name: 'Fêtes',
     onClick: () => replaceTag('Fêtes')
   },
 ]
