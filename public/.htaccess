@@ -4,6 +4,9 @@
     </IfModule>
 
     RewriteEngine On
+    
+    # Exclure les requêtes pour les fichiers existants dans les dossiers js, css et favicon.ico
+    RewriteCond %{REQUEST_URI} !\.(webp|mp4)$
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
