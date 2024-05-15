@@ -1,6 +1,6 @@
 
 <template>
-    <header class="bg-slate-950 sticky top-0 transition-all duration-200 z-40">
+    <header class="bg-zinc-950 sticky top-0 transition-all duration-200 z-40">
       <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-2 lg:px-8" aria-label="Global">
         <div class="flex lg:flex-1">
           <a href="/home" class="-m-1.5 p-1.5 outline-none focus:outline-none">
@@ -15,7 +15,7 @@
           </button>
         </div>
         <div class="hidden lg:flex lg:gap-x-12">
-          <a v-for="item in navigation" :key="item.name" :href="item.href" class="text-sm font-semibold leading-6 hover:bg-slate-900 transition-all duration-200 py-2 px-4 rounded-lg text-white cursor-pointer select-none">{{ item.name }}</a>
+          <a v-for="item in navigation" :key="item.name" :href="item.href" class="text-sm font-semibold leading-6 hover:bg-zinc-900 transition-all duration-200 py-2 px-4 rounded-lg text-white cursor-pointer select-none">{{ item.name }}</a>
         </div>
         <div class="hidden lg:flex lg:flex-1 lg:justify-end">
           <!-- <a href="#" class="text-sm font-semibold leading-6 text-white">Se connecter <span aria-hidden="true">&rarr;</span></a> -->
@@ -23,7 +23,7 @@
       </nav>
       <Dialog as="div" class="lg:hidden" @close="mobileMenuOpen = false" :open="mobileMenuOpen">
         <div class="fixed inset-0 z-50"/>
-        <DialogPanel class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-slate-950 px-6 py-2 sm:max-w-sm sm:ring-1 sm:ring-white/10">
+        <DialogPanel class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-zinc-950 px-6 py-2 sm:max-w-sm sm:ring-1 sm:ring-white/10">
           <div class="flex items-center justify-between">
             <a href="/home" class="-m-1.5 p-1.5 outline-none focus:outline-none">
               <span class="sr-only">Geez Production</span>

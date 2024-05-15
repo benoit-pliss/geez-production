@@ -1,7 +1,7 @@
 <template>
-    <div class="bg-slate-950 pb-24 sm:pb-32 pt-24" id="gallery" ref="gallery">
+    <div class="bg-zinc-950 pb-24 sm:pb-32 pt-24" id="gallery" ref="gallery">
         <div class="mx-auto px-6 lg:px-8">
-            <div class="border-b border-slate-800 pb-5 sm:flex sm:items-center sm:justify-between mt-10">
+            <div class="border-b border-zinc-800 pb-5 sm:flex sm:items-center sm:justify-between mt-10">
                 <div class="flex items-start gap-y-2 flex-col">
                     <h3 class="text-base font-semibold leading-6 text-white">Filtres</h3>
                     <div class="flex mt-3 sm:mt-0 gap-x-2">
@@ -15,7 +15,7 @@
 
                 <Combobox as="div" v-model="selectedTags">
                     <div class="relative mt-2">
-                        <ComboboxInput class="w-full rounded-md border-0 bg-slate-950 py-1.5 pl-3 pr-10 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 outline-none" @change="query = $event.target.value" v-on:keydown.enter.prevent="addTag(filteredTags[0])" placeholder="Rechercher un tag" />
+                        <ComboboxInput class="w-full rounded-md border-0 bg-zinc-950 py-1.5 pl-3 pr-10 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 outline-none" @change="query = $event.target.value" v-on:keydown.enter.prevent="addTag(filteredTags[0])" placeholder="Rechercher un tag" />
                         <ComboboxButton class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
                             <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
                         </ComboboxButton>

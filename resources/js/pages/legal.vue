@@ -2,7 +2,7 @@
   <div data-theme="dark">
     <Navbar></Navbar>
 
-    <div class="bg-slate-950/80 min-h-screen">
+    <div class="bg-zinc-950/80 min-h-screen">
       <div class="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8 lg:py-40">
         <div class="mx-auto max-w-4xl divide-y divide-white/10">
           <div class="flex items-center justify-between">

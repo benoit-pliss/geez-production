@@ -2,7 +2,7 @@
     <div data-theme="dark">
         <Navbar></Navbar>
 
-        <div class="relative isolate bg-slate-950/80 min-h-screen">
+        <div class="relative isolate bg-zinc-950/80 min-h-screen">
             <div class="mx-auto grid max-w-7xl grid-cols-1 lg:grid-cols-2">
                 <div class="relative px-6 pb-20 pt-24 sm:pt-32 lg:static lg:px-8 lg:py-48">
                     <div class="mx-auto max-w-xl lg:mx-0 lg:max-w-lg">
@@ -91,8 +91,13 @@
                             </div>
                         </div>
                         <div class="mt-8 flex justify-end">
-                            <button type="submit" @click="submit"
-                                class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Envoyer le message</button>
+                            <button class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800"
+                                @click="submit"
+                                type="submit">
+                                <span class="relative px-5 py-2.5 transition-all ease-in duration-200 bg-white bg-zinc-950 rounded-md bg-opacity-80 group-hover:bg-opacity-50">
+                                    Envoyer le message
+                                </span>
+                            </button>
                         </div>
                     </div>
                 </div>
