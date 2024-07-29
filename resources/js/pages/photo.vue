@@ -18,7 +18,7 @@
               <button
                 class="animate-bounce w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center mx-3 text-white"
                 id="scroll-down-gallery-button">
-                <i class="fas fa-arrow-down "></i>
+                <ArrowDownIcon class="w-5 h-5"></ArrowDownIcon>
               </button>
             </div>
           </div>
@@ -70,6 +70,7 @@ import Navbar from "@/components/NavbarPhoto.vue";
 import Footer from "@/components/FooterLight.vue";
 import Galerie from "@/components/GaleriePhoto.vue";
 import { onMounted, ref } from 'vue';
+import { ArrowDownIcon } from '@heroicons/vue/24/outline';
 
 onMounted(() => {
   document.getElementById('scroll-down-gallery-button').addEventListener('click', () => {
