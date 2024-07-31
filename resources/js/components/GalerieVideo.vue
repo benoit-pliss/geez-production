@@ -133,7 +133,7 @@ const fetchVideos = async () => {
     try {
         if (current_tags.value.length > 0) {
             const response = await getListeVideoByTags(current_tags.value.map(tag => tag.id));
-            videos.value = response.data.rows.data;
+            videos.value = response.data.rows;
         } else {
             const response = await get30RandomVideosWithTags();
             videos.value = response.data.rows;

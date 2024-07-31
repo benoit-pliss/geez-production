@@ -138,11 +138,17 @@ class VideosController extends Controller
 
     public function getVideoByTags(Request $request) : JsonResponse
     {
-        $tags = $request->input(['tags' => function ($query) {
-            $query->orderBy('name');
-        }]);
+        $tags = $request->input('tags');
 
-        $videos = Files::with('tags')->where('id_type', 2)
+        if (!is_array($tags)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tags should be an array',
+            ], 400);
+        }
+
+        $videos = Files::with('tags')
+            ->where('id_type', 2)
             ->whereHas('tags', function ($query) use ($tags) {
                 $query->whereIn('tags.id', $tags);
             })
