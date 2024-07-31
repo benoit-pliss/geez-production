@@ -30,19 +30,18 @@
                     </div>
                 </Combobox>
             </div>
-            
+
             <!-- New gallery -->
-            <!-- New video gallery -->
             <div class="mx-auto mt-16 flow-root max-w-2xl sm:mt-20 md:mx-0 md:max-w-none px-4">
                 <div class="flex flex-wrap -mx-4 gap-4 sm:gap-10 items-start justify-center">
                     <div v-for="video in videos" :key="video.name" class="w-full sm:w-auto flex-shrink-0">
                         <div class="overflow-hidden transition duration-300 transform rounded-lg sm:hover:scale-105 relative">
-                            <video :src="video.url" :poster="video.poster_url" :ref="el => { videoPlayers[video.id] = el; }" preload="none" class="object-contain w-auto sm:h-[30rem]" :muted="false" :controls="false" v-on:mouseover="playVideo(video)" loop></video>
-                            <div class="absolute inset-0 flex place-content-end justify-start flex-wrap-reverse gap-2 p-4" v-if="!video.showControls">
+                            <video :src="video.url" :poster="video.poster_url" :ref="el => { videoPlayers[video.id] = el; }" preload="none" class="object-contain w-auto sm:h-[30rem]" :muted="false" :controls="false" loop/>
+                            <div class="absolute inset-0 flex place-content-end justify-start flex-wrap-reverse gap-2 p-4" v-on:mouseover="playVideo(video, false)" v-on:mouseleave="pauseVideo(video, false)">
                                 <div class="flex gap-x-2 text-white backdrop-blur-md bg-black/10 rounded-lg items-center justify-center px-2 py-1">
                                     <div>
-                                        <PlayIcon class="h-4 w-4" v-if="!video.play" v-on:click="playVideo(video)" />
-                                        <PauseIcon class="h-4 w-4" v-if="video.play" v-on:click="pauseVideo(video)" />
+                                        <PlayIcon class="h-4 w-4" v-if="!video.play" v-on:click="playVideo(video, true)" />
+                                        <PauseIcon class="h-4 w-4" v-if="video.play" v-on:click="pauseVideo(video, true)" />
                                     </div>
                                     <div>
                                         <ArrowPathIcon class="h-4 w-4" v-on:click="goStart(video)" />
@@ -73,11 +72,10 @@ import {
 import { ChevronUpDownIcon, PlayIcon, PauseIcon, ArrowPathIcon } from '@heroicons/vue/20/solid'
 import {ref, onMounted, computed, watch, reactive} from 'vue'
 
-const load_tags = ref([])
-const current_tags = ref([])
-const videos = ref([])
+const load_tags = ref([]);
+const current_tags = ref([]);
+const videos = ref([]);
 const videoPlayers = reactive({});
-
 
 const props = defineProps({
     pageTag: {
@@ -88,7 +86,7 @@ const props = defineProps({
         type: Function,
         required: false
     }
-})
+});
 
 watch(() => props.pageTag, (newValue) => {
     if (newValue) {
@@ -97,118 +95,88 @@ watch(() => props.pageTag, (newValue) => {
             replaceAllTag(tag);
         }
     }
-})
+});
 
 const scrollDown = () => {
     document.getElementById('gallery').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
+};
 
 const replaceAllTag = (tag) => {
-    current_tags.value = [];
-    current_tags.value.push(tag);
+    current_tags.value = [tag];
     fetchVideos();
     scrollDown();
-}
+};
 
 const addTag = (tag) => {
-    if (current_tags.value.find(t => t.id === tag.id)) {
-        return;
-    }
-    if (tag) {
+    if (!current_tags.value.some(t => t.id === tag.id)) {
         current_tags.value.push(tag);
+        query.value = '';
+        fetchVideos();
     }
-    query.value = '';
-    fetchVideos();
-}
+};
 
 const removeTag = (tag_id) => {
-    const index = current_tags.value.findIndex(tag => tag.id === tag_id);
-    if (index !== -1) {
-        current_tags.value.splice(index, 1);
-    }
+    current_tags.value = current_tags.value.filter(tag => tag.id !== tag_id);
     fetchVideos();
-}
+};
 
-const fetchTags = () => {
-    getTags()
-        .then(response => {
-            load_tags.value = response.data.tags;
-        })
-        .catch(error => {
-            console.log(error);
-        });
-}
-
-const fetchVideos = () => {
-    if (current_tags.value.length > 0) {
-        getListeVideoByTags(current_tags.value.map(tag => tag.id))
-            .then(response => {
-                videos.value = response.data.rows.data;
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    } else {
-        get30RandomVideosWithTags()
-            .then(response => {
-                videos.value = response.data.rows;
-            })
-            .catch(error => {
-                console.log(error);
-            });
+const fetchTags = async () => {
+    try {
+        const response = await getTags();
+        load_tags.value = response.data.tags;
+    } catch (error) {
+        console.error(error);
     }
-}
+};
 
+const fetchVideos = async () => {
+    try {
+        if (current_tags.value.length > 0) {
+            const response = await getListeVideoByTags(current_tags.value.map(tag => tag.id));
+            videos.value = response.data.rows.data;
+        } else {
+            const response = await get30RandomVideosWithTags();
+            videos.value = response.data.rows;
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
 
-const query = ref('')
+const query = ref('');
+const selectedTags = ref(null);
 
-const selectedTags = ref(null)
-
-const filteredTags = computed(() =>
-    query.value === ''
+const filteredTags = computed(() => {
+    const lowerQuery = query.value.toLowerCase();
+    return query.value === ''
         ? load_tags.value
-        : load_tags.value.filter((tag) => {
-            return tag.name.toLowerCase().includes(query.value.toLowerCase())
-        })
-)
+        : load_tags.value.filter(tag => tag.name.toLowerCase().includes(lowerQuery));
+});
 
 onMounted(() => {
-    for (let image of videos.value) {
-        image.hidden = true;
-    }
-
     fetchVideos();
     fetchTags();
-})
+});
 
-const playVideo = (video) => {
-    // Pause all other videos
-    for (const otherVideo of videos.value) {
-        if (otherVideo.id !== video.id) {
-            pauseVideo(otherVideo);
-        }
-    }
-
+const playVideo = (video, forced = false) => {
     if (videoPlayers[video.id]) {
         video.play = true;
         videoPlayers[video.id].play();
     }
+};
 
-    
-}
-
-const pauseVideo = (video) => {
+const pauseVideo = (video, forced = false) => {
     if (videoPlayers[video.id]) {
         video.play = false;
         videoPlayers[video.id].pause();
     }
-}
+};
 
 const goStart = (video) => {
     if (videoPlayers[video.id]) {
         videoPlayers[video.id].currentTime = 0;
     }
-}
+};
 
 let timeoutId = null;
 
@@ -217,19 +185,15 @@ const showControls = (video) => {
         clearTimeout(timeoutId);
         video.showControls = true;
     }
-}
+};
 
 const hideControls = (video) => {
-    if (videoPlayers[video.id]) {
-        // Ajouter une condition pour vérifier si la vidéo est en cours de lecture
-        if (!videoPlayers[video.id].paused) {
-            return;
-        }
+    if (videoPlayers[video.id] && videoPlayers[video.id].paused) {
         timeoutId = setTimeout(() => {
             video.showControls = false;
         }, 1000); // 1000 milliseconds = 1 second
     }
-}
+};
 </script>
 
 <style scoped>
