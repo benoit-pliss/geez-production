@@ -34,11 +34,11 @@
             <!-- New gallery -->
             <div class="mx-auto mt-16 flow-root max-w-2xl sm:mt-20 md:mx-0 md:max-w-none px-4">
                 <div class="flex flex-wrap -mx-4 gap-4 sm:gap-10 items-start justify-center">
-                    <div v-for="video in videos" :key="video.name" class="w-full sm:w-auto flex-shrink-0">
+                    <div v-for="video in videos" :key="video.name" class="w-full sm:w-auto flex-shrink-0" v-on:mouseleave="pauseVideo(video, false)">
                         <div class="overflow-hidden transition duration-300 transform rounded-lg sm:hover:scale-105 relative">
-                            <video :src="video.url" :poster="video.poster_url" :ref="el => { videoPlayers[video.id] = el; }" preload="none" class="object-contain w-auto sm:h-[30rem]" :muted="false" :controls="false" loop/>
-                            <div class="absolute inset-0 flex place-content-end justify-start flex-wrap-reverse gap-2 p-4" v-on:mouseover="playVideo(video, false)" v-on:mouseleave="pauseVideo(video, false)">
-                                <div class="flex gap-x-2 text-white backdrop-blur-md bg-black/10 rounded-lg items-center justify-center px-2 py-1">
+                            <video :src="video.url" :poster="video.poster_url" :ref="el => { videoPlayers[video.id] = el; }" preload="none" class="object-contain w-auto sm:h-[30rem]" :muted="false" :controls="false" loop v-on:mouseover="playVideo(video, false)"/>
+                            <div class="absolute bottom-0 flex place-content-end justify-start flex-wrap-reverse gap-2 p-4 max-h-min w-full">
+                                <div class="flex gap-x-2 text-white backdrop-blur-md bg-black/10 rounded-lg items-center justify-center px-2 py-1 hidden sm:flex">
                                     <div>
                                         <PlayIcon class="h-4 w-4" v-if="!video.play" v-on:click="playVideo(video, true)" />
                                         <PauseIcon class="h-4 w-4" v-if="video.play" v-on:click="pauseVideo(video, true)" />
