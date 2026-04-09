@@ -50,7 +50,7 @@ watch(selectedTags, (value) => {
                 <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
             </ComboboxButton>
 
-            <ComboboxOptions v-if="filteredTags.length > 0" class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+            <ComboboxOptions v-if="filteredTags.length > 0" class="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                 <ComboboxOption v-for="tag in filteredTags" :key="tag.id" :value="tag" as="template" v-slot="{ active, selected }">
                     <li :class="['relative cursor-default select-none py-2 pl-3 pr-9', active ? 'bg-indigo-600 text-white' : 'text-gray-900']">
             <span :class="['block truncate', selected && 'font-semibold']">

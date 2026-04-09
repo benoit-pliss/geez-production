@@ -7,9 +7,6 @@ use App\Models\Files;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
-use Psy\Util\Json;
 
 class ImageController extends Controller
 {
@@ -21,26 +18,25 @@ class ImageController extends Controller
 
         $file = $request->file('file');
         $originalName = $file->getClientOriginalName();
-        $filename = pathinfo($originalName, PATHINFO_FILENAME) . '.webp';
+        $basename = pathinfo($originalName, PATHINFO_FILENAME);
 
-        // Vérifiez si l'image existe déjà en base de données
-        if (Files::class::where('name', pathinfo($originalName, PATHINFO_FILENAME))->exists()) {
+        if (Files::where('name', $basename)->exists()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Cette image existe déjà en base de données.',
             ], 400);
         }
 
-        // Convertir l'image en WEBP et la stocker sur le serveur FTP
-        $manager = new ImageManager(array('driver' => 'gd'));
-        $image = $manager->make($file)->encode('webp', 75);
+        $uploaded = cloudinary()->upload($file->getRealPath(), [
+            'folder'    => 'geez-production/images',
+            'public_id' => $basename,
+            'format'    => 'webp',
+            'quality'   => 'auto',
+        ]);
 
-        FilesController::storeFileOnServer($image, $filename, 'images');
-
-        // Enregistrez l'URL en base de données
         $image = FilesController::storeFileOnDatabase(
             $originalName,
-            env('DATA_URL') . '/images/' . $filename,
+            $uploaded->getSecurePath(),
             $request->input('description'),
             null
         );
@@ -86,7 +82,7 @@ class ImageController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Liste des images avec tags',
-            'photos' => FilesController::sortedFilesListe($photos),
+            'photos' => $photos,
         ]);
     }
 
@@ -187,12 +183,15 @@ class ImageController extends Controller
             'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
         ]);
 
-        $manager = new ImageManager(array('driver' => 'gd'));
-        $image = $manager->make($request->file('file'))->encode('webp', 75);
-        $url = FilesController::storeFileOnServer($image, $request->input('videoName'), 'posters');
+        $uploaded = cloudinary()->upload($request->file('file')->getRealPath(), [
+            'folder'    => 'geez-production/posters',
+            'public_id' => $request->input('videoName'),
+            'format'    => 'webp',
+            'quality'   => 'auto',
+        ]);
 
-        $video = Files::class::where(['name' => $request->input('videoName'), 'id_type' => 2])->first();
-        $video->update(['poster_url' => $url]);
+        $video = Files::where(['name' => $request->input('videoName'), 'id_type' => 2])->first();
+        $video->update(['poster_url' => $uploaded->getSecurePath()]);
 
         return response()->json([
             'success' => true,

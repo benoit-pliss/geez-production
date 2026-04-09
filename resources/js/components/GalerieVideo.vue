@@ -6,7 +6,7 @@
                     <h3 class="text-base font-semibold leading-6 text-white">Filtres</h3>
                     <div class="flex mt-3 sm:mt-0 gap-x-2">
                         <!--Add all unselcted tags-->
-                        <Badge v-for="tag in current_tags" :key="tag.id" :label="tag.name" :color="tag.color" :id="tag.id" :onClick="removeTag" type="remove"/>
+                        <Badge v-for="tag in current_tags" :key="tag.id" :label="tag.name" :color="tag.color" :id="tag.id" :onClick="removeTag" type="remove" :dark="true"/>
                         <!--Message if no tag is selected-->
                         <span v-if="current_tags.length === 0" class="text-sm font-medium text-gray-500">Aucun filtre sélectionné</span>
                     </div>
@@ -31,12 +31,27 @@
                 </Combobox>
             </div>
 
-            <div class="mx-auto mt-16 flow-root max-w-2xl sm:mt-20 lg:mx-0 lg:max-w-none">
+            <!-- Skeleton -->
+            <div v-if="loading" class="mx-auto mt-16 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                <div v-for="n in 8" :key="n" class="aspect-video rounded-lg bg-slate-800 animate-pulse" />
+            </div>
+
+            <div v-else class="mx-auto mt-16 flow-root max-w-2xl sm:mt-20 lg:mx-0 lg:max-w-none">
                 <div class="-mt-8 sm:-mx-4 sm:columns-2 sm:text-[0] sm:columns-2 md:columns-2 lg:columns-3 xl:columns-4">
                     <div v-for="video in videos" :key="video.name" class="pt-8 sm:inline-block sm:w-full sm:px-4">
-                        <div class="overflow-hidden transition duration-300 transform rounded-lg">
-                            <video :src="video.url" :poster="video.poster_url" :ref="el => { videoPlayers[video.id] = el; }" preload="none" class="object-cover w-full h-auto" :muted="false" :controls="false" v-on:mouseover="playVideo(video)"
-                                loop data-id="video.id"></video>
+                        <div class="relative overflow-hidden transition duration-300 transform rounded-lg">
+                            <video :src="video.url" :poster="video.poster_url" :ref="el => { videoPlayers[video.id] = el; }" preload="none" class="object-cover w-full h-auto" :muted="false" :controls="false"
+                                v-on:mouseover="playVideo(video)"
+                                v-on:waiting="video.buffering = true"
+                                v-on:playing="video.buffering = false"
+                                loop></video>
+                            <!-- Spinner buffering -->
+                            <div v-if="video.buffering" class="absolute inset-0 flex items-center justify-center bg-black/30">
+                                <svg class="animate-spin h-8 w-8 text-white" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                                </svg>
+                            </div>
                             <div class="absolute bottom-0 flex place-content-end justify-start flex-wrap-reverse gap-2 p-4 h-fit" v-if="!video.showControls">
                                 <div class="flex gap-x-2 text-white backdrop-blur-md bg-black/10 rounded-lg items-center justify-center px-2 py-1">
                                     <div>
@@ -53,7 +68,7 @@
 
                                     </div>
                                 </div>
-                                <Badge v-for="tag in video.tags" :key="tag.id" :label="tag.name" :color="tag.color" type="add" v-on:click="addTag(tag)" :id="tag.id"/>
+                                <Badge v-for="tag in video.tags" :key="tag.id" :label="tag.name" :color="tag.color" type="add" v-on:click="addTag(tag)" :id="tag.id" :dark="true"/>
                             </div>
                         </div>
                     </div>
@@ -81,6 +96,7 @@ const load_tags = ref([])
 const current_tags = ref([])
 const videos = ref([])
 const videoPlayers = reactive({});
+const loading = ref(true);
 
 
 const props = defineProps({
@@ -144,25 +160,17 @@ const fetchTags = () => {
 }
 
 const fetchVideos = () => {
+    loading.value = true;
     if (current_tags.value.length > 0) {
         getListeVideoByTags(current_tags.value.map(tag => tag.id))
-            .then(response => {
-
-                videos.value = response.data.rows.data;
-            })
-            .catch(error => {
-                console.log(error);
-            });
+            .then(response => { videos.value = response.data.rows.data; })
+            .catch(error => { console.error(error); })
+            .finally(() => { loading.value = false; });
     } else {
         get30RandomVideosWithTags()
-            .then(response => {
-                console.log(response.data.rows);
-                videos.value = response.data.rows;
-                console.log(response);
-            })
-            .catch(error => {
-                console.log(error);
-            });
+            .then(response => { videos.value = response.data.rows; })
+            .catch(error => { console.error(error); })
+            .finally(() => { loading.value = false; });
     }
 }
 
@@ -188,26 +196,30 @@ onMounted(() => {
     fetchTags();
 })
 
-const playVideo = (video) => {
-    // Pause all other videos
+const playVideo = async (video) => {
     for (const otherVideo of videos.value) {
         if (otherVideo.id !== video.id) {
             pauseVideo(otherVideo);
         }
     }
-
-    if (videoPlayers[video.id]) {
+    const player = videoPlayers[video.id];
+    if (player) {
         video.play = true;
-        videoPlayers[video.id].play();
+        video.buffering = !player.readyState >= 3;
+        try {
+            await player.play();
+        } catch (e) {
+            if (e.name !== 'AbortError') console.error(e);
+            video.buffering = false;
+        }
     }
-
-
 }
 
 const pauseVideo = (video) => {
-    if (videoPlayers[video.id]) {
+    const player = videoPlayers[video.id];
+    if (player && !player.paused) {
         video.play = false;
-        videoPlayers[video.id].pause();
+        player.pause();
     }
 }
 

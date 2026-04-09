@@ -7,7 +7,8 @@ const props = defineProps({
     id : Number,
     onClick : Function,
     type : String,
-    isDashboard : Boolean || false
+    isDashboard : Boolean || false,
+    dark : { type: Boolean, default: false },
 });
 const colors = [
     'fill-red-500',
@@ -24,24 +25,20 @@ function getRandColor() {
 </script>
 
 <template>
-    <span class="inline-flex items-center gap-x-1.5 rounded-md px-2 py-1 text-xs font-medium text-white backdrop-blur-md bg-black/10">
+    <span
+        class="inline-flex items-center gap-x-1.5 rounded-md px-2 py-1 text-xs font-medium backdrop-blur-md"
+        :class="[
+            dark ? 'text-white bg-white/20 hover:bg-white/30' : 'text-gray-900 bg-black/10 hover:bg-black/20',
+            !isDashboard ? 'cursor-pointer' : ''
+        ]"
+        @click="!isDashboard && onClick(id)"
+    >
         <svg class="h-1.5 w-1.5" viewBox="0 0 6 6" aria-hidden="true" :class="'fill-' + color + '-500' || getRandColor()">
-        <circle cx="3" cy="3" r="3" />
+            <circle cx="3" cy="3" r="3" />
         </svg>
         {{ label }}
-
-        <button v-if="type === 'remove' && !isDashboard" class="text-white group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-gray-500/30" @click="onClick(id)" :id="`button-tag-${id}`">
-            <span class="sr-only">Remove</span>
-            <XMarkIcon class="h-3.5 w-3.5" aria-hidden="true" />
-            <span class="absolute -inset-1" />
-        </button>
-
-        <button v-if="type !== 'remove' && !isDashboard" class="text-white group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-gray-500/30" @click="onClick(id)" :id="`button-tag-${id}`">
-            <span class="sr-only">Add</span>
-            <PlusIcon class="h-3.5 w-3.5" aria-hidden="true" />
-            <span class="absolute -inset-1" />
-        </button>
-
+        <XMarkIcon v-if="type === 'remove' && !isDashboard" class="h-3 w-3" aria-hidden="true" />
+        <PlusIcon v-if="type !== 'remove' && !isDashboard" class="h-3 w-3" aria-hidden="true" />
     </span>
 </template>
 

@@ -12,13 +12,15 @@
     </head>
     <body class="h-full">
 
-        <div id="app">
-            <router-view></router-view>
+        <div id="initial-loader" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#fff;z-index:9999;transition:opacity 0.4s ease;">
+            <p style="font-size:2rem;font-weight:700;letter-spacing:0.15em;animation:pulse 1.5s ease-in-out infinite;">GEEZ</p>
         </div>
+        <style>
+            @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+        </style>
 
-        <!-- Umami -->
-        <script defer src="https://analytics.eu.umami.is/script.js" data-website-id="dae1e59b-eb64-4764-b0b6-2be23f661401"></script>
+        <div id="app"></div>
 
-        <script src="https://kit.fontawesome.com/895b664c37.js" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/895b664c37.js" crossorigin="anonymous"></script>
     </body>
 </html>
