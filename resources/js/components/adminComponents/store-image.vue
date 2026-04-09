@@ -69,8 +69,11 @@ async function upload() {
                     }
                 })
                 .catch(error => {
-                    notificationService.addToast('Erreur lors de l\'enregistrement du fichier', 'error');
-                    console.log(error);
+                    const detail = error.response?.data?.errors
+                        ? JSON.stringify(error.response.data.errors)
+                        : error.message;
+                    notificationService.addToast('Erreur : ' + detail, 'error');
+                    console.log(error.response?.data ?? error);
                 });
 
         }

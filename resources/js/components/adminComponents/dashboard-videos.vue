@@ -1,5 +1,4 @@
 <script setup>
-import StoreVideos from "./store-videos.vue";
 import VideosTables from "./tables/videos-tables.vue";
 import {getVideoWithTags} from "../../services/videosService.js";
 import {onMounted, ref} from "vue";
@@ -45,7 +44,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <StoreVideos/>
     <VideosTables :photos="VideosListe" @searchName="updateListe"/>
     <paginator v-model="currentPage" :to="to" :total="total" :last-page="lastPage" @change="changePage" />
 </template>

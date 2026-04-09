@@ -8,6 +8,8 @@ import notificationService from "../../../services/notificationService.js";
 import Badge from "@/components/Badge.vue";
 
 let editingId = ref(null);
+const isSaving = ref(false);
+const originalVideo = ref(null);
 
 const props = defineProps({
     photos: Array
@@ -33,15 +35,36 @@ const addtags = (tag) => {
     }
 }
 
-const removeTag = (tag) => {
-    if (props.photos.find(p => p.id === editingId.value).tags.includes(tag)) {
-        props.photos.find(p => p.id === editingId.value).tags = props.photos.find(p => p.id === editingId.value).tags.filter(t => t.id !== tag.id);
+const removeTag = (tagId) => {
+    const video = props.photos.find(p => p.id === editingId.value);
+    if (video) {
+        video.tags = video.tags.filter(t => t.id !== tagId);
     }
 }
 
-async function saveChanges(photo) {
-    await updateVideo(photo)
+function startEdit(video) {
+    originalVideo.value = JSON.parse(JSON.stringify(video));
+    editingId.value = video.id;
+}
+
+function cancelEdit(video) {
+    Object.assign(video, originalVideo.value);
     editingId.value = null;
+    originalVideo.value = null;
+}
+
+async function saveChanges(video) {
+    isSaving.value = true;
+    try {
+        await updateVideo(video);
+        notificationService.addToast('Modifications enregistrées', 'success');
+        editingId.value = null;
+        originalVideo.value = null;
+    } catch {
+        notificationService.addToast('Erreur lors de la sauvegarde', 'error');
+    } finally {
+        isSaving.value = false;
+    }
 }
 
 </script>
@@ -49,7 +72,7 @@ async function saveChanges(photo) {
 <template>
     <div class="px-4 sm:px-6 lg:px-8">
         <div class="mt-8 flow-root">
-            <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="-mx-4 -my-2 sm:-mx-6 lg:-mx-8">
                 <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                     <table class="min-w-full divide-y divide-gray-300">
                         <thead>
@@ -102,17 +125,6 @@ async function saveChanges(photo) {
                                 <div v-else>
 
                                     <div class="flex flex-wrap w-full gap-4">
-                                        <span v-for="tag in photo.tags" :key="tag.id" class="inline-flex items-center gap-x-0.5 rounded-md px-2 py-1 bg-blue-50 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
-                                                    {{ tag.name }}
-                                                <button type="button" @click="removeTag(tag)" class="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-blue-600/20">
-                                                  <span class="sr-only">Remove</span>
-                                                      <svg viewBox="0 0 14 14" class="h-3.5 w-3.5 stroke-blue-700/50 group-hover:stroke-blue-700/75">
-                                                        <path d="M4 4l6 6m0-6l-6 6"/>
-                                                      </svg>
-                                                      <span class="absolute -inset-1"/>
-                                                </button>
-                                          </span>
-
                                         <Badge v-for="tag in photo.tags" :key="tag.id" :label="tag.name" :color="tag.color ? tag.color : null" :id="tag.id" :onClick="removeTag" type="remove" :isDashboard="0"/>
                                     </div>
 
@@ -127,13 +139,15 @@ async function saveChanges(photo) {
                             </td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ photo.type }}</td>
                             <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                                <a v-if="editingId !== photo.id" href="#" @click.prevent="editingId = photo.id" class="text-blue-600 hover:text-blue-900">
-                                    Edit
-                                    <span class="sr-only">, {{ photo.name }}</span>
+                                <a v-if="editingId !== photo.id" href="#" @click.prevent="startEdit(photo)" class="text-indigo-600 hover:text-indigo-900">
+                                    Modifier<span class="sr-only">, {{ photo.name }}</span>
                                 </a>
-                                <button v-else @click="saveChanges(photo)" class="text-green-600 hover:text-green-900">
-                                    Save
-                                </button>
+                                <div v-else class="flex justify-end gap-3">
+                                    <button @click="cancelEdit(photo)" class="text-gray-500 hover:text-gray-700">Annuler</button>
+                                    <button @click="saveChanges(photo)" :disabled="isSaving" class="text-green-600 hover:text-green-800 disabled:opacity-50">
+                                        {{ isSaving ? 'Sauvegarde...' : 'Sauvegarder' }}
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                         </tbody>

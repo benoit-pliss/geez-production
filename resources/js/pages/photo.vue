@@ -84,7 +84,6 @@ const scrollDown = () => {
 };
 
 const replaceTag = (tag) => {
-    console.log(tag);
   pageTag.value = tag;
     scrollDown();
 };

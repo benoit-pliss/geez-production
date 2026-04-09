@@ -54,14 +54,14 @@
                             <div>
                                 <label for="first-name" class="block text-sm font-semibold leading-6 text-white">Prénom</label>
                                 <div class="mt-2.5">
-                                    <input type="text" name="firstname" id="firstname" autocomplete="given-name" v-model="firstname"
+                                    <input type="text" name="firstname" id="firstname" autocomplete="given-name" v-model="formdata.firstname"
                                         class="block w-full rounded-md border-0 bg-white/5 px-3.5 py-2 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" />
                                 </div>
                             </div>
                             <div>
                                 <label for="last-name" class="block text-sm font-semibold leading-6 text-white">Nom</label>
                                 <div class="mt-2.5">
-                                    <input type="text" name="lastname" id="lastname" autocomplete="family-name" v-model="lastname"
+                                    <input type="text" name="lastname" id="lastname" autocomplete="family-name" v-model="formdata.lastname"
                                         class="block w-full rounded-md border-0 bg-white/5 px-3.5 py-2 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" />
                                 </div>
                             </div>
@@ -69,7 +69,7 @@
                                 <label for="email" class="block text-sm font-semibold leading-6 text-white">Adresse
                                     email</label>
                                 <div class="mt-2.5">
-                                    <input type="email" name="email" id="email" autocomplete="email" v-model="email"
+                                    <input type="email" name="email" id="email" autocomplete="email" v-model="formdata.email"
                                         class="block w-full rounded-md border-0 bg-white/5 px-3.5 py-2 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" />
                                 </div>
                             </div>
@@ -77,7 +77,9 @@
                                 <label for="phone-number" class="block text-sm font-semibold leading-6 text-white">Numéro
                                     de téléphone</label>
                                 <div class="mt-2.5">
-                                    <input type="tel" name="phone" id="phone" autocomplete="tel" v-model="phone"
+                                    <input type="tel" name="phone" id="phone" autocomplete="tel" v-model="formdata.phone"
+                                        placeholder="+33 6 XX XX XX XX"
+                                        pattern="[+]?[0-9\s\-]{7,20}"
                                         class="block w-full rounded-md border-0 bg-white/5 px-3.5 py-2 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" />
                                 </div>
                             </div>
@@ -85,7 +87,7 @@
                                 <label for="message"
                                     class="block text-sm font-semibold leading-6 text-white">Message</label>
                                 <div class="mt-2.5">
-                                    <textarea name="message" id="message" rows="4" v-model="message"
+                                    <textarea name="message" id="message" rows="4" v-model="formdata.message"
                                         class="block w-full rounded-md border-0 bg-white/5 px-3.5 py-2 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" />
                                 </div>
                             </div>
@@ -120,20 +122,15 @@ const formdata = ref({
 
 const submit = () => {
     postMessage(
-        firstname.value,
-        lastname.value,
-        email.value,
-        phone.value,
-        message.value
-        )
+        formdata.value.firstname,
+        formdata.value.lastname,
+        formdata.value.email,
+        formdata.value.phone,
+        formdata.value.message
+    )
     .then((res) => {
         notificationService.addToast(res.data.message, 'success');
-        // Clear the form
-        firstname.value = '';
-        lastname.value = '';
-        email.value = '';
-        phone.value = '';
-        message.value = '';
+        formdata.value = { firstname: '', lastname: '', email: '', phone: '', message: '' };
     })
     .catch((err) => {
         notificationService.addToast(err.response.data.message, 'error');

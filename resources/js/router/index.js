@@ -1,92 +1,63 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-import Home from "../pages/home.vue";
-
-import Login from "../pages/admin/login.vue";
-import Dashboard from "../pages/admin/dashboard.vue";
-import Photo from "../pages/photo.vue";
-import Video from "../pages/video.vue";
-import Contact from "../pages/contact.vue";
-import Legal from "../pages/legal.vue";
-import DashboardPhotos from "../components/adminComponents/dashboard-photos.vue";
-import storeVideos from "../components/adminComponents/store-videos.vue";
-
 const routes = [
     {
         path: '/',
         redirect: { name: 'home' }
-
     },
     {
         path: '/sandbox',
         name: 'sandbox',
-        component: storeVideos,
+        component: () => import('../components/adminComponents/store-videos.vue'),
     },
     {
         path: '/home',
         name: 'home',
-        component: Home,
-        data: {
-            theme: 'dark'
-        }
+        component: () => import('../pages/home.vue'),
+        data: { theme: 'dark' }
     },
     {
         path: '/photo',
         name: 'photo',
-        component: Photo,
-        data: {
-            theme: 'light'
-        }
+        component: () => import('../pages/photo.vue'),
+        data: { theme: 'light' }
     },
     {
         path: '/video',
         name: 'video',
-        component: Video,
-        data: {
-            theme: 'light'
-        }
+        component: () => import('../pages/video.vue'),
+        data: { theme: 'light' }
     },
     {
         path: '/contact',
         name: 'contact',
-        component: Contact,
-        data: {
-            theme: 'light'
-        }
+        component: () => import('../pages/contact.vue'),
+        data: { theme: 'light' }
     },
     {
         path: '/legal',
         name: 'legal',
-        component: Legal,
-        data: {
-            theme: 'dark'
-        }
+        component: () => import('../pages/legal.vue'),
+        data: { theme: 'dark' }
     },
     {
         path: '/admin/dashboard',
         name: 'dashboard',
-        component: Dashboard,
-        meta: {
-            requiresAuth: true
-        }
+        component: () => import('../pages/admin/dashboard.vue'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/admin/login',
         name: 'login',
-        component: Login,
-        data: {
-            theme: 'light'
-        }
+        component: () => import('../pages/admin/login.vue'),
+        data: { theme: 'light' }
     },
     {
         path: '/admin/photos',
         name: 'admin-photos',
-        component: DashboardPhotos,
-        meta: {
-            requiresAuth: true
-        }
+        component: () => import('../components/adminComponents/dashboard-photos.vue'),
+        meta: { requiresAuth: true }
     }
-
 ]
 
 

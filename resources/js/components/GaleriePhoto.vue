@@ -39,10 +39,10 @@
             <div class="mx-auto mt-16 flow-root max-w-2xl sm:mt-20 md:mx-0 md:max-w-none">
                 <div class="-mt-8 sm:-mx-4 sm:text-[0] sm:columns-2 md:columns-2 lg:columns-3 xl:columns-4">
                     <div v-for="image in images" :key="image.name" class="pt-8 sm:inline-block sm:w-full sm:px-4">
-                        <div class="overflow-hidden transition duration-300 transform rounded-lg hover:scale-105"  v-on:mouseover="image.hidden = true" v-on:mouseleave="image.hidden = false">
-                            <img :src="image.url" loading="lazy" class="object-cover w-full h-auto" alt="geez"/>
-                                <div class="absolute inset-0 flex place-content-end justify-start flex-wrap-reverse gap-2 p-4" :class="{ 'hidden' : !image.hidden }">
-                                    <Badge v-for="tag in image.tags" :key="tag.id" :label="tag.name" :color="tag.color" type="add" v-on:click="addTag(tag)" :id="tag.id"/>
+                        <div class="relative overflow-hidden transition duration-300 transform rounded-lg hover:scale-105" v-on:mouseover="image.hover = true" v-on:mouseleave="image.hover = false">
+                            <LazyImage :src="image.url" alt="geez" />
+                            <div class="absolute inset-0 flex place-content-end justify-start flex-wrap-reverse gap-2 p-4 transition-opacity duration-200" :class="image.hover ? 'opacity-100' : 'opacity-0'">
+                                <Badge v-for="tag in image.tags" :key="tag.id" :label="tag.name" :color="tag.color" type="add" v-on:click="addTag(tag)" :id="tag.id"/>
                             </div>
                         </div>
                     </div>
@@ -55,6 +55,7 @@
 
 <script setup>
 import Badge from '../components/Badge.vue';
+import LazyImage from '../components/LazyImage.vue';
 import {getTags} from "../services/tagsService.js";
 import {get30RandomPhotosWithTags, getListePhotosByTags} from "../services/Photo-service.js";
 import {
@@ -165,13 +166,8 @@ const filteredTags = computed(() =>
 )
 
 onMounted(() => {
-    for (let image of images.value) {
-        image.hidden = true;
-    }
-
     fetchImages();
     fetchTags();
-
 })
 </script>
 

@@ -1,5 +1,4 @@
 <script setup>
-import StoreImage from "./store-image.vue";
 import PhotosTables from "./tables/photos-tables.vue";
 import {getListePhotosWithTags} from "../../services/Photo-service.js";
 import {onMounted, ref} from "vue";
@@ -45,7 +44,6 @@ onMounted(() => {
 </script>
 
 <template>
-    <StoreImage @update:photos="getPhotos"/>
     <div class="spinner-container" v-if="isLoading">
         <span class="loading loading-spinner loading-md"></span>
     </div>
