@@ -23,7 +23,7 @@
 
 <script setup>
 
-import Navbar from "@/components/NavbarVideo.vue";
+import Navbar from "@/components/NavbarGlobal.vue";
 import Footer from "@/components/FooterDark.vue";
 import Galerie from "@/components/GalerieVideo.vue";
 import { onMounted, ref } from 'vue';

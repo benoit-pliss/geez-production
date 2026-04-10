@@ -66,7 +66,7 @@
 
 <script setup>
 
-import Navbar from "@/components/NavbarPhoto.vue";
+import Navbar from "@/components/NavbarGlobal.vue";
 import Footer from "@/components/FooterLight.vue";
 import Galerie from "@/components/GaleriePhoto.vue";
 import { onMounted, ref } from 'vue';
