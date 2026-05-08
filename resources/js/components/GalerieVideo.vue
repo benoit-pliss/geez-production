@@ -39,7 +39,7 @@
             <div v-else class="mx-auto mt-16 flow-root max-w-2xl sm:mt-20 lg:mx-0 lg:max-w-none">
                 <div class="-mt-8 sm:-mx-4 sm:columns-2 sm:text-[0] sm:columns-2 md:columns-2 lg:columns-3 xl:columns-4">
                     <div v-for="video in videos" :key="video.name" class="pt-8 sm:inline-block sm:w-full sm:px-4">
-                        <div class="relative overflow-hidden transition duration-300 transform rounded-lg">
+                        <div class="relative overflow-hidden transition duration-300 transform rounded-lg cursor-pointer" @click="openLightbox(video)">
                             <video :src="video.url" :poster="video.poster_url" :ref="el => { videoPlayers[video.id] = el; }" preload="none" class="object-cover w-full h-auto" :muted="false" :controls="false"
                                 v-on:mouseover="playVideo(video)"
                                 v-on:waiting="video.buffering = true"
@@ -57,29 +57,32 @@
                                     <div>
                                         <PlayIcon class="h-4 w-4"
                                             v-if="!video.play"
-                                            v-on:click="playVideo(video)"/>
+                                            v-on:click.stop="playVideo(video)"/>
                                         <PauseIcon class="h-4 w-4"
                                             v-if="video.play"
-                                            v-on:click="pauseVideo(video)"/>
+                                            v-on:click.stop="pauseVideo(video)"/>
                                     </div>
                                     <div>
                                         <ArrowPathIcon class="h-4 w-4"
-                                            v-on:click="goStart(video)"/>
+                                            v-on:click.stop="goStart(video)"/>
 
                                     </div>
                                 </div>
-                                <Badge v-for="tag in video.tags" :key="tag.id" :label="tag.name" :color="tag.color" type="add" v-on:click="addTag(tag)" :id="tag.id" :dark="true"/>
+                                <Badge v-for="tag in video.tags" :key="tag.id" :label="tag.name" :color="tag.color" type="add" v-on:click.stop="addTag(tag)" :id="tag.id" :dark="true"/>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <MediaLightbox v-model="lightboxOpen" type="video" :src="selectedVideo?.url" :poster="selectedVideo?.poster_url" />
     </div>
 </template>
 
 <script setup>
 import Badge from '../components/Badge.vue';
+import MediaLightbox from '../components/MediaLightbox.vue';
 import {getTags} from "../services/tagsService.js";
 import {getListeVideoByTags, get30RandomVideosWithTags} from "../services/videosService.js";
 import {
@@ -97,6 +100,14 @@ const current_tags = ref([])
 const videos = ref([])
 const videoPlayers = reactive({});
 const loading = ref(true);
+const lightboxOpen = ref(false)
+const selectedVideo = ref(null)
+
+const openLightbox = (video) => {
+    pauseVideo(video)
+    selectedVideo.value = video
+    lightboxOpen.value = true
+}
 
 
 const props = defineProps({
