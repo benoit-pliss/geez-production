@@ -7,8 +7,13 @@ Route::post('logout', [\App\Http\Controllers\Auth\AuthController::class, 'logout
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
+    Route::middleware('throttle:upload')->group(function () {
+        Route::post('/upload/chunks', [\App\Http\Controllers\Fichiers\VideosController::class, 'handleChunk']);
+        Route::post('/upload/success', [\App\Http\Controllers\Fichiers\VideosController::class, 'handleSuccess']);
+        Route::post('/upload/thumbnails', [\App\Http\Controllers\Fichiers\ImageController::class, 'uploadAndStoreThumbnail']);
+    });
+
     Route::post('/sync/images', [\App\Http\Controllers\Sync\SyncController::class, 'syncImages']);
-    Route::post('/sync/videos', [\App\Http\Controllers\Sync\SyncController::class, 'syncVideos']);
 
     Route::get('/tags', [\App\Http\Controllers\Tags\TagsController::class, 'getTags']);
     Route::post('/tag/store', [\App\Http\Controllers\Tags\TagsController::class, 'store']);

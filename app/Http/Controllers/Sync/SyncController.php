@@ -14,22 +14,6 @@ class SyncController extends Controller
         return $this->sync('geez-production/images', 'image', 1);
     }
 
-    public function syncVideos(): JsonResponse
-    {
-        return $this->sync('geez-production/videos', 'video', 2);
-    }
-
-    private function videoPosterUrl(string $videoUrl): string
-    {
-        // Cloudinary génère automatiquement une thumbnail à la seconde 0
-        // https://res.cloudinary.com/.../video/upload/so_0/public_id.jpg
-        return preg_replace(
-            '#/video/upload/#',
-            '/video/upload/so_0/',
-            preg_replace('/\.[^.]+$/', '.jpg', $videoUrl)
-        );
-    }
-
     private function sync(string $folder, string $resourceType, int $idType): JsonResponse
     {
         $created = 0;
@@ -70,7 +54,7 @@ class SyncController extends Controller
                     'name'        => $name,
                     'url'         => $asset['secure_url'],
                     'id_type'     => $idType,
-                    'poster_url'  => $idType === 2 ? $this->videoPosterUrl($asset['secure_url']) : null,
+                    'poster_url'  => null,
                     'description' => null,
                 ]);
 
