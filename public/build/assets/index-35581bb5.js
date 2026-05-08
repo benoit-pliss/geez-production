@@ -1,1 +1,0 @@
-import{R as t}from"./app-04adb6b2.js";const a=t.create({baseURL:"https://geez-production.com/api"});a.interceptors.request.use(e=>(e.headers.Accept="application/json",e.headers.Authorization="Bearer "+localStorage.getItem("token"),e));export{a};
