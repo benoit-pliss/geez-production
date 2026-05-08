@@ -9,6 +9,7 @@ use FFMpeg\Coordinate\TimeCode;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -35,8 +36,9 @@ class VideosController extends Controller
 
     public function handleChunk(Request $request)
     {
-        $uploadId = preg_replace('/[^a-zA-Z0-9-]/', '', $request->header('X-Upload-ID', Str::uuid()));
-        $tmpPath = storage_path('app/chunks/' . $uploadId . '.part');
+        $fileName = urldecode($request->header('X-File-Name', 'upload.mp4'));
+        $safeFileName = preg_replace('/[^a-zA-Z0-9._-]/', '_', pathinfo($fileName, PATHINFO_BASENAME));
+        $tmpPath = storage_path('app/chunks/' . $safeFileName . '.part');
 
         $contentRange = $request->header('Content-Range');
         if (!$contentRange || !preg_match('/bytes (\d+)-(\d+)\/(\d+)/', $contentRange, $m)) {
@@ -53,15 +55,9 @@ class VideosController extends Controller
         }
 
         $handle = fopen($tmpPath, (file_exists($tmpPath) && $start > 0) ? 'r+b' : 'wb');
-        if ($handle === false) {
-            return response()->json(['error' => 'Failed to open temp file'], 500);
-        }
         fseek($handle, $start);
-        $written = fwrite($handle, $chunkData);
+        fwrite($handle, $chunkData);
         fclose($handle);
-        if ($written === false) {
-            return response()->json(['error' => 'Failed to write chunk'], 500);
-        }
 
         clearstatcache(true, $tmpPath);
         $currentSize = filesize($tmpPath);
