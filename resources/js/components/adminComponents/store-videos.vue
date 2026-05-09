@@ -10,6 +10,7 @@ import {uploadThumbnails} from "../../services/Photo-service.js";
 
 window.createUpload = createUpload;
 
+const emit = defineEmits(['videoUploaded']);
 const thumbnails = ref([])
 const files = ref(null);
 const uploading = ref(false);
@@ -78,6 +79,7 @@ const submit = (e) => {
                 .then((res) => {
                     if (res.data.success) {
                         notificationService.addToast('Vidéo enregistrée avec succès', 'success');
+                        emit('videoUploaded');
                         generateAndUploadThumbnail(file, res.data.entity?.name ?? file.name);
                     } else {
                         notificationService.addToast('Erreur lors de l\'enregistrement de la vidéo', 'error');
