@@ -46,7 +46,7 @@ onMounted(() => {
 
 <template>
     <div>
-        <StoreVideos class="mb-8" />
+        <StoreVideos class="mb-8" @videoUploaded="getVideos" />
         <VideosTables :photos="VideosListe" @searchName="updateListe"/>
         <paginator v-model="currentPage" :to="to" :total="total" :last-page="lastPage" @change="changePage" />
     </div>

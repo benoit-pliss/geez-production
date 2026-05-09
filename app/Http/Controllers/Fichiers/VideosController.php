@@ -98,7 +98,7 @@ class VideosController extends Controller
         @unlink($file->getRealPath());
         $s3Url = Storage::disk('s3')->url($s3Key);
 
-        $fileToUpdate = Files::where('name', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))->first();
+        $fileToUpdate = Files::where('name', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))->where('id_type', 2)->first();
 
         if ($fileToUpdate) {
             $fileToUpdate->update([
