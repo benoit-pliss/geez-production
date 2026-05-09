@@ -203,7 +203,8 @@ class ImageController extends Controller
         ]);
 
         $videoName = $request->input("videoName");
-        $s3Key = "posters/" . $videoName . ".jpg";
+        $safeVideoName = preg_replace('/[^a-zA-Z0-9._-]/', '_', pathinfo($videoName, PATHINFO_BASENAME));
+        $s3Key = "posters/" . $safeVideoName . ".jpg";
 
         $stream = fopen($request->file("file")->getRealPath(), "rb");
         Storage::disk("s3")->put($s3Key, $stream);

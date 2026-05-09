@@ -8,6 +8,7 @@ import ListeTags from "../../components/adminComponents/tags/liste-tags.vue";
 import ListeMessage from "../../components/adminComponents/messages/liste-messages.vue";
 import DashboardVideos from "../../components/adminComponents/dashboard-videos.vue";
 import DashboardHome from "../../components/adminComponents/dashboard-home.vue";
+import DashboardSettings from "../../components/adminComponents/dashboard-settings.vue";
 
 const user = {
     name: 'Tom Cook',
@@ -24,6 +25,7 @@ const navigation = [
     { name: 'Vidéos'},
     { name: 'Tags'},
     { name: 'Messages'},
+    { name: 'Paramètres'},
 ]
 
 
@@ -122,6 +124,7 @@ const deconnection = () => {
                     <DashboardVideos v-else-if="selectedNavigation === 'Vidéos'"/>
                     <ListeTags v-else-if="selectedNavigation === 'Tags'" :is-dashboard="true"/>
                     <ListeMessage v-else-if="selectedNavigation === 'Messages'"/>
+                    <DashboardSettings v-else-if="selectedNavigation === 'Paramètres'"/>
 
                 </div>
             </div>

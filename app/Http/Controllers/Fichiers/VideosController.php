@@ -9,7 +9,6 @@ use FFMpeg\Coordinate\TimeCode;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -36,9 +35,8 @@ class VideosController extends Controller
 
     public function handleChunk(Request $request)
     {
-        $fileName = urldecode($request->header('X-File-Name', 'upload.mp4'));
-        $safeFileName = preg_replace('/[^a-zA-Z0-9._-]/', '_', pathinfo($fileName, PATHINFO_BASENAME));
-        $tmpPath = storage_path('app/chunks/' . $safeFileName . '.part');
+        $uploadId = preg_replace('/[^a-zA-Z0-9-]/', '', $request->header('X-Upload-ID', Str::uuid()));
+        $tmpPath = storage_path('app/chunks/' . $uploadId . '.part');
 
         $contentRange = $request->header('Content-Range');
         if (!$contentRange || !preg_match('/bytes (\d+)-(\d+)\/(\d+)/', $contentRange, $m)) {
@@ -55,9 +53,15 @@ class VideosController extends Controller
         }
 
         $handle = fopen($tmpPath, (file_exists($tmpPath) && $start > 0) ? 'r+b' : 'wb');
+        if ($handle === false) {
+            return response()->json(['error' => 'Failed to open temp file'], 500);
+        }
         fseek($handle, $start);
-        fwrite($handle, $chunkData);
+        $written = fwrite($handle, $chunkData);
         fclose($handle);
+        if ($written === false) {
+            return response()->json(['error' => 'Failed to write chunk'], 500);
+        }
 
         clearstatcache(true, $tmpPath);
         $currentSize = filesize($tmpPath);
@@ -74,7 +78,18 @@ class VideosController extends Controller
         $path = $request->input('path');
         $name = $request->input('name');
 
-        $file = new UploadedFile(storage_path('app/chunks/' . $path), $name);
+        $chunkFilename = basename((string) $path);
+        $chunksDir = storage_path('app/chunks');
+        $resolvedPath = realpath($chunksDir . DIRECTORY_SEPARATOR . $chunkFilename);
+        if (
+            !$resolvedPath ||
+            !is_file($resolvedPath) ||
+            !str_starts_with($resolvedPath, realpath($chunksDir) . DIRECTORY_SEPARATOR)
+        ) {
+            return response()->json(['error' => 'Chunk file not found.'], 404);
+        }
+
+        $file = new UploadedFile($resolvedPath, $name);
         $s3Key = 'videos/' . Str::uuid() . '.mp4';
 
         $stream = fopen($file->getRealPath(), 'rb');
