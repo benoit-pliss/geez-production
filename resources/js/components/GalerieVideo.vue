@@ -40,7 +40,7 @@
                 <div class="-mt-8 sm:-mx-4 sm:columns-2 sm:text-[0] sm:columns-2 md:columns-2 lg:columns-3 xl:columns-4">
                     <div v-for="video in videos" :key="video.name" class="pt-8 sm:inline-block sm:w-full sm:px-4">
                         <div class="relative overflow-hidden transition duration-300 transform rounded-lg cursor-pointer" @click="openLightbox(video)">
-                            <video :src="video.url" :poster="video.poster_url" :ref="el => { videoPlayers[video.id] = el; }" preload="none" class="object-cover w-full h-auto" muted :controls="false"
+                            <video :src="video.url" :poster="video.poster_url" :ref="el => { videoPlayers[video.id] = el; }" preload="none" class="object-cover w-full h-auto" :muted="videoMuted[video.id] !== false" :controls="false"
                                 v-on:mouseover="playVideo(video)"
                                 v-on:waiting="video.buffering = true"
                                 v-on:playing="video.buffering = false"
@@ -65,7 +65,14 @@
                                     <div>
                                         <ArrowPathIcon class="h-4 w-4"
                                             v-on:click.stop="goStart(video)"/>
-
+                                    </div>
+                                    <div>
+                                        <SpeakerXMarkIcon class="h-4 w-4"
+                                            v-if="videoMuted[video.id] !== false"
+                                            v-on:click.stop="toggleSound(video)"/>
+                                        <SpeakerWaveIcon class="h-4 w-4"
+                                            v-if="videoMuted[video.id] === false"
+                                            v-on:click.stop="toggleSound(video)"/>
                                     </div>
                                 </div>
                                 <Badge v-for="tag in video.tags" :key="tag.id" :label="tag.name" :color="tag.color" type="add" v-on:click.stop="addTag(tag)" :id="tag.id" :dark="true"/>
@@ -85,6 +92,7 @@ import Badge from '../components/Badge.vue';
 import MediaLightbox from '../components/MediaLightbox.vue';
 import {getTags} from "../services/tagsService.js";
 import {getListeVideoByTags, get30RandomVideosWithTags} from "../services/videosService.js";
+import {getSettings} from "../services/settingsService.js";
 import {
   Combobox,
   ComboboxButton,
@@ -92,16 +100,19 @@ import {
   ComboboxOption,
   ComboboxOptions,
 } from '@headlessui/vue'
-import { ChevronUpDownIcon, PlayIcon, PauseIcon, ArrowPathIcon } from '@heroicons/vue/20/solid'
+import { ChevronUpDownIcon, PlayIcon, PauseIcon, ArrowPathIcon, SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/vue/20/solid'
 import {ref, onMounted, computed, watch, reactive} from 'vue'
 
 const load_tags = ref([])
 const current_tags = ref([])
 const videos = ref([])
 const videoPlayers = reactive({});
+const videoMuted = reactive({});
+const defaultSound = ref(false);
 const loading = ref(true);
 const lightboxOpen = ref(false)
 const selectedVideo = ref(null)
+const featuredVideo = ref(null)
 
 const openLightbox = (video) => {
     pauseVideo(video)
@@ -172,14 +183,22 @@ const fetchTags = () => {
 
 const fetchVideos = () => {
     loading.value = true;
+    const excludeId = featuredVideo.value?.id ?? null;
+
+    const applyExclusion = (list) => excludeId ? list.filter(v => v.id !== excludeId) : list;
+
+    const initMuted = (list) => {
+        list.forEach(v => { videoMuted[v.id] = !defaultSound.value; });
+    };
+
     if (current_tags.value.length > 0) {
         getListeVideoByTags(current_tags.value.map(tag => tag.id))
-            .then(response => { videos.value = response.data.rows.data; })
+            .then(response => { videos.value = applyExclusion(response.data.rows.data); initMuted(videos.value); })
             .catch(error => { console.error(error); })
             .finally(() => { loading.value = false; });
     } else {
         get30RandomVideosWithTags()
-            .then(response => { videos.value = response.data.rows; })
+            .then(response => { videos.value = applyExclusion(response.data.rows); initMuted(videos.value); })
             .catch(error => { console.error(error); })
             .finally(() => { loading.value = false; });
     }
@@ -198,10 +217,12 @@ const filteredTags = computed(() =>
         })
 )
 
-onMounted(() => {
-    for (let image of videos.value) {
-        image.hidden = true;
-    }
+onMounted(async () => {
+    try {
+        const { data } = await getSettings();
+        featuredVideo.value = data.featured_video ?? null;
+        defaultSound.value = data.settings.video_default_sound === '1';
+    } catch { /* silencieux */ }
 
     fetchVideos();
     fetchTags();
@@ -216,9 +237,10 @@ const playVideo = async (video) => {
     const player = videoPlayers[video.id];
     if (player) {
         video.play = true;
-        video.buffering = !player.readyState >= 3;
+        video.buffering = player.readyState < 3;
         try {
             await player.play();
+            player.muted = videoMuted[video.id] !== false;
         } catch (e) {
             if (e.name !== 'AbortError') console.error(e);
             video.buffering = false;
@@ -238,6 +260,12 @@ const goStart = (video) => {
     if (videoPlayers[video.id]) {
         videoPlayers[video.id].currentTime = 0;
     }
+}
+
+const toggleSound = (video) => {
+    const isMuted = !videoMuted[video.id];
+    videoMuted[video.id] = isMuted;
+    if (videoPlayers[video.id]) videoPlayers[video.id].muted = isMuted;
 }
 
 let timeoutId = null;

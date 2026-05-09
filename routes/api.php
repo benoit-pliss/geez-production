@@ -20,6 +20,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::put('/photo/update', [\App\Http\Controllers\Fichiers\ImageController::class, 'update']);
     Route::put('/video/update', [\App\Http\Controllers\Fichiers\VideosController::class, 'update']);
+    Route::put('/settings', [\App\Http\Controllers\Settings\SettingsController::class, 'update']);
 
     Route::get('/messages', [\App\Http\Controllers\Message\MessageController::class, 'getMessages']);
     Route::get('/message/archived', [\App\Http\Controllers\Message\MessageController::class, 'getArchivedMessages']);
@@ -38,6 +39,8 @@ Route::get('/videosByTags', [\App\Http\Controllers\Fichiers\VideosController::cl
 Route::get('/get30RandomVideosWithTags', [\App\Http\Controllers\Fichiers\VideosController::class, 'get30RandomVideosWithTags']);
 
 Route::get('/tags', [\App\Http\Controllers\Tags\TagsController::class, 'getTags']);
+
+Route::get('/settings', [\App\Http\Controllers\Settings\SettingsController::class, 'index']);
 
 Route::post('/message/send', [\App\Http\Controllers\Message\MessageController::class, 'send']);
 Route::post('/newsletter/subscribe', [\App\Http\Controllers\Newsletter\NewsletterController::class, 'subscribe']);

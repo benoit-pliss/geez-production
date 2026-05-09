@@ -78,7 +78,18 @@ class VideosController extends Controller
         $path = $request->input('path');
         $name = $request->input('name');
 
-        $file = new UploadedFile(storage_path('app/chunks/' . $path), $name);
+        $chunkFilename = basename((string) $path);
+        $chunksDir = storage_path('app/chunks');
+        $resolvedPath = realpath($chunksDir . DIRECTORY_SEPARATOR . $chunkFilename);
+        if (
+            !$resolvedPath ||
+            !is_file($resolvedPath) ||
+            !str_starts_with($resolvedPath, realpath($chunksDir) . DIRECTORY_SEPARATOR)
+        ) {
+            return response()->json(['error' => 'Chunk file not found.'], 404);
+        }
+
+        $file = new UploadedFile($resolvedPath, $name);
         $s3Key = 'videos/' . Str::uuid() . '.mp4';
 
         $stream = fopen($file->getRealPath(), 'rb');

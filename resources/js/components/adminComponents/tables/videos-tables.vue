@@ -1,15 +1,39 @@
 <script setup>
 
-import {ref, watch} from "vue";
+import {ref, watch, onMounted} from "vue";
 import {updateVideo} from "../../../services/videosService.js";
+import {getSettings, updateSettings} from "../../../services/settingsService.js";
 import ComboboxTags from "../../dialog/create-tags/combobox-tags.vue";
 import notificationService from "../../../services/notificationService.js";
-
 import Badge from "@/components/Badge.vue";
 
 let editingId = ref(null);
 const isSaving = ref(false);
 const originalVideo = ref(null);
+const featuredVideoId = ref(null);
+
+onMounted(async () => {
+    try {
+        const { data } = await getSettings();
+        featuredVideoId.value = data.settings.featured_video_id
+            ? parseInt(data.settings.featured_video_id)
+            : null;
+    } catch { /* silencieux */ }
+});
+
+const setFeatured = async (videoId) => {
+    const newId = featuredVideoId.value === videoId ? null : videoId;
+    try {
+        await updateSettings({ featured_video_id: newId });
+        featuredVideoId.value = newId;
+        notificationService.addToast(
+            newId ? 'Vidéo définie comme vedette' : 'Vidéo vedette retirée',
+            'success'
+        );
+    } catch {
+        notificationService.addToast('Erreur lors de la mise à jour', 'error');
+    }
+};
 
 const props = defineProps({
     photos: Array
@@ -82,6 +106,7 @@ async function saveChanges(video) {
                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Description</th>
                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Tags associés</th>
                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Visible</th>
+                            <th scope="col" class="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">Vedette</th>
                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 text-right">Actions</th>
                         </tr>
                         </thead>
@@ -138,6 +163,14 @@ async function saveChanges(video) {
                                 </div>
                             </td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ photo.type }}</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-center">
+                                <button
+                                    @click="setFeatured(photo.id)"
+                                    :title="featuredVideoId === photo.id ? 'Retirer la vedette' : 'Définir comme vedette'"
+                                    :class="featuredVideoId === photo.id ? 'text-yellow-400' : 'text-gray-300 hover:text-yellow-400'"
+                                    class="text-xl transition-colors"
+                                >★</button>
+                            </td>
                             <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                                 <a v-if="editingId !== photo.id" href="#" @click.prevent="startEdit(photo)" class="text-indigo-600 hover:text-indigo-900">
                                     Modifier<span class="sr-only">, {{ photo.name }}</span>
