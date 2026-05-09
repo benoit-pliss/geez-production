@@ -3,21 +3,14 @@
 namespace App\Http\Controllers\Fichiers;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\Videos\AssembleFileJob;
 use App\Models\Files;
 use FFMpeg\FFMpeg;
+use FFMpeg\Coordinate\TimeCode;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use FFMpeg\Coordinate\TimeCode;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
-use Pion\Laravel\ChunkUpload\Handler\AbstractHandler;
-use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
-use Pion\Laravel\ChunkUpload\Handler\ContentRangeUploadHandler;
 
 class VideosController extends Controller
 {
@@ -42,56 +35,78 @@ class VideosController extends Controller
 
     public function handleChunk(Request $request)
     {
-        Log::write('info', 'handleChunk');
+        $uploadId = preg_replace('/[^a-zA-Z0-9-]/', '', $request->header('X-Upload-ID', Str::uuid()));
+        $tmpPath = storage_path('app/chunks/' . $uploadId . '.part');
 
-        $receiver = new FileReceiver(
-            UploadedFile::fake()->createWithContent('file', $request->getContent()),
-            $request,
-            ContentRangeUploadHandler::class,
-        );
-
-        $save = $receiver->receive();
-
-        if ($save->isFinished()) {
-            return response()->json([
-                'file' => $save->getFile()->getFilename()
-            ]);
+        $contentRange = $request->header('Content-Range');
+        if (!$contentRange || !preg_match('/bytes (\d+)-(\d+)\/(\d+)/', $contentRange, $m)) {
+            return response()->json(['error' => 'Missing Content-Range'], 400);
         }
 
-        $save->handler();
+        $start = (int) $m[1];
+        $total = (int) $m[3];
+        $chunkData = $request->getContent();
+
+        $chunkDir = storage_path('app/chunks');
+        if (!is_dir($chunkDir)) {
+            mkdir($chunkDir, 0755, true);
+        }
+
+        $handle = fopen($tmpPath, (file_exists($tmpPath) && $start > 0) ? 'r+b' : 'wb');
+        if ($handle === false) {
+            return response()->json(['error' => 'Failed to open temp file'], 500);
+        }
+        fseek($handle, $start);
+        $written = fwrite($handle, $chunkData);
+        fclose($handle);
+        if ($written === false) {
+            return response()->json(['error' => 'Failed to write chunk'], 500);
+        }
+
+        clearstatcache(true, $tmpPath);
+        $currentSize = filesize($tmpPath);
+
+        if ($currentSize >= $total) {
+            return response()->json(['file' => $uploadId . '.part']);
+        }
+
+        return response()->json(['received' => true]);
     }
 
     public function handleSuccess(Request $request) : JsonResponse
     {
-        Log::write('info', 'handleSuccess');
         $path = $request->input('path');
         $name = $request->input('name');
 
         $file = new UploadedFile(storage_path('app/chunks/' . $path), $name);
-        $url =  $file->storeAs('videos', Str::uuid() . '.mp4');
+        $s3Key = 'videos/' . Str::uuid() . '.mp4';
 
-        Log::write('info', $file->getClientOriginalName());
+        $stream = fopen($file->getRealPath(), 'rb');
+        Storage::disk('s3')->put($s3Key, $stream);
+        fclose($stream);
+        @unlink($file->getRealPath());
+        $s3Url = Storage::disk('s3')->url($s3Key);
 
         $fileToUpdate = Files::where('name', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))->first();
 
-        if($fileToUpdate) {
-
+        if ($fileToUpdate) {
+            $fileToUpdate->update([
+                'name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+                'url' => $s3Url,
+            ]);
             return response()->json([
                 'success' => true,
-                'entity' => $fileToUpdate->update([
-                    'name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
-                    'url' => $url,
-                ])
+                'entity' => $fileToUpdate->fresh(),
             ]);
         }
 
         return response()->json([
             'success' => true,
-            'entity' =>  FilesController::storeFileOnDatabase(
+            'entity' => FilesController::storeFileOnDatabase(
                 originalName: $file->getClientOriginalName(),
-                url: storage_path('app/public/' . $url),
+                url: $s3Url,
                 description: null,
-                poster_url: 'thumbnail.example.com',
+                poster_url: null,
             )
         ]);
     }
@@ -155,8 +170,6 @@ class VideosController extends Controller
 
     public function update(Request $request) : JsonResponse
     {
-        // Valider les données de la requête
-        Log::info($request);
         $request->validate([
             'id' => 'required|integer',
             // Ajoutez ici d'autres champs si nécessaire

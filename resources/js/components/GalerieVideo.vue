@@ -40,7 +40,7 @@
                 <div class="-mt-8 sm:-mx-4 sm:columns-2 sm:text-[0] sm:columns-2 md:columns-2 lg:columns-3 xl:columns-4">
                     <div v-for="video in videos" :key="video.name" class="pt-8 sm:inline-block sm:w-full sm:px-4">
                         <div class="relative overflow-hidden transition duration-300 transform rounded-lg cursor-pointer" @click="openLightbox(video)">
-                            <video :src="video.url" :poster="video.poster_url" :ref="el => { videoPlayers[video.id] = el; }" preload="none" class="object-cover w-full h-auto" :muted="false" :controls="false"
+                            <video :src="video.url" :poster="video.poster_url" :ref="el => { videoPlayers[video.id] = el; }" preload="none" class="object-cover w-full h-auto" muted :controls="false"
                                 v-on:mouseover="playVideo(video)"
                                 v-on:waiting="video.buffering = true"
                                 v-on:playing="video.buffering = false"
