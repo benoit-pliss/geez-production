@@ -118,6 +118,7 @@ class VideosController extends Controller
                 url: $s3Url,
                 description: null,
                 poster_url: null,
+                idType: 2,
             )
         ]);
     }
