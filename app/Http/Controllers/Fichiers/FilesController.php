@@ -41,14 +41,14 @@ class FilesController extends Controller
         return '';
     }
 
-    public static function storeFileOnDatabase($originalName, $url, ?string $description, ?string $poster_url) : Files
+    public static function storeFileOnDatabase($originalName, $url, ?string $description, ?string $poster_url, int $idType = 1) : Files
     {
         return Files::class::create([
             'name' => pathinfo($originalName, PATHINFO_FILENAME),
             'description' => $description,
             'url' => $url,
-            'id_type' => $poster_url ? 2 : 1,
-            'poster_url' => $poster_url ?? null,
+            'id_type' => $idType,
+            'poster_url' => $poster_url,
         ]);
     }
 
