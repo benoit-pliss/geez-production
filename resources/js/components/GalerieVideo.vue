@@ -42,6 +42,7 @@
                         <div class="relative overflow-hidden transition duration-300 transform rounded-lg cursor-pointer" @click="openLightbox(video)">
                             <video :src="video.url" :poster="video.poster_url" :ref="el => { videoPlayers[video.id] = el; }" preload="none" class="object-cover w-full h-auto" :muted="videoMuted[video.id] !== false" :controls="false"
                                 v-on:mouseover="playVideo(video)"
+                                v-on:mouseleave="pauseVideo(video)"
                                 v-on:waiting="video.buffering = true"
                                 v-on:playing="video.buffering = false"
                                 loop></video>
