@@ -46,7 +46,7 @@ import Footer from "@/components/FooterDark.vue";
 import Galerie from "@/components/GalerieVideo.vue";
 import MediaLightbox from '@/components/MediaLightbox.vue';
 import { ArrowsPointingOutIcon } from '@heroicons/vue/24/solid';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { getSettings } from '../services/settingsService.js';
 
 const pageTag = ref(null);
@@ -54,11 +54,17 @@ const featuredVideo = ref(null);
 const videoRef = ref(null);
 const lightboxOpen = ref(false);
 
+let observer = null;
+
 onMounted(async () => {
     try {
         const { data } = await getSettings();
         featuredVideo.value = data.featured_video ?? null;
     } catch { /* silencieux */ }
+});
+
+onUnmounted(() => {
+    observer?.disconnect();
 });
 
 watch(videoRef, (el) => {
@@ -69,6 +75,16 @@ watch(videoRef, (el) => {
         window.addEventListener('focus', retry, { once: true });
         document.addEventListener('click', retry, { once: true });
     });
+
+    observer = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+            el.play().catch(() => {});
+        } else {
+            el.pause();
+        }
+    }, { threshold: 0.1 });
+
+    observer.observe(el);
 });
 
 const scrollDown = () => {
