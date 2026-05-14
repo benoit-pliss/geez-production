@@ -39,10 +39,8 @@
             <div v-else class="mx-auto mt-16 flow-root max-w-2xl sm:mt-20 lg:mx-0 lg:max-w-none">
                 <div class="-mt-8 sm:-mx-4 sm:columns-2 sm:text-[0] sm:columns-2 md:columns-2 lg:columns-3 xl:columns-4">
                     <div v-for="video in videos" :key="video.name" class="pt-8 sm:inline-block sm:w-full sm:px-4">
-                        <div class="relative overflow-hidden transition duration-300 transform rounded-lg cursor-pointer" @click="openLightbox(video)">
-                            <video :src="video.url" :poster="video.poster_url" :ref="el => { videoPlayers[video.id] = el; }" preload="none" class="object-cover w-full h-auto" :muted="videoMuted[video.id] !== false" :controls="false"
-                                v-on:mouseover="playVideo(video)"
-                                v-on:mouseleave="pauseVideo(video)"
+                        <div class="relative overflow-hidden transition duration-300 transform rounded-lg cursor-pointer" @click="openLightbox(video)" @mouseenter="playVideo(video)" @mouseleave="pauseVideo(video)">
+                            <video :src="video.url?.endsWith('.m3u8') ? undefined : video.url" :poster="video.poster_url" :ref="el => initPlayer(el, video)" preload="none" class="object-cover w-full h-auto" :muted="videoMuted[video.id] !== false" :controls="false"
                                 v-on:waiting="video.buffering = true"
                                 v-on:playing="video.buffering = false"
                                 loop></video>
@@ -58,7 +56,7 @@
                                     <div>
                                         <PlayIcon class="h-4 w-4"
                                             v-if="!video.play"
-                                            v-on:click.stop="playVideo(video)"/>
+                                            v-on:click.stop="startPlay(video)"/>
                                         <PauseIcon class="h-4 w-4"
                                             v-if="video.play"
                                             v-on:click.stop="pauseVideo(video)"/>
@@ -94,6 +92,8 @@ import MediaLightbox from '../components/MediaLightbox.vue';
 import {getTags} from "../services/tagsService.js";
 import {getListeVideoByTags, get30RandomVideosWithTags} from "../services/videosService.js";
 import {getSettings} from "../services/settingsService.js";
+import Hls from 'hls.js';
+import { attachHls } from '../composables/useHls.js';
 import {
   Combobox,
   ComboboxButton,
@@ -102,12 +102,17 @@ import {
   ComboboxOptions,
 } from '@headlessui/vue'
 import { ChevronUpDownIcon, PlayIcon, PauseIcon, ArrowPathIcon, SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/vue/20/solid'
-import {ref, onMounted, computed, watch, reactive} from 'vue'
+import {ref, onMounted, onUnmounted, computed, watch, reactive} from 'vue'
 
 const load_tags = ref([])
 const current_tags = ref([])
 const videos = ref([])
 const videoPlayers = reactive({});
+const hlsInstances = {};
+const hlsManifestParsed = {};
+const pendingCanPlay = {};
+const pendingManifestListeners = {};
+const hoverTimers = {};
 const videoMuted = reactive({});
 const defaultSound = ref(false);
 const loading = ref(true);
@@ -218,6 +223,30 @@ const filteredTags = computed(() =>
         })
 )
 
+const initPlayer = (el, video) => {
+    if (!el) {
+        if (hoverTimers[video.id]) {
+            clearTimeout(hoverTimers[video.id]);
+            delete hoverTimers[video.id];
+        }
+        if (hlsInstances[video.id]) {
+            hlsInstances[video.id].destroy();
+            delete hlsInstances[video.id];
+            delete hlsManifestParsed[video.id];
+            delete pendingManifestListeners[video.id];
+        }
+        delete videoPlayers[video.id];
+        return;
+    }
+    videoPlayers[video.id] = el;
+    // HLS is initialized lazily on first hover to avoid fetching the playlist on mount
+};
+
+onUnmounted(() => {
+    Object.values(hoverTimers).forEach(clearTimeout);
+    Object.values(hlsInstances).forEach(hls => hls.destroy());
+});
+
 onMounted(async () => {
     try {
         const { data } = await getSettings();
@@ -229,31 +258,115 @@ onMounted(async () => {
     fetchTags();
 })
 
-const playVideo = async (video) => {
-    for (const otherVideo of videos.value) {
-        if (otherVideo.id !== video.id) {
-            pauseVideo(otherVideo);
-        }
+// Debounced hover handler — filters out rapid mouse-passes (< 50ms)
+const playVideo = (video) => {
+    if (hoverTimers[video.id]) clearTimeout(hoverTimers[video.id]);
+    hoverTimers[video.id] = setTimeout(() => {
+        delete hoverTimers[video.id];
+        startPlay(video);
+    }, 50);
+};
+
+const pauseVideo = (video) => {
+    if (hoverTimers[video.id]) {
+        clearTimeout(hoverTimers[video.id]);
+        delete hoverTimers[video.id];
     }
     const player = videoPlayers[video.id];
+    video.play = false;
+    video.buffering = false;
     if (player) {
-        video.play = true;
-        video.buffering = player.readyState < 3;
+        if (pendingCanPlay[video.id]) {
+            player.removeEventListener('canplay', pendingCanPlay[video.id]);
+            delete pendingCanPlay[video.id];
+        }
+        if (!player.paused) player.pause();
+    }
+    const hls = hlsInstances[video.id];
+    if (hls && hlsManifestParsed[video.id]) hls.stopLoad();
+};
+
+const startPlay = async (video) => {
+    for (const otherVideo of videos.value) {
+        if (otherVideo.id !== video.id) pauseVideo(otherVideo);
+    }
+    const player = videoPlayers[video.id];
+    if (!player) return;
+
+    video.play = true;
+    video.buffering = true;
+
+    if (pendingCanPlay[video.id]) {
+        player.removeEventListener('canplay', pendingCanPlay[video.id]);
+        delete pendingCanPlay[video.id];
+    }
+
+    const doPlay = async () => {
+        if (!video.play) return;
         try {
             await player.play();
             player.muted = videoMuted[video.id] !== false;
-        } catch (e) {
-            if (e.name !== 'AbortError') console.error(e);
+            video.buffering = false;
+        } catch {
             video.buffering = false;
         }
-    }
-}
+    };
 
-const pauseVideo = (video) => {
-    const player = videoPlayers[video.id];
-    if (player && !player.paused) {
-        video.play = false;
-        player.pause();
+    const waitForCanPlay = () => {
+        if (player.readyState >= 3) {
+            doPlay();
+            return;
+        }
+        const onCanPlay = () => {
+            delete pendingCanPlay[video.id];
+            player.removeEventListener('canplay', onCanPlay);
+            doPlay();
+        };
+        pendingCanPlay[video.id] = onCanPlay;
+        player.addEventListener('canplay', onCanPlay);
+    };
+
+    if (video.url?.endsWith('.m3u8')) {
+        let hls = hlsInstances[video.id];
+
+        if (!hls) {
+            if (!Hls.isSupported()) {
+                if (player.canPlayType('application/vnd.apple.mpegurl')) player.src = video.url;
+                video.buffering = player.readyState < 3;
+                await doPlay();
+                return;
+            }
+            hls = new Hls({ autoStartLoad: false, maxBufferLength: 8, maxMaxBufferLength: 15 });
+            hls.on(Hls.Events.ERROR, (_, data) => {
+                if (!data.fatal) return;
+                if (data.type === Hls.ErrorTypes.NETWORK_ERROR) hls.startLoad();
+                else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
+                else { hls.destroy(); delete hlsInstances[video.id]; delete hlsManifestParsed[video.id]; }
+            });
+            hls.loadSource(video.url);
+            hls.attachMedia(player);
+            hlsInstances[video.id] = hls;
+        }
+
+        if (hlsManifestParsed[video.id]) {
+            hls.startLoad();
+            waitForCanPlay();
+        } else if (!pendingManifestListeners[video.id]) {
+            const onManifestParsed = () => {
+                hls.off(Hls.Events.MANIFEST_PARSED, onManifestParsed);
+                hlsManifestParsed[video.id] = true;
+                delete pendingManifestListeners[video.id];
+                if (!video.play) return;
+                hls.startLoad();
+                waitForCanPlay();
+            };
+            pendingManifestListeners[video.id] = onManifestParsed;
+            hls.on(Hls.Events.MANIFEST_PARSED, onManifestParsed);
+        }
+        // else: manifest loading, existing listener will handle it once video.play is true
+    } else {
+        video.buffering = player.readyState < 3;
+        await doPlay();
     }
 }
 

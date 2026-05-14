@@ -4,106 +4,86 @@ namespace App\Http\Controllers\Fichiers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Files;
-use FFMpeg\FFMpeg;
-use FFMpeg\Coordinate\TimeCode;
+use App\Models\PendingVideoUpload;
+use App\Services\BunnyStreamService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class VideosController extends Controller
 {
 
-    public function getFirstFrame($videoFile, $originalName) : string
+    public function initTusUpload(Request $request): JsonResponse
     {
-        // Create an instance of FFMpeg and open the video
-        $ffmpeg = FFMpeg::create();
-        $video = $ffmpeg->open($videoFile);
-
-        // Extract the first frame of the video
-        $frame = $video->frame(TimeCode::fromSeconds(1));
-
-
-        // Define the name and path for the image
-        $imageName = pathinfo($videoFile, PATHINFO_FILENAME) . '_frame.jpg';
-
-        FilesController::storeFileOnServer($frame, $imageName, 'posters');
-        // Return the path of the saved image
-        return env('DATA_URL') . '/posters/' . $imageName;
-    }
-
-    public function handleChunk(Request $request)
-    {
-        $uploadId = preg_replace('/[^a-zA-Z0-9-]/', '', $request->header('X-Upload-ID', Str::uuid()));
-        $tmpPath = storage_path('app/chunks/' . $uploadId . '.part');
-
-        $contentRange = $request->header('Content-Range');
-        if (!$contentRange || !preg_match('/bytes (\d+)-(\d+)\/(\d+)/', $contentRange, $m)) {
-            return response()->json(['error' => 'Missing Content-Range'], 400);
-        }
-
-        $start = (int) $m[1];
-        $total = (int) $m[3];
-        $chunkData = $request->getContent();
-
-        $chunkDir = storage_path('app/chunks');
-        if (!is_dir($chunkDir)) {
-            mkdir($chunkDir, 0755, true);
-        }
-
-        $handle = fopen($tmpPath, (file_exists($tmpPath) && $start > 0) ? 'r+b' : 'wb');
-        if ($handle === false) {
-            return response()->json(['error' => 'Failed to open temp file'], 500);
-        }
-        fseek($handle, $start);
-        $written = fwrite($handle, $chunkData);
-        fclose($handle);
-        if ($written === false) {
-            return response()->json(['error' => 'Failed to write chunk'], 500);
-        }
-
-        clearstatcache(true, $tmpPath);
-        $currentSize = filesize($tmpPath);
-
-        if ($currentSize >= $total) {
-            return response()->json(['file' => $uploadId . '.part']);
-        }
-
-        return response()->json(['received' => true]);
-    }
-
-    public function handleSuccess(Request $request) : JsonResponse
-    {
-        $path = $request->input('path');
         $name = $request->input('name');
+        $title = pathinfo($name, PATHINFO_FILENAME);
 
-        $chunkFilename = basename((string) $path);
-        $chunksDir = storage_path('app/chunks');
-        $resolvedPath = realpath($chunksDir . DIRECTORY_SEPARATOR . $chunkFilename);
-        if (
-            !$resolvedPath ||
-            !is_file($resolvedPath) ||
-            !str_starts_with($resolvedPath, realpath($chunksDir) . DIRECTORY_SEPARATOR)
-        ) {
-            return response()->json(['error' => 'Chunk file not found.'], 404);
-        }
+        $bunny = new BunnyStreamService();
+        $videoId = $bunny->createVideo($title);
+        $credentials = $bunny->generateTusCredentials($videoId);
 
-        $file = new UploadedFile($resolvedPath, $name);
-        $s3Key = 'videos/' . Str::uuid() . '.mp4';
+        PendingVideoUpload::create([
+            'video_id' => $videoId,
+            'user_id' => $request->user()->id,
+        ]);
 
-        $stream = fopen($file->getRealPath(), 'rb');
-        Storage::disk('s3')->put($s3Key, $stream);
-        fclose($stream);
-        @unlink($file->getRealPath());
-        $s3Url = Storage::disk('s3')->url($s3Key);
+        return response()->json([
+            'success' => true,
+            'videoId' => $videoId,
+            'signature' => $credentials['signature'],
+            'expires' => $credentials['expires'],
+            'libraryId' => $credentials['libraryId'],
+        ]);
+    }
 
-        $fileToUpdate = Files::where('name', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))->where('id_type', 2)->first();
+    public function refreshTusCredentials(Request $request): JsonResponse
+    {
+        $request->validate(['videoId' => 'required|string']);
+
+        $videoId = $request->input('videoId');
+
+        abort_unless(
+            PendingVideoUpload::where('video_id', $videoId)
+                ->where('user_id', $request->user()->id)
+                ->exists(),
+            403
+        );
+
+        $bunny = new BunnyStreamService();
+        $credentials = $bunny->generateTusCredentials($videoId);
+        return response()->json(['success' => true, ...$credentials]);
+    }
+
+    public function completeTusUpload(Request $request): JsonResponse
+    {
+        $request->validate([
+            'videoId' => 'required|string',
+            'name' => 'required|string',
+        ]);
+
+        $videoId = $request->input('videoId');
+
+        abort_unless(
+            PendingVideoUpload::where('video_id', $videoId)
+                ->where('user_id', $request->user()->id)
+                ->exists(),
+            403
+        );
+
+        $name = $request->input('name');
+        $title = pathinfo($name, PATHINFO_FILENAME);
+
+        $bunny = new BunnyStreamService();
+        $hlsUrl = $bunny->getHlsUrl($videoId);
+        $thumbnailUrl = $bunny->getThumbnailUrl($videoId);
+
+        PendingVideoUpload::where('video_id', $videoId)->delete();
+
+        $fileToUpdate = Files::where('name', $title)->where('id_type', 2)->first();
 
         if ($fileToUpdate) {
             $fileToUpdate->update([
-                'name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
-                'url' => $s3Url,
+                'url' => $hlsUrl,
+                'poster_url' => $thumbnailUrl,
             ]);
             return response()->json([
                 'success' => true,
@@ -114,13 +94,26 @@ class VideosController extends Controller
         return response()->json([
             'success' => true,
             'entity' => FilesController::storeFileOnDatabase(
-                originalName: $file->getClientOriginalName(),
-                url: $s3Url,
+                originalName: $name,
+                url: $hlsUrl,
                 description: null,
-                poster_url: null,
+                poster_url: $thumbnailUrl,
                 idType: 2,
             )
         ]);
+    }
+
+    public function getBunnyStatus(Request $request): JsonResponse
+    {
+        $request->validate(['videoId' => 'required|string']);
+
+        try {
+            $bunny = new BunnyStreamService();
+            $status = $bunny->getVideoStatus($request->input('videoId'));
+            return response()->json(['success' => true, ...$status]);
+        } catch (\Exception) {
+            return response()->json(['success' => false, 'status' => -1, 'encodeProgress' => 0]);
+        }
     }
 
     public function getListe() {
@@ -184,13 +177,10 @@ class VideosController extends Controller
     {
         $request->validate([
             'id' => 'required|integer',
-            // Ajoutez ici d'autres champs si nécessaire
         ]);
 
-        // Trouver l'image par son ID
         $video = Files::findOrFail($request->input('id'));
 
-        // Mettre à jour l'image avec les nouvelles données
         $video->update($request->all());
 
         if ($request->has('tags') && $request->input('tags') !== null) {
@@ -199,18 +189,13 @@ class VideosController extends Controller
                 return $tag['id'];
             }, $tags);
 
-            // Supprimer tous les tags actuels de l'image et ajouter les nouveaux tags
             $video->tags()->sync($tagsArray);
         }
 
-        // Retourner une réponse
         return response()->json([
             'success' => true,
             'message' => 'Video updated successfully',
             'video' => $video
         ]);
     }
-
-
-
 }
