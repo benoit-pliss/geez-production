@@ -21,9 +21,9 @@
                 />
                 <video
                     v-else-if="type === 'video'"
-                    :src="src"
+                    ref="videoRef"
                     :poster="poster"
-                    class="max-w-full max-h-[90vh] rounded-lg"
+                    class="max-w-[90vw] max-h-[90vh] rounded-lg"
                     controls
                     autoplay
                 />
@@ -34,7 +34,8 @@
 
 <script setup>
 import { XMarkIcon } from '@heroicons/vue/20/solid'
-import { watch, onUnmounted } from 'vue'
+import { watch, onUnmounted, ref } from 'vue'
+import { attachHls } from '../composables/useHls.js'
 
 const props = defineProps({
     modelValue: Boolean,
@@ -51,6 +52,32 @@ const handleKeydown = (e) => {
     if (e.key === 'Escape') close()
 }
 
+let lightboxHls = null;
+
+const videoRef = ref(null);
+
+watch(videoRef, (el) => {
+    lightboxHls?.destroy();
+    lightboxHls = null;
+    if (!el) return;
+
+    // Pre-size the video element from the poster so HLS metadata loading causes no visible resize
+    if (props.poster) {
+        const img = new Image();
+        img.onload = () => {
+            const maxW = window.innerWidth * 0.9;
+            const maxH = window.innerHeight * 0.9;
+            const scale = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight, 1);
+            el.style.width = Math.round(img.naturalWidth * scale) + 'px';
+            el.style.height = Math.round(img.naturalHeight * scale) + 'px';
+        };
+        img.src = props.poster;
+    }
+
+    lightboxHls = attachHls(el, props.src);
+    if (lightboxHls) lightboxHls.startLoad();
+});
+
 watch(() => props.modelValue, (val) => {
     if (val) {
         document.addEventListener('keydown', handleKeydown)
@@ -58,11 +85,14 @@ watch(() => props.modelValue, (val) => {
     } else {
         document.removeEventListener('keydown', handleKeydown)
         document.body.style.overflow = ''
+        lightboxHls?.destroy();
+        lightboxHls = null;
     }
 })
 
 onUnmounted(() => {
     document.removeEventListener('keydown', handleKeydown)
     document.body.style.overflow = ''
+    lightboxHls?.destroy();
 })
 </script>

@@ -8,9 +8,9 @@ Route::post('logout', [\App\Http\Controllers\Auth\AuthController::class, 'logout
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::middleware('throttle:upload')->group(function () {
-        Route::post('/upload/chunks', [\App\Http\Controllers\Fichiers\VideosController::class, 'handleChunk']);
-        Route::post('/upload/success', [\App\Http\Controllers\Fichiers\VideosController::class, 'handleSuccess']);
-        Route::post('/upload/thumbnails', [\App\Http\Controllers\Fichiers\ImageController::class, 'uploadAndStoreThumbnail']);
+        Route::post('/upload/bunny-init', [\App\Http\Controllers\Fichiers\VideosController::class, 'initTusUpload']);
+        Route::post('/upload/bunny-complete', [\App\Http\Controllers\Fichiers\VideosController::class, 'completeTusUpload']);
+        Route::post('/upload/bunny-refresh', [\App\Http\Controllers\Fichiers\VideosController::class, 'refreshTusCredentials']);
     });
 
     Route::post('/sync/images', [\App\Http\Controllers\Sync\SyncController::class, 'syncImages']);
@@ -20,6 +20,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::put('/photo/update', [\App\Http\Controllers\Fichiers\ImageController::class, 'update']);
     Route::put('/video/update', [\App\Http\Controllers\Fichiers\VideosController::class, 'update']);
+    Route::get('/video/bunny-status', [\App\Http\Controllers\Fichiers\VideosController::class, 'getBunnyStatus']);
     Route::put('/settings', [\App\Http\Controllers\Settings\SettingsController::class, 'update']);
 
     Route::get('/messages', [\App\Http\Controllers\Message\MessageController::class, 'getMessages']);

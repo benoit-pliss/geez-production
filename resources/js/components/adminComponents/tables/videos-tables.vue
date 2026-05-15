@@ -3,6 +3,7 @@
 import {ref, watch, onMounted} from "vue";
 import {updateVideo} from "../../../services/videosService.js";
 import {getSettings, updateSettings} from "../../../services/settingsService.js";
+import {extractBunnyId} from "../../../utils/bunnyHelpers.js";
 import ComboboxTags from "../../dialog/create-tags/combobox-tags.vue";
 import notificationService from "../../../services/notificationService.js";
 import Badge from "@/components/Badge.vue";
@@ -36,8 +37,26 @@ const setFeatured = async (videoId) => {
 };
 
 const props = defineProps({
-    photos: Array
+    photos: Array,
+    statuses: { type: Object, default: () => ({}) },
 })
+
+const STATUS_LABELS = {
+    0: 'En attente',
+    1: 'En traitement',
+    2: 'Encodage',
+    5: 'Échec',
+    6: 'Échec upload',
+};
+
+const getStatus = (video) => {
+    const id = extractBunnyId(video.url);
+    if (!id) return null;
+    const s = props.statuses[id];
+    // status 3 = finalized, status < 0 = error fetching, progress 100 = done despite stuck status
+    if (!s || s.status === 3 || s.status < 0 || s.progress >= 100) return null;
+    return s;
+};
 
 const emits = defineEmits(['searchName']);
 
@@ -120,7 +139,28 @@ async function saveChanges(video) {
                         <!--                        </tr>-->
                         <tr v-for="photo in props.photos" :key="photo.id">
                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                <img :src="photo.poster_url" alt="Photo miniature" width="50" height="50">
+                                <div class="relative inline-block">
+                                    <img :src="photo.poster_url" alt="Photo miniature" width="50" height="50" class="rounded">
+                                    <template v-if="getStatus(photo)">
+                                        <span
+                                            v-if="getStatus(photo).status >= 5"
+                                            class="absolute -top-1 -right-1 flex h-3 w-3"
+                                            title="Échec de traitement"
+                                        >
+                                            <span class="inline-flex h-3 w-3 rounded-full bg-red-500"></span>
+                                        </span>
+                                        <span v-else class="absolute -top-1 -right-1 flex h-3 w-3" :title="`${STATUS_LABELS[getStatus(photo).status] ?? 'En traitement'} — ${getStatus(photo).progress}%`">
+                                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                                            <span class="relative inline-flex h-3 w-3 rounded-full bg-orange-500"></span>
+                                        </span>
+                                    </template>
+                                </div>
+                                <div v-if="getStatus(photo)" class="mt-1 text-xs font-medium whitespace-nowrap" :class="getStatus(photo).status >= 5 ? 'text-red-600' : 'text-orange-600'">
+                                    <template v-if="getStatus(photo).status < 5">
+                                        {{ STATUS_LABELS[getStatus(photo).status] ?? 'En traitement' }} {{ getStatus(photo).progress }}%
+                                    </template>
+                                    <template v-else>Échec</template>
+                                </div>
                             </td>
 
                             <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">

@@ -1,11 +1,15 @@
 import axiosClient from "../axios/index.js";
-import {get30RandomPhotosWithTags} from "./Photo-service.js";
 
-export function handleSuccess(name, path ) {
-    const data = new FormData();
-    data.append("name", name);
-    data.append("path", path);
-    return axiosClient.post("/upload/success", data);
+export function initBunnyUpload(name) {
+    return axiosClient.post("/upload/bunny-init", { name });
+}
+
+export function refreshBunnyCredentials(videoId) {
+    return axiosClient.post("/upload/bunny-refresh", { videoId });
+}
+
+export function completeBunnyUpload(videoId, name) {
+    return axiosClient.post("/upload/bunny-complete", { videoId, name });
 }
 
 export function getListeVideoByTags(tags) {
@@ -28,6 +32,10 @@ export function get30RandomVideosWithTags() {
     return axiosClient.get("/get30RandomVideosWithTags");
 }
 
+
+export function getBunnyVideoStatus(videoId) {
+    return axiosClient.get('/video/bunny-status', { params: { videoId } });
+}
 
 export function updateVideo(video) {
 

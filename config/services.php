@@ -31,4 +31,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'bunny' => [
+        'api_key' => env('BUNNY_STREAM_API_KEY'),
+        'library_id' => env('BUNNY_LIBRARY_ID'),
+        'cdn_hostname' => env('BUNNY_CDN_HOSTNAME'),
+    ],
+
 ];

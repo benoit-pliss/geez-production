@@ -4,7 +4,6 @@
         <div :class="featuredVideo ? 'py-48 sm:py-64' : 'py-24 sm:py-32'" class="relative isolate overflow-hidden bg-gray-900 px-6 lg:px-8">
             <video v-if="featuredVideo"
                 ref="videoRef"
-                :src="featuredVideo.url"
                 :poster="featuredVideo.poster_url"
                 autoplay loop playsinline muted
                 class="absolute inset-0 -z-10 h-full w-full object-cover"
@@ -48,6 +47,7 @@ import MediaLightbox from '@/components/MediaLightbox.vue';
 import { ArrowsPointingOutIcon } from '@heroicons/vue/24/solid';
 import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { getSettings } from '../services/settingsService.js';
+import { attachHls } from '../composables/useHls.js';
 
 const pageTag = ref(null);
 const featuredVideo = ref(null);
@@ -55,6 +55,7 @@ const videoRef = ref(null);
 const lightboxOpen = ref(false);
 
 let observer = null;
+let featuredHls = null;
 
 onMounted(async () => {
     try {
@@ -65,11 +66,19 @@ onMounted(async () => {
 
 onUnmounted(() => {
     observer?.disconnect();
+    featuredHls?.destroy();
 });
 
 watch(videoRef, (el) => {
     if (!el) return;
     el.muted = true;
+
+    featuredHls?.destroy();
+    featuredHls = attachHls(el, featuredVideo.value?.url);
+    if (featuredHls) {
+        featuredHls.startLoad();
+    }
+
     el.play().catch(() => {
         const retry = () => el.play().catch(() => {});
         window.addEventListener('focus', retry, { once: true });
