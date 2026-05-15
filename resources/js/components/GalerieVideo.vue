@@ -38,7 +38,7 @@
 
             <div v-else class="mx-auto mt-16 flow-root max-w-2xl sm:mt-20 lg:mx-0 lg:max-w-none">
                 <div class="-mt-8 sm:-mx-4 sm:columns-2 sm:text-[0] sm:columns-2 md:columns-2 lg:columns-3 xl:columns-4">
-                    <div v-for="video in videos" :key="video.name" class="pt-8 sm:inline-block sm:w-full sm:px-4">
+                    <div v-for="video in videos" :key="video.id" class="pt-8 sm:inline-block sm:w-full sm:px-4">
                         <div class="relative overflow-hidden transition duration-300 transform rounded-lg cursor-pointer" @click="openLightbox(video)" @mouseenter="playVideo(video)" @mouseleave="pauseVideo(video)">
                             <video :src="video.url?.endsWith('.m3u8') ? undefined : video.url" :poster="video.poster_url" :ref="el => initPlayer(el, video)" preload="none" class="object-cover w-full h-auto" :muted="videoMuted[video.id] !== false" :controls="false"
                                 v-on:waiting="video.buffering = true"
@@ -190,8 +190,12 @@ const fetchTags = () => {
 const fetchVideos = () => {
     loading.value = true;
     const excludeId = featuredVideo.value?.id ?? null;
+    const excludeUrl = featuredVideo.value?.url ?? null;
 
-    const applyExclusion = (list) => excludeId ? list.filter(v => v.id !== excludeId) : list;
+    const applyExclusion = (list) => {
+        if (!excludeId && !excludeUrl) return list;
+        return list.filter(v => v.id !== excludeId && (!excludeUrl || v.url !== excludeUrl));
+    };
 
     const initMuted = (list) => {
         list.forEach(v => { videoMuted[v.id] = !defaultSound.value; });
